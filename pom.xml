@@ -140,6 +140,32 @@
 					<effort>Max</effort>
 				</configuration -->
 			</plugin>
+			
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!--
+                        we should really, really use the eclipse compiler but cannot:
+                        http://jira.codehaus.org/browse/MCOMPILER-43
+                        http://jira.codehaus.org/browse/PLXCOMP-59
+                    -->
+                    <!-- <compilerId>eclipse</compilerId> -->
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <encoding>ISO-8859-1</encoding>
+                </configuration>
+                <!--
+                <dependencies>
+                  <dependency>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-compiler-eclipse</artifactId>
+                    <version>1.5.1</version>
+                  </dependency>
+                </dependencies>
+                -->
+            </plugin>
+			
 		</plugins>
 	</reporting>
 	<dependencies>
@@ -181,5 +207,35 @@
 			<artifactId>mule-transport-stream</artifactId>
 			<version>${muleVersion}</version>
 		</dependency>
+		
+	<!-- Smooks Dependencies -->
+		<dependency>
+            <groupId>milyn</groupId>
+            <artifactId>milyn-smooks-templating</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        
+	    <!-- log4 j -->
+         <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.14</version>
+        </dependency>
+
+	    <!-- junit  -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.2</version>
+		</dependency>
 	</dependencies>
+	
+	
+	<repositories>
+        <repository>
+            <id>milyn</id>
+            <url>http://dist.codehaus.org</url>
+        </repository>
+    </repositories>
+    
 </project>		

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN" "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="Mule_Smooks_Example" version="1.0">
+
+    <description>
+		This example demonstrates how a SmooksTransformer can be used with Mule
+	</description>
+
+    <connector name="SystemStreamConnector" className="org.mule.providers.stream.SystemStreamConnector">
+        <properties>
+            <property name="promptMessage" value="Press return to perform transformation"/>
+            <property name="messageDelayTime" value="1000"/>
+        </properties>
+    </connector>
+
+    <transformers>
+        <transformer name="SmooksTransformer"  className="org.milyn.smooks.mule.SmooksTransformer">
+			<!-- specify a different smooks-config.xml then the default one
+        	<properties>
+        		<property name="smooksConfigFile" value="smooks-config.xml"/>
+        	</properties>
+			-->
+        </transformer>
+    </transformers>
+
+    <model name="SmooksExample">
+        <mule-descriptor name="SmooksExample" implementation="example.Main">
+			 <inbound-router>
+                <endpoint address="stream://System.in"  transformers="SmooksTransformer"/>
+            </inbound-router>
+
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="stream://System.out"/>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+    </model>
+
+</mule-configuration>
