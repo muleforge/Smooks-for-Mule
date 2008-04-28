@@ -1,7 +1,6 @@
 package org.milyn.smooks.mule;
 
 
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import junit.framework.TestCase;
@@ -12,7 +11,7 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.transformer.TransformerException;
 
 /**
- * 
+ * Unit test for {@link SmooksTransformer}
  * @author <a href="mailto:daniel.bevenius@gmail.com">Daniel Bevenius</a>				
  *
  */
@@ -38,24 +37,19 @@ public class SmooksTransformerTest extends TestCase
 		assertNotNull ( transformedObject );
 	}
 	
-	public void test_getBytesFromMessageObject() throws TransformerException
-	{
-		smooksTransformer.setSmooksConfigFile( smooksConfigFileName );
-		byte[] inputMessage = readInputMessage();
-		String inputAsString = new String( inputMessage );
-		byte[] bytesFromMessageObject = smooksTransformer.getBytesFromMessageObject( inputAsString );
-		assertEquals( new String( inputMessage ), new String ( bytesFromMessageObject ) );
-	}
-	
 	public void setUp() throws InitialisationException
 	{
 		smooksTransformer.initialise();
 	}
 	
-	private static byte[] readInputMessage() {
-        try {
+	private static byte[] readInputMessage() 
+	{
+        try 
+        {
             return StreamUtils.readStream( SmooksTransformerTest.class.getResourceAsStream( "/input-message.xml"));
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
         	log.error( "IOException while trying to read input-message.xml", e );
             return "<no-message/>".getBytes();
         }
