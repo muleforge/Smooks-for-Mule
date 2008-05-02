@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  *      &lt;transformer name="SmooksTransformer" className="org.milyn.smooks.mule.SmooksTransformer"/&gt;
  * &lt;/transformers&gt;
  *   
- * Declare the tranformer in the Mule configuration file:
+ * Configure the transformer with a router:
  * &lt;inbound-router&gt;
  *     &lt;endpoint address="stream://System.in"  transformers="SmooksTransformer"/&gt;
  * &lt;/inbound-router&gt;
@@ -39,6 +39,8 @@ import org.xml.sax.SAXException;
  * Optional properties:
  * &lt;property name="smooksConfig" value="smooks-config.xml" /&gt;
  * &lt;property name="resultType" value="STRING" /&gt;
+ * &lt;property name="excludeNonSerializables" value="false" /&gt;
+ * &lt;property name="reportPath" value="/tmp/smooks-report.html" /&gt;
  * </pre>
  * 
  * Description of configuration properties:
@@ -239,7 +241,7 @@ public class SmooksTransformer extends org.mule.transformers.AbstractTransformer
 		{
             try 
             {
-            	log.info( "Using Smooks Reporting. Will generate smooks-report.html in directory: " + reportPath  + "Do not use in production evironment as this will have negative impact on performance!");
+            	log.info( "Using Smooks Reporting. Will generate report in file [" + reportPath  + "]. Do not use in production evironment as this will have negative impact on performance!");
                 executionContext.setEventListener( new HtmlReportGenerator( reportPath ) );
             } 
             catch ( final IOException e) 
@@ -248,6 +250,11 @@ public class SmooksTransformer extends org.mule.transformers.AbstractTransformer
 	            throw new TransformerException( errorMsg, e );
             }
         }
+	}
+
+	public void setReportPath( String reportPath )
+	{
+		this.reportPath = reportPath;
 	}
 	
 }

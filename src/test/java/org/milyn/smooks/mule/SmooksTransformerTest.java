@@ -3,7 +3,9 @@ package org.milyn.smooks.mule;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.junit.Before;
@@ -16,6 +18,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Unit test for {@link SmooksTransformer}
+ * <p/>
+ * The test in the class intentionally only test the configuration and <br>
+ * execution of {@link SmooksTransformer} and not the actual tranformations<br>
+ * that Smooks performs as these are covered in the Smooks project.
  * 
  * @author <a href="mailto:daniel.bevenius@gmail.com">Daniel Bevenius</a>				
  *
@@ -50,6 +56,29 @@ public class SmooksTransformerTest
 		byte[] inputMessage = readInputMessage();
 		Object transformedObject = smooksTransformer.doTransform( inputMessage, "UTF-8" );
 		assertNotNull ( transformedObject );
+	}
+	
+	@Test
+	public void doTransformationWithSmooksReportGeneration() throws TransformerException, InitialisationException
+	{
+		File reportFile = new File ( "target" + File.separator + "smooks-report.html" );
+		smooksTransformer.setSmooksConfig( smooksConfigFile );
+		smooksTransformer.setReportPath( reportFile.getAbsolutePath() );
+		smooksTransformer.initialise();
+		byte[] inputMessage = readInputMessage();
+		try
+		{
+    		Object transformedObject = smooksTransformer.doTransform( inputMessage, "UTF-8" );
+    		assertNotNull ( transformedObject );
+			assertTrue( reportFile.exists() );
+		}
+		finally
+		{
+			if ( reportFile.exists() )
+			{
+				reportFile.delete();
+			}
+		}
 	}
 	
 	@Before
