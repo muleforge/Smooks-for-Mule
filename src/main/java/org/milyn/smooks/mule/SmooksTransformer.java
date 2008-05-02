@@ -133,43 +133,17 @@ public class SmooksTransformer extends org.mule.transformers.AbstractTransformer
 	protected Object doTransform( Object message, String encoding ) throws TransformerException
 	{
         //	Create Smooks ExecutionContext.
-		ExecutionContext executionContext = createExecutionContext( smooks );
+		ExecutionContext executionContext = smooks.createExecutionContext();
 		
 		//	add smooks reporting if configured
 		addReportingSupport( executionContext );
 		
         //	Use the Smooks PayloadProcessor to execute the transformation....	
-        final Object newPayload = payloadProcessor.process( extractPayload( message), executionContext );
+        final Object newPayload = payloadProcessor.process( message, executionContext );
         
-		return packagePayload( newPayload );
+		return newPayload;
 	}
 	
-	/*
-     * 	Hook for subclasses to control how the execution context is created. 
-     * 	Might be useful for Actions that use profiles for example. 
-     */
-	protected ExecutionContext createExecutionContext( final Smooks smooks )
-	{
-		return smooks.createExecutionContext();
-	}
-	
-	/*
-     * 	Hook for subclasses to extract the message payload in any way they see fit.
-     */
-    protected Object extractPayload( final Object object ) 
-    {
-    	return object;
-    }
-    
-    /*
-     * Hook for subclasses so they can control what manipulate the payload
-     * if needed. 
-     */
-    protected Object packagePayload( final Object payload )
-    {
-    	return payload;
-    }
-    
 	/**
      * Will return a Map containing only the Serializable objects 
      * that exist in the passed-in Map if {@link #excludeNonSerializables} is true.
