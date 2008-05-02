@@ -19,7 +19,7 @@
         <transformer name="SmooksTransformer"  className="org.milyn.smooks.mule.SmooksTransformer">
 			<!-- specify a different smooks-config.xml then the default one
         	<properties>
-        		<property name="smooksConfigFile" value="smooks-config.xml"/>
+        		<property name="smooksConfig" value="smooks-config.xml"/>
         	</properties>
 			-->
         </transformer>
