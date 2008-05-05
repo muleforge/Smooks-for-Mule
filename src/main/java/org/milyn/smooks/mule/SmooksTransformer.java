@@ -15,6 +15,8 @@ import org.milyn.container.plugin.PayloadProcessor;
 import org.milyn.container.plugin.ResultType;
 import org.milyn.event.report.HtmlReportGenerator;
 import org.mule.config.i18n.Message;
+import org.mule.transformers.AbstractEventAwareTransformer;
+import org.mule.umo.UMOEventContext;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.transformer.TransformerException;
 import org.slf4j.Logger;
@@ -24,7 +26,7 @@ import org.xml.sax.SAXException;
 /**
  * SmooksTransformer intended to be used with the Mule ESB.
  * <p/>
- * Usage: <br>
+ * <h3>Usage:</h3> 
  * <pre>
  * Declare the tranformer in the Mule configuration file:
  * &lt;transformers&gt;
@@ -41,21 +43,45 @@ import org.xml.sax.SAXException;
  * &lt;property name="resultType" value="STRING" /&gt;
  * &lt;property name="excludeNonSerializables" value="false" /&gt;
  * &lt;property name="reportPath" value="/tmp/smooks-report.html" /&gt;
+ * &lt;property name="javaResultBeanId" value="orderBean" /&gt;
  * </pre>
  * 
- * Description of configuration properties:
+ * <h3>Description of configuration properties</h3>
  * <ul>
  * <li><i>smooksConfig</i> - the Smooks configuration file. Can be a path on the file system or on the classpath.
  * <li><i>resultType</i> - type of result expected from Smooks ("STRING", "BYTES", "JAVA", "NORESULT"). Default is "STRING".
  * <li><i>excludeNonSerializables</i> - if true, non serializable attributes from the Smooks ExecutionContext will no be included. Default is true.
  * <li><i>reportPath</i> - specifies the path and file name for generating a Smooks Execution Report.  This is a development tool.
+ * <li><i>javaResultBeanId</i> - specifies the Smooks bean context beanId to be mapped as the result when the resultType is "JAVA".  If not specified,
+ *                               the whole bean context bean Map is mapped as the result. 
  * </ul>
+ * 
+ * <h3>Accessing Smooks ExecutionContext attributes</h3>
+ * After Smooks has performed the filtering the transform method will make the attributes that have been set in the
+ * the ExecutionContext available for other actions in the Mule ESB.
+ * The attributes (Map) can be accessed by using the {@link #EXECUTION_CONTEXT_ATTR_MAP_KEY} key like this:
+ * <pre>
+ * umoEventContext.getMessage().get( SmooksTransformer.EXECUTION_CONTEXT_ATTR_MAP_KEY );
+ * </pre>
+ * <h3>Specifying the Source and Result Types</h3>
+ * From the object payload data type, this Transformer is able to automatically determine the type of
+ * {@link javax.xml.transform.Source} to use (via the Smooks {@link PayloadProcessor}).  The
+ * {@link javax.xml.transform.Result} type to be used can be specified via the "resultType"
+ * property, as outlined above.
+ * <p/>
+ * It is expected that the above mechanism will be satisfactory for most usecase, but not all.
+ * For the other usecases, this action supports {@link org.milyn.container.plugin.SourceResult}
+ * payloads. This allows you to manually specify other Source and Result
+ * types, which is of particular interest with respect to the Result type e.g. for streaming
+ * the Result to a file etc.
  * 
  * @author <a href="mailto:daniel.bevenius@gmail.com">Daniel Bevenius</a>				
  *
  */
-public class SmooksTransformer extends org.mule.transformers.AbstractTransformer
+public class SmooksTransformer extends AbstractEventAwareTransformer
 {
+	public static final String EXECUTION_CONTEXT_ATTR_MAP_KEY = "SmooksExecutionContext";
+	
 	private static final long serialVersionUID = 1L;
 	
 	private final Logger log = LoggerFactory.getLogger( SmooksTransformer.class );
@@ -90,13 +116,32 @@ public class SmooksTransformer extends org.mule.transformers.AbstractTransformer
 	 */
 	private String reportPath;
 
+	/*
+	 * Bean Id under which the JavaResult bean will be bound
+	 */
+	private String javaResultBeanId;
+
     //	public
 	
 	public void initialise() throws InitialisationException
 	{
+		//	determine the ResultType
 		ResultType resultType = getResultType();
+		
+		//	Create the Smooks instance
 		smooks = createSmooksInstance();
+		
+		//	Create the Smooks payload processor
 		payloadProcessor = new PayloadProcessor( smooks, resultType );
+		
+		//	set the JavaResult beanId if specified
+		if ( resultType == ResultType.JAVA ) 
+		{
+            if ( javaResultBeanId != null ) 
+            {
+                payloadProcessor.setJavaResultBeanId( javaResultBeanId );
+            }
+        }
 	}
 
 	public String getSmooksConfig()
@@ -127,21 +172,34 @@ public class SmooksTransformer extends org.mule.transformers.AbstractTransformer
 		this.excludeNonSerializables = excludeNonSerializables;
 	}
 	
+	public void setReportPath( final String reportPath )
+	{
+		this.reportPath = reportPath;
+	}
+
+	public void setJavaResultBeanId( final String javaResultBeanId )
+	{
+		this.javaResultBeanId = javaResultBeanId;
+	}
+	
 	//	protected
 	
 	@Override
-	protected Object doTransform( Object message, String encoding ) throws TransformerException
+	public Object transform( final Object payload, String encoding, UMOEventContext umoEventContext ) throws TransformerException
 	{
         //	Create Smooks ExecutionContext.
 		ExecutionContext executionContext = smooks.createExecutionContext();
 		
-		//	add smooks reporting if configured
+		//	Add smooks reporting if configured
 		addReportingSupport( executionContext );
 		
         //	Use the Smooks PayloadProcessor to execute the transformation....	
-        final Object newPayload = payloadProcessor.process( message, executionContext );
+        final Object transformedPayload = payloadProcessor.process( payload, executionContext );
         
-		return newPayload;
+        //	Set the Smooks Excecution properites on the Mule Message object
+        umoEventContext.getMessage().setProperty( EXECUTION_CONTEXT_ATTR_MAP_KEY, getSerializableObjectsMap( executionContext.getAttributes() ) );
+        
+		return transformedPayload;
 	}
 	
 	/**
@@ -226,9 +284,4 @@ public class SmooksTransformer extends org.mule.transformers.AbstractTransformer
         }
 	}
 
-	public void setReportPath( String reportPath )
-	{
-		this.reportPath = reportPath;
-	}
-	
 }
