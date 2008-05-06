@@ -104,7 +104,7 @@ public class SmooksTransformer extends AbstractEventAwareTransformer
 	/*
 	 * Filename for smooks configuration. Default is smooks-config.xml
 	 */
-    private String smooksConfigFile = "smooks-config.xml";
+    private String smooksConfigFile;
 
     /*
      * If true, non serializable attributes from the Smooks ExecutionContext will no be included. Default is true.
@@ -149,9 +149,9 @@ public class SmooksTransformer extends AbstractEventAwareTransformer
 		return smooksConfigFile;
 	}
 	
-	public void setSmooksConfig( final String smooksResFile )
+	public void setSmooksConfig( final String smooksConfigFile )
 	{
-		this.smooksConfigFile = smooksResFile;
+		this.smooksConfigFile = smooksConfigFile;
 	}
 	
     public Object clone() throws CloneNotSupportedException
@@ -233,6 +233,12 @@ public class SmooksTransformer extends AbstractEventAwareTransformer
 	
 	private Smooks createSmooksInstance() throws InitialisationException
 	{
+		if ( smooksConfigFile == null )
+		{
+			final Message errorMsg = createStaticMessage( "'smooksConfigFile' parameter must be specified" );
+			throw new InitialisationException( errorMsg, this );
+		}
+	
 		try
 		{
 			return new Smooks ( smooksConfigFile );

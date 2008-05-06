@@ -1,7 +1,6 @@
 package org.milyn.smooks.mule;
 
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -37,11 +36,11 @@ public class SmooksTransformerTest
 	
 	private final String smooksConfigFile = "smooks-config.xml";
 	
-	@Test
-	public void getSmooksConfigFile() throws TransformerException
+	@Test ( expected = InitialisationException.class )
+	public void initWithoutSmooksConfigFile() throws TransformerException, InitialisationException
 	{
-		smooksTransformer.setSmooksConfig( smooksConfigFile );
-		assertEquals( smooksConfigFile, smooksTransformer.getSmooksConfig() );
+		smooksTransformer.setSmooksConfig( null );
+		smooksTransformer.initialise();
 	}
 	
 	@Test ( expected = InitialisationException.class )
@@ -107,6 +106,7 @@ public class SmooksTransformerTest
 	public void setUp() throws Exception
 	{
     	smooksTransformer = new SmooksTransformer();
+		smooksTransformer.setSmooksConfig( smooksConfigFile );
 		smooksTransformer.initialise();
 		RequestContext.setEvent( getTestEvent ( "Test!" ) );	
 		eventContext = RequestContext.getEventContext();
