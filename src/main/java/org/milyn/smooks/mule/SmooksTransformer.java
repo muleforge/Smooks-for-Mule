@@ -196,7 +196,7 @@ public class SmooksTransformer extends AbstractEventAwareTransformer
         //	Use the Smooks PayloadProcessor to execute the transformation....	
         final Object transformedPayload = payloadProcessor.process( payload, executionContext );
         
-        //	Set the Smooks Excecution properites on the Mule Message object
+        //	Set the Smooks Excecution properties on the Mule Message object
         umoEventContext.getMessage().setProperty( EXECUTION_CONTEXT_ATTR_MAP_KEY, getSerializableObjectsMap( executionContext.getAttributes() ) );
         
 		return transformedPayload;
