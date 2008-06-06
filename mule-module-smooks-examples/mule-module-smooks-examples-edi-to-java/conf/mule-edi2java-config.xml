@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN" "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="Smooks_EDI_to_Java_Example" version="1.0">
+
+    <description>Smooks EDI to Java Example</description>
+
+    <connector name="FileConnector" className="org.mule.providers.file.FileConnector">
+        <properties>
+            <property name="pollingFrequency" value="1000"/>
+            <property name="moveToDirectory" value="./data/out"/>
+            <property name="binaryMode" value="false"/>
+        </properties>
+    </connector>
+
+    <transformers>
+        <transformer name="EDIOrderToJavaOrder" className="org.milyn.smooks.mule.SmooksTransformer">
+            <properties>
+                <property name="smooksConfig" value="/transforms/smooks-edi2java-config.xml"/>
+                <property name="resultType" value="JAVA"/>
+                <property name="javaResultBeanId" value="order"/>
+            </properties>
+        </transformer>
+    </transformers>
+
+    <model name="OrderProcessor">
+        <mule-descriptor name="OrderProcessor" implementation="org.mule.components.simple.BridgeComponent">
+            <inbound-router>
+                <endpoint address="file://./data/in" transformers="EDIOrderToJavaOrder">
+                    <filter pattern="*.edi" className="org.mule.providers.file.filters.FilenameWildcardFilter"/>
+                </endpoint>
+            </inbound-router>
+
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="stream://System.out"/>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+    </model>
+
+</mule-configuration>

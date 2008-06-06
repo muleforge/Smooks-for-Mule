@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>mule-module-smooks-examples</artifactId>
+		<groupId>org.mule.modules</groupId>
+		<version>1.0</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.mule.modules</groupId>
+	<artifactId>mule-module-smooks-examples-edi-to-java</artifactId>
+	<name>Smooks EDI to Java Example</name>
+	<version>1.0</version>
+	<description>
+		Is a simple example of how Smooks can be used as a transformer.
+	</description>
+
+	<build>
+        <defaultGoal>install</defaultGoal>
+
+        <!-- Allow config files to be in the "conf" directory to make it easier for users to find them. -->
+        <resources>
+            <resource>
+                <directory>conf</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
+    </build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.mule</groupId>
+			<artifactId>mule-core</artifactId>
+		</dependency>
+
+		<!-- Mule Transport Dependencies -->
+
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-file</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-stream</artifactId>
+		</dependency>
+
+		<!-- Better testing of XML -->
+		<dependency>
+			<groupId>xmlunit</groupId>
+			<artifactId>xmlunit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>install-in-mule</id>
+
+			<build>
+				<plugins>
+		            <!-- "mvn -P install-in-mule install" will copy the target jar to the $MULE_HOME/lib/user directory,
+		                overwriting the previous one.-->
+		            <plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-dependency-plugin</artifactId>
+		                <executions>
+		                    <execution>
+		                        <id>copy-artifact</id>
+		                        <phase>install</phase>
+		                        <goals>
+		                            <goal>copy</goal>
+		                        </goals>
+		                        <configuration>
+		                            <outputDirectory>${MULE_HOME}/lib/user</outputDirectory>
+		                            <overWriteReleases>true</overWriteReleases>
+		                            <overWriteSnapshots>true</overWriteSnapshots>
+		                            <artifactItems>
+		                                <artifactItem>
+		                                    <groupId>${groupId}</groupId>
+		                                    <artifactId>${artifactId}</artifactId>
+		                                    <version>${version}</version>
+		                                    <destFileName>${artifactId}.jar</destFileName>
+		                                </artifactItem>
+		                            </artifactItems>
+		                        </configuration>
+		                    </execution>
+		                </executions>
+		            </plugin>
+		        </plugins>
+			</build>
+
+		</profile>
+	</profiles>
+
+</project>

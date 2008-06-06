@@ -1,23 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule-module-smooks</artifactId>
-	<name>Smooks Transformer</name>
+	<name>Smooks Mule module</name>
 	<description>Smooks Transformer for Mule.</description>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 	<version>1.0</version>
+
+	<modules>
+		<module>mule-module-smooks-core</module>
+		<module>mule-module-smooks-examples</module>
+	</modules>
+
 	<properties>
 		<muleVersion>1.4.1</muleVersion>
 		<shortId>SMOOKS</shortId>
 		<domainName>smooks</domainName>
 	</properties>
+
 	<issueManagement>
 		<system>Jira</system>
 		<url>http://mule.mulesource.org/jira/browse/${shortId}</url>
 	</issueManagement>
+
 	<scm>
 		<connection>
 			scm:svn:http://svn.muleforge.org/${domainName}/
@@ -28,25 +36,32 @@
 		<tag>HEAD</tag>
 		<url>http://svn.${domainName}.muleforge.org/</url>
 	</scm>
+
 	<ciManagement>
 		<system>Bamboo</system>
 		<url>http://bamboo.muleforge.org/browse/${shortId}</url>
 		<notifiers />
 	</ciManagement>
+
 	<distributionManagement>
 		<repository>
 			<id>muleforge.webdav.releases</id>
-			<url>dav:https://dav.muleforge.org/repository/${domainName}/</url>
+			<url>
+				dav:https://dav.muleforge.org/repository/${domainName}/
+			</url>
 		</repository>
 		<snapshotRepository>
 			<id>muleforge.webdav.snapshots</id>
-			<url>dav:https://dav.muleforge.org/snapshots.repository/${domainName}/</url>
+			<url>
+				dav:https://dav.muleforge.org/snapshots.repository/${domainName}/
+			</url>
 		</snapshotRepository>
 		<site>
 			<id>muleforge.webdav.sites</id>
 			<url>dav:https://dav.muleforge.org/${domainName}/</url>
 		</site>
 	</distributionManagement>
+
 	<build>
 		<extensions>
 			<extension>
@@ -57,13 +72,13 @@
 		</extensions>
 		<plugins>
 			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
-             </plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -76,6 +91,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<reporting>
 		<plugins>
 			<plugin>
@@ -146,105 +162,115 @@
 				<!-- configuration>
 					<threshold>Low</threshold>
 					<effort>Max</effort>
-				</configuration -->
+					</configuration -->
 			</plugin>
-			
+
 			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <!--
-                        we should really, really use the eclipse compiler but cannot:
-                        http://jira.codehaus.org/browse/MCOMPILER-43
-                        http://jira.codehaus.org/browse/PLXCOMP-59
-                    -->
-                    <!-- <compilerId>eclipse</compilerId> -->
-                    <source>1.5</source>
-                    <target>1.5</target>
-                    <encoding>ISO-8859-1</encoding>
-                </configuration>
-                <!--
-                <dependencies>
-                  <dependency>
-                    <groupId>org.codehaus.plexus</groupId>
-                    <artifactId>plexus-compiler-eclipse</artifactId>
-                    <version>1.5.1</version>
-                  </dependency>
-                </dependencies>
-                -->
-            </plugin>
-			
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<!--
+						we should really, really use the eclipse compiler but cannot:
+						http://jira.codehaus.org/browse/MCOMPILER-43
+						http://jira.codehaus.org/browse/PLXCOMP-59
+					-->
+					<!-- <compilerId>eclipse</compilerId> -->
+					<source>1.5</source>
+					<target>1.5</target>
+					<encoding>ISO-8859-1</encoding>
+				</configuration>
+				<!--
+					<dependencies>
+					<dependency>
+					<groupId>org.codehaus.plexus</groupId>
+					<artifactId>plexus-compiler-eclipse</artifactId>
+					<version>1.5.1</version>
+					</dependency>
+					</dependencies>
+				-->
+			</plugin>
+
 		</plugins>
 	</reporting>
-	<dependencies>
-		<!-- Mule Dependencies -->
-		<dependency>
-			<groupId>org.mule</groupId>
-			<artifactId>mule-core</artifactId>
-			<version>${muleVersion}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mule.modules</groupId>
-			<artifactId>mule-module-client</artifactId>
-			<version>${muleVersion}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mule.tests</groupId>
-			<artifactId>mule-tests-functional</artifactId>
-			<version>${muleVersion}</version>
-			<scope>test</scope>
-		</dependency>
-	<!-- Mule Transport Dependencies -->
-		<dependency>
-			<groupId>org.mule.transports</groupId>
-			<artifactId>mule-transport-vm</artifactId>
-			<version>${muleVersion}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mule.transports</groupId>
-			<artifactId>mule-transport-tcp</artifactId>
-			<version>${muleVersion}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mule.transports</groupId>
-			<artifactId>mule-transport-file</artifactId>
-			<version>${muleVersion}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mule.transports</groupId>
-			<artifactId>mule-transport-stream</artifactId>
-			<version>${muleVersion}</version>
-		</dependency>
-		
-	<!-- Smooks Dependencies -->
-		<dependency>
-            <groupId>milyn</groupId>
-            <artifactId>milyn-smooks-templating</artifactId>
-            <version>1.0</version>
-        </dependency>
-        
-	    <!-- log4 j -->
-         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
-        </dependency>
 
-	    <!-- junit  -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.4</version>
-            <scope>test</scope>
-		</dependency>
-	</dependencies>
-	
-	
+	<dependencyManagement>
+		<dependencies>
+			<!-- Mule Dependencies -->
+			<dependency>
+				<groupId>org.mule</groupId>
+				<artifactId>mule-core</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.modules</groupId>
+				<artifactId>mule-module-client</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.tests</groupId>
+				<artifactId>mule-tests-functional</artifactId>
+				<version>${muleVersion}</version>
+				<scope>test</scope>
+			</dependency>
+			<!-- Mule Transport Dependencies -->
+			<dependency>
+				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-vm</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-tcp</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-file</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-stream</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+
+			<!-- Smooks Dependencies -->
+			<dependency>
+				<groupId>milyn</groupId>
+				<artifactId>milyn-smooks-templating</artifactId>
+				<version>1.0</version>
+			</dependency>
+
+			<!-- log4 j -->
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.14</version>
+			</dependency>
+
+			<!-- unit testing -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.4</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+	            <groupId>xmlunit</groupId>
+	            <artifactId>xmlunit</artifactId>
+	            <version>1.0</version>
+	            <scope>test</scope>
+	        </dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
 	<repositories>
-        <repository>
-            <id>milyn</id>
-            <url>http://dist.codehaus.org</url>
-        </repository>
-    </repositories>
-    
-</project>		
+		<repository>
+			<id>milyn</id>
+			<url>http://dist.codehaus.org</url>
+		</repository>
+	</repositories>
+
+</project>

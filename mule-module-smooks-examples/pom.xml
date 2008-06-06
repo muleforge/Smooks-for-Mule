@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>mule-module-smooks</artifactId>
+		<groupId>org.mule.modules</groupId>
+		<version>1.0</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.mule.modules</groupId>
+	<artifactId>mule-module-smooks-examples</artifactId>
+	<name>Smooks Transformer Examples</name>
+	<version>1.0</version>
+	<packaging>pom</packaging>
+	<description>Parent POM for all examples</description>
+
+	<modules>
+		<module>mule-module-smooks-examples-edi-to-java</module>
+	</modules>
+</project>
