@@ -5,13 +5,13 @@
 	<parent>
 		<artifactId>mule-module-smooks</artifactId>
 		<groupId>org.mule.modules</groupId>
-		<version>1.0</version>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule-module-smooks-examples</artifactId>
 	<name>Smooks Transformer Examples</name>
-	<version>1.0</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>Parent POM for all examples</description>
 

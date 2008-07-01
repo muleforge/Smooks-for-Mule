@@ -5,13 +5,13 @@
 	<parent>
 		<artifactId>mule-module-smooks-examples</artifactId>
 		<groupId>org.mule.modules</groupId>
-		<version>1.0</version>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
-	<modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule-module-smooks-examples-edi-to-java</artifactId>
 	<name>Smooks EDI to Java Example</name>
-	<version>1.0</version>
+	<version>1.0-SNAPSHOT</version>
 	<description>
 		Is a simple example of how Smooks can be used as a transformer.
 	</description>
@@ -32,9 +32,19 @@
     </build>
 
 	<dependencies>
+
+		<!-- The Smooks Transformer -->
+
 		<dependency>
-			<groupId>org.mule</groupId>
-			<artifactId>mule-core</artifactId>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-module-smooks-transformer</artifactId>
+		</dependency>
+
+		<!-- The Smooks dependencies -->
+
+		<dependency>
+			<groupId>milyn</groupId>
+			<artifactId>milyn-smooks-edi</artifactId>
 		</dependency>
 
 		<!-- Mule Transport Dependencies -->
@@ -87,6 +97,32 @@
 		                                    <destFileName>${artifactId}.jar</destFileName>
 		                                </artifactItem>
 		                            </artifactItems>
+		                        </configuration>
+		                    </execution>
+		                    <execution>
+		                        <id>copy-dependencies</id>
+		                        <phase>install</phase>
+		                        <goals>
+		                            <goal>copy-dependencies</goal>
+		                        </goals>
+		                        <configuration>
+		                            <outputDirectory>${MULE_HOME}/lib/user</outputDirectory>
+		                            <overWriteReleases>true</overWriteReleases>
+		                            <overWriteSnapshots>true</overWriteSnapshots>
+									<includeGroupIds>milyn,org.mvel,org.freemarker,antlr,xmlbeans</includeGroupIds>
+		                        </configuration>
+		                    </execution>
+		                    <execution>
+		                        <id>copy-parent-dependencies</id>
+		                        <phase>install</phase>
+		                        <goals>
+		                            <goal>copy-dependencies</goal>
+		                        </goals>
+		                        <configuration>
+		                            <outputDirectory>${MULE_HOME}/lib/user</outputDirectory>
+		                            <overWriteReleases>true</overWriteReleases>
+		                            <overWriteSnapshots>true</overWriteSnapshots>
+									<includeArtifactIds>mule-module-smooks-transformer</includeArtifactIds>
 		                        </configuration>
 		                    </execution>
 		                </executions>

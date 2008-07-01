@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" skipped="0" tests="5" time="2.453" failures="0" name="org.milyn.smooks.mule.SmooksTransformerTest">
+  <properties>
+    <property value="Java(TM) 2 Runtime Environment, Standard Edition" name="java.runtime.name"/>
+    <property value="C:\Java\jdk1.5.0_11\jre\bin" name="sun.boot.library.path"/>
+    <property value="1.5.0_11-b03" name="java.vm.version"/>
+    <property value="Sun Microsystems Inc." name="java.vm.vendor"/>
+    <property value="http://java.sun.com/" name="java.vendor.url"/>
+    <property value=";" name="path.separator"/>
+    <property value="Java HotSpot(TM) Client VM" name="java.vm.name"/>
+    <property value="sun.io" name="file.encoding.pkg"/>
+    <property value="DE" name="user.country"/>
+    <property value="SUN_STANDARD" name="sun.java.launcher"/>
+    <property value="Service Pack 1" name="sun.os.patch.level"/>
+    <property value="Java Virtual Machine Specification" name="java.vm.specification.name"/>
+    <property value="F:\Workspace\workspace.mule\mule-module-smooks\mule-module-smooks-transformer" name="user.dir"/>
+    <property value="1.5.0_11-b03" name="java.runtime.version"/>
+    <property value="sun.awt.Win32GraphicsEnvironment" name="java.awt.graphicsenv"/>
+    <property value="F:\Workspace\workspace.mule\mule-module-smooks\mule-module-smooks-transformer" name="basedir"/>
+    <property value="C:\Java\jdk1.5.0_11\jre\lib\endorsed" name="java.endorsed.dirs"/>
+    <property value="x86" name="os.arch"/>
+    <property value="D:\SysTemp\" name="java.io.tmpdir"/>
+    <property value="
+" name="line.separator"/>
+    <property value="Sun Microsystems Inc." name="java.vm.specification.vendor"/>
+    <property value="" name="user.variant"/>
+    <property value="Windows 2003" name="os.name"/>
+    <property value="F:\Application\Maven\maven-2.0.8\bin\\..\bin\m2.conf" name="classworlds.conf"/>
+    <property value="Cp1252" name="sun.jnu.encoding"/>
+    <property value="C:\Java\jdk1.5.0_11\bin;.;C:\WINDOWS\system32;C:\WINDOWS;C:\Java\jdk1.5.0_11/bin;%C:\tools\oracle\ora92\bin;E:\Client\Oracle\Ora92\bin;F:\oracle\ora92\bin;C:\Tools\oracle\orahome1\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;F:/Application/Apple\Library\Executables;F:/Application/Apple\bin;F:\Application\Maven\maven-2.0.8\bin;F:\Application\jad;F:\Application\Ant\apache-ant-1.7.0\\bin;C:\Program Files (x86)\QuickTime Alternative\QTSystem\;C:\Tools\svn-win32-1.4.5\bin;C:\WINDOWS\system32\WindowsPowerShell\v1.0;F:\Application\Groovy\Groovy-1.5.4\bin;C:\Program Files (x86)\GNU\GnuPG\pub;C:\Program Files (x86)\Net-SNMP\bin;F:\Application\mule\mule-1.4.4\bin;C:\Program Files\TortoiseSVN\bin" name="java.library.path"/>
+    <property value="F:\Workspace\workspace.mule\mule-module-smooks\mule-module-smooks-transformer\target\test-classes;F:\Workspace\workspace.mule\mule-module-smooks\mule-module-smooks-transformer\target\classes;F:\Lib\mvn-repository\org\mule\mule-core\1.4.1\mule-core-1.4.1.jar;F:\Lib\mvn-repository\junit\junit\4.4\junit-4.4.jar;F:\Lib\mvn-repository\org\apache\geronimo\specs\geronimo-j2ee-connector_1.5_spec\1.0.1\geronimo-j2ee-connector_1.5_spec-1.0.1.jar;F:\Lib\mvn-repository\org\apache\geronimo\specs\geronimo-jta_1.0.1B_spec\1.0.1\geronimo-jta_1.0.1B_spec-1.0.1.jar;F:\Lib\mvn-repository\commons-collections\commons-collections\3.2\commons-collections-3.2.jar;F:\Lib\mvn-repository\commons-io\commons-io\1.3.1\commons-io-1.3.1.jar;F:\Lib\mvn-repository\xml-apis\xml-apis\1.3.03\xml-apis-1.3.03.jar;F:\Lib\mvn-repository\org\slf4j\slf4j-api\1.3.1\slf4j-api-1.3.1.jar;F:\Lib\mvn-repository\backport-util-concurrent\backport-util-concurrent\3.0\backport-util-concurrent-3.0.jar;F:\Lib\mvn-repository\commons-lang\commons-lang\2.3\commons-lang-2.3.jar;F:\Lib\mvn-repository\log4j\log4j\1.2.14\log4j-1.2.14.jar;F:\Lib\mvn-repository\commons-cli\commons-cli\1.0\commons-cli-1.0.jar;F:\Lib\mvn-repository\org\slf4j\jcl104-over-slf4j\1.3.1\jcl104-over-slf4j-1.3.1.jar;F:\Lib\mvn-repository\xerces\xercesImpl\2.8.1\xercesImpl-2.8.1.jar;F:\Lib\mvn-repository\commons-beanutils\commons-beanutils\1.7.0\commons-beanutils-1.7.0.jar;F:\Lib\mvn-repository\org\slf4j\slf4j-log4j12\1.3.1\slf4j-log4j12-1.3.1.jar;F:\Lib\mvn-repository\commons-pool\commons-pool\1.3\commons-pool-1.3.jar;F:\Lib\mvn-repository\org\safehaus\jug\jug\2.0.0\jug-2.0.0-asl.jar;F:\Lib\mvn-repository\mockobjects\mockobjects-core\0.09\mockobjects-core-0.09.jar;F:\Lib\mvn-repository\commons-discovery\commons-discovery\0.2\commons-discovery-0.2.jar;F:\Lib\mvn-repository\org\mule\modules\mule-module-client\1.4.1\mule-module-client-1.4.1.jar;F:\Lib\mvn-repository\org\mule\modules\mule-module-builders\1.4.1\mule-module-builders-1.4.1.jar;F:\Lib\mvn-repository\commons-digester\commons-digester\1.7\commons-digester-1.7.jar;F:\Lib\mvn-repository\org\apache\geronimo\specs\geronimo-servlet_2.4_spec\1.0.1\geronimo-servlet_2.4_spec-1.0.1.jar;F:\Lib\mvn-repository\org\mule\modules\mule-module-xml\1.4.1\mule-module-xml-1.4.1.jar;F:\Lib\mvn-repository\commons-jxpath\commons-jxpath\1.2\commons-jxpath-1.2.jar;F:\Lib\mvn-repository\org\codehaus\woodstox\wstx-asl\3.2.1\wstx-asl-3.2.1.jar;F:\Lib\mvn-repository\stax\stax-api\1.0.1\stax-api-1.0.1.jar;F:\Lib\mvn-repository\com\thoughtworks\xstream\xstream\1.2.2\xstream-1.2.2.jar;F:\Lib\mvn-repository\xpp3\xpp3_min\1.1.3.4.O\xpp3_min-1.1.3.4.O.jar;F:\Lib\mvn-repository\dom4j\dom4j\1.4\dom4j-1.4.jar;F:\Lib\mvn-repository\org\mule\tests\mule-tests-functional\1.4.1\mule-tests-functional-1.4.1.jar;F:\Lib\mvn-repository\org\mule\transports\mule-transport-vm\1.4.1\mule-transport-vm-1.4.1.jar;F:\Lib\mvn-repository\org\mule\transports\mule-transport-tcp\1.4.1\mule-transport-tcp-1.4.1.jar;F:\Lib\mvn-repository\org\mule\transports\mule-transport-file\1.4.1\mule-transport-file-1.4.1.jar;F:\Lib\mvn-repository\org\mule\transports\mule-transport-stream\1.4.1\mule-transport-stream-1.4.1.jar;F:\Lib\mvn-repository\milyn\milyn-smooks-core\1.0.1\milyn-smooks-core-1.0.1.jar;F:\Lib\mvn-repository\commons-logging\commons-logging\1.1\commons-logging-1.1.jar;F:\Lib\mvn-repository\milyn\milyn-commons\1.0\milyn-commons-1.0.jar;F:\Lib\mvn-repository\hsqldb\hsqldb\1.8.0.7\hsqldb-1.8.0.7.jar;F:\Lib\mvn-repository\org\mvel\mvel\1.3.3-java1.5\mvel-1.3.3-java1.5.jar;F:\Lib\mvn-repository\dtdparser\dtdparser\1.21\dtdparser-1.21.jar;F:\Lib\mvn-repository\org\freemarker\freemarker\2.3.9\freemarker-2.3.9.jar;" name="surefire.test.class.path"/>
+    <property value="Java Platform API Specification" name="java.specification.name"/>
+    <property value="49.0" name="java.class.version"/>
+    <property value="HotSpot Client Compiler" name="sun.management.compiler"/>
+    <property value="5.2" name="os.version"/>
+    <property value="C:\Documents and Settings\maurice_zeijen" name="user.home"/>
+    <property value="Europe/Berlin" name="user.timezone"/>
+    <property value="sun.awt.windows.WPrinterJob" name="java.awt.printerjob"/>
+    <property value="1.5" name="java.specification.version"/>
+    <property value="Cp1252" name="file.encoding"/>
+    <property value="maurice_zeijen" name="user.name"/>
+    <property value="F:\Application\Maven\maven-2.0.8\bin\\..\boot\classworlds-1.1.jar" name="java.class.path"/>
+    <property value="1.0" name="java.vm.specification.version"/>
+    <property value="32" name="sun.arch.data.model"/>
+    <property value="C:\Java\jdk1.5.0_11\jre" name="java.home"/>
+    <property value="Sun Microsystems Inc." name="java.specification.vendor"/>
+    <property value="de" name="user.language"/>
+    <property value="sun.awt.windows.WToolkit" name="awt.toolkit"/>
+    <property value="mixed mode" name="java.vm.info"/>
+    <property value="1.5.0_11" name="java.version"/>
+    <property value="C:\Java\jdk1.5.0_11\jre\lib\ext" name="java.ext.dirs"/>
+    <property value="C:\Java\jdk1.5.0_11\jre\lib\rt.jar;C:\Java\jdk1.5.0_11\jre\lib\i18n.jar;C:\Java\jdk1.5.0_11\jre\lib\sunrsasign.jar;C:\Java\jdk1.5.0_11\jre\lib\jsse.jar;C:\Java\jdk1.5.0_11\jre\lib\jce.jar;C:\Java\jdk1.5.0_11\jre\lib\charsets.jar;C:\Java\jdk1.5.0_11\jre\classes" name="sun.boot.class.path"/>
+    <property value="Sun Microsystems Inc." name="java.vendor"/>
+    <property value="F:\Application\Maven\maven-2.0.8\bin\\.." name="maven.home"/>
+    <property value="F:\Lib\mvn-repository" name="localRepository"/>
+    <property value="\" name="file.separator"/>
+    <property value="http://java.sun.com/cgi-bin/bugreport.cgi" name="java.vendor.url.bug"/>
+    <property value="little" name="sun.cpu.endian"/>
+    <property value="UnicodeLittle" name="sun.io.unicode.encoding"/>
+    <property value="windows" name="sun.desktop"/>
+    <property value="pentium_pro+mmx pentium_pro pentium+mmx pentium i486 i386 i86" name="sun.cpu.isalist"/>
+  </properties>
+  <testcase classname="org.milyn.smooks.mule.SmooksTransformerTest" time="1.016" name="initWithoutSmooksConfigFile"/>
+  <testcase classname="org.milyn.smooks.mule.SmooksTransformerTest" time="0.219" name="illegalResultType"/>
+  <testcase classname="org.milyn.smooks.mule.SmooksTransformerTest" time="0.344" name="javaResultBeanId"/>
+  <testcase classname="org.milyn.smooks.mule.SmooksTransformerTest" time="0.235" name="doTransformation"/>
+  <testcase classname="org.milyn.smooks.mule.SmooksTransformerTest" time="0.609" name="doTransformationWithSmooksReportGeneration"/>
+</testsuite>

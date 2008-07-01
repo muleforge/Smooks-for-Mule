@@ -16,7 +16,7 @@
     <transformers>
         <transformer name="EDIOrderToJavaOrder" className="org.milyn.smooks.mule.SmooksTransformer">
             <properties>
-                <property name="smooksConfig" value="/transforms/smooks-edi2java-config.xml"/>
+                <property name="smooksConfig" value="/transforms/smooks-edi-to-java-config.xml"/>
                 <property name="resultType" value="JAVA"/>
                 <property name="javaResultBeanId" value="order"/>
             </properties>

@@ -5,16 +5,17 @@
 	<parent>
 		<artifactId>mule-module-smooks</artifactId>
 		<groupId>org.mule.modules</groupId>
-		<version>1.0</version>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule-module-smooks-transformer</artifactId>
 	<name>Smooks Transformer Mule module</name>
-	<version>1.0</version>
+	<version>1.0-SNAPSHOT</version>
 	<description />
 
 	<dependencies>
+
 		<!-- Mule Dependencies -->
 		<dependency>
 			<groupId>org.mule</groupId>
@@ -29,6 +30,7 @@
 			<artifactId>mule-tests-functional</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<!-- Mule Transport Dependencies -->
 		<dependency>
 			<groupId>org.mule.transports</groupId>
@@ -50,7 +52,7 @@
 		<!-- Smooks Dependencies -->
 		<dependency>
 			<groupId>milyn</groupId>
-			<artifactId>milyn-smooks-templating</artifactId>
+			<artifactId>milyn-smooks-core</artifactId>
 		</dependency>
 
 		<!-- log4 j -->

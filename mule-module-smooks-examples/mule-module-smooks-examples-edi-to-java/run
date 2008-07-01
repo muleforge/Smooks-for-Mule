@@ -19,7 +19,5 @@ fi
 MULE_LIB=./conf
 export MULE_LIB
 
-cp target/mule-smooks-example-edi2java-1.0.jar "$MULE_HOME/lib/user"
-
-exec "$MULE_BASE/bin/mule" -config ./conf/mule-edi2java-config.xml
+exec "$MULE_BASE/bin/mule" -config ./conf/mule-edi-to-java-config.xml
 

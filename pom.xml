@@ -8,10 +8,10 @@
 	<name>Smooks Mule module</name>
 	<description>Smooks Transformer for Mule.</description>
 	<packaging>pom</packaging>
-	<version>1.0</version>
+	<version>1.0-SNAPSHOT</version>
 
 	<modules>
-		<module>mule-module-smooks-core</module>
+		<module>mule-module-smooks-transformer</module>
 		<module>mule-module-smooks-examples</module>
 	</modules>
 
@@ -58,7 +58,7 @@
 		</snapshotRepository>
 		<site>
 			<id>muleforge.webdav.sites</id>
-			<url>dav:https://dav.muleforge.org/${domainName}/</url>
+			<url>dav:https://dav.muleforge.org/${domainName}/maven</url>
 		</site>
 	</distributionManagement>
 
@@ -195,6 +195,13 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- Mule Smooks Module Dependencies  -->
+			<dependency>
+				<groupId>org.mule.modules</groupId>
+				<artifactId>mule-module-smooks-transformer</artifactId>
+				<version>${version}</version>
+			</dependency>
+
 			<!-- Mule Dependencies -->
 			<dependency>
 				<groupId>org.mule</groupId>
@@ -235,10 +242,17 @@
 			</dependency>
 
 			<!-- Smooks Dependencies -->
+
 			<dependency>
 				<groupId>milyn</groupId>
-				<artifactId>milyn-smooks-templating</artifactId>
-				<version>1.0</version>
+				<artifactId>milyn-smooks-core</artifactId>
+				<version>1.0.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>milyn</groupId>
+				<artifactId>milyn-smooks-edi</artifactId>
+				<version>1.0.1</version>
 			</dependency>
 
 			<!-- log4 j -->
