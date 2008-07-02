@@ -9,13 +9,13 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
-	<artifactId>mule-module-smooks-examples</artifactId>
+	<artifactId>mule1-module-smooks-examples</artifactId>
 	<name>Smooks Transformer Examples</name>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>Parent POM for all examples</description>
 
 	<modules>
-		<module>mule-module-smooks-examples-edi-to-java</module>
+		<module>mule1-module-smooks-examples-edi-to-java</module>
 	</modules>
 </project>

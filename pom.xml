@@ -11,7 +11,7 @@
 	<version>1.0-SNAPSHOT</version>
 
 	<modules>
-		<module>mule-module-smooks-transformer</module>
+		<module>mule1-module-smooks-transformer</module>
 		<module>mule-module-smooks-examples</module>
 	</modules>
 
@@ -196,9 +196,16 @@
 	<dependencyManagement>
 		<dependencies>
 			<!-- Mule Smooks Module Dependencies  -->
+
 			<dependency>
 				<groupId>org.mule.modules</groupId>
-				<artifactId>mule-module-smooks-transformer</artifactId>
+				<artifactId>mule1-module-smooks-transformer</artifactId>
+				<version>${version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.mule.modules</groupId>
+				<artifactId>mule2-module-smooks-transformer</artifactId>
 				<version>${version}</version>
 			</dependency>
 

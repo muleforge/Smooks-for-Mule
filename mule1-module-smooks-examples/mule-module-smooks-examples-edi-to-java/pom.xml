@@ -3,13 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>mule-module-smooks-examples</artifactId>
+		<artifactId>mule1-module-smooks-examples</artifactId>
 		<groupId>org.mule.modules</groupId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>>
 	<groupId>org.mule.modules</groupId>
-	<artifactId>mule-module-smooks-examples-edi-to-java</artifactId>
+	<artifactId>mule1-module-smooks-examples-edi-to-java</artifactId>
 	<name>Smooks EDI to Java Example</name>
 	<version>1.0-SNAPSHOT</version>
 	<description>
@@ -37,7 +37,7 @@
 
 		<dependency>
 			<groupId>org.mule.modules</groupId>
-			<artifactId>mule-module-smooks-transformer</artifactId>
+			<artifactId>mule1-module-smooks-transformer</artifactId>
 		</dependency>
 
 		<!-- The Smooks dependencies -->
