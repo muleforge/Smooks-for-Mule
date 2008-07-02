@@ -9,10 +9,10 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
-	<artifactId>mule1-module-smooks</artifactId>
-	<name>Smooks Transformer for Mule 1.x</name>
+	<artifactId>mule2-module-smooks</artifactId>
+	<name>Smooks Transformer for Mule 2.x</name>
 	<packaging>pom</packaging>
-	<description>Parent Pom Smooks Transformer for Mule 1.x</description>
+	<description>Parent Pom Smooks Transformer for Mule 2.x</description>
 
 	<modules>
 		<module>mule1-module-smooks-examples</module>
@@ -20,7 +20,7 @@
 	</modules>
 
 	<properties>
-		<muleVersion>1.4.4</muleVersion>
+		<muleVersion>2.0.1</muleVersion>
 	</properties>
 
 	<dependencyManagement>
@@ -61,11 +61,12 @@
 				<artifactId>mule-transport-file</artifactId>
 				<version>${muleVersion}</version>
 			</dependency>
+			<!--
 			<dependency>
 				<groupId>org.mule.transports</groupId>
 				<artifactId>mule-transport-stream</artifactId>
 				<version>${muleVersion}</version>
-			</dependency>
+			</dependency> -->
 
 		</dependencies>
 

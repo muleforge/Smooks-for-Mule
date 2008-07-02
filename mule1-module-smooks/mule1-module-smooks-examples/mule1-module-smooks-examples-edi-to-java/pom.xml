@@ -121,7 +121,7 @@
 		                            <outputDirectory>${MULE_HOME}/lib/user</outputDirectory>
 		                            <overWriteReleases>true</overWriteReleases>
 		                            <overWriteSnapshots>true</overWriteSnapshots>
-									<includeArtifactIds>mule-module-smooks-transformer</includeArtifactIds>
+									<includeArtifactIds>mule1-module-smooks-transformer</includeArtifactIds>
 		                        </configuration>
 		                    </execution>
 		                </executions>
