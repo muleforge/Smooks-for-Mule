@@ -15,7 +15,6 @@
 	</modules>
 
 	<properties>
-		<muleVersion>1.4.1</muleVersion>
 		<shortId>SMOOKS</shortId>
 		<domainName>smooks</domainName>
 	</properties>
@@ -206,45 +205,6 @@
 				<groupId>org.mule.modules</groupId>
 				<artifactId>mule2-module-smooks-transformer</artifactId>
 				<version>${version}</version>
-			</dependency>
-
-			<!-- Mule Dependencies -->
-			<dependency>
-				<groupId>org.mule</groupId>
-				<artifactId>mule-core</artifactId>
-				<version>${muleVersion}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mule.modules</groupId>
-				<artifactId>mule-module-client</artifactId>
-				<version>${muleVersion}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mule.tests</groupId>
-				<artifactId>mule-tests-functional</artifactId>
-				<version>${muleVersion}</version>
-				<scope>test</scope>
-			</dependency>
-			<!-- Mule Transport Dependencies -->
-			<dependency>
-				<groupId>org.mule.transports</groupId>
-				<artifactId>mule-transport-vm</artifactId>
-				<version>${muleVersion}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mule.transports</groupId>
-				<artifactId>mule-transport-tcp</artifactId>
-				<version>${muleVersion}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mule.transports</groupId>
-				<artifactId>mule-transport-file</artifactId>
-				<version>${muleVersion}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mule.transports</groupId>
-				<artifactId>mule-transport-stream</artifactId>
-				<version>${muleVersion}</version>
 			</dependency>
 
 			<!-- Smooks Dependencies -->

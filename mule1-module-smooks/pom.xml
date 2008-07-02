@@ -18,4 +18,57 @@
 		<module>mule1-module-smooks-examples</module>
 		<module>mule1-module-smooks-transformer</module>
 	</modules>
+
+	<properties>
+		<muleVersion>1.4.1</muleVersion>
+	</properties>
+
+	<dependencyManagement>
+
+		<dependencies>
+
+			<!-- Mule Dependencies -->
+			<dependency>
+				<groupId>org.mule</groupId>
+				<artifactId>mule-core</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.modules</groupId>
+				<artifactId>mule-module-client</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.tests</groupId>
+				<artifactId>mule-tests-functional</artifactId>
+				<version>${muleVersion}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<!-- Mule Transport Dependencies -->
+			<dependency>
+				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-vm</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-tcp</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-file</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-stream</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+
+		</dependencies>
+
+	</dependencyManagement>
+
 </project>
