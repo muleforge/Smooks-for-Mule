@@ -11,8 +11,7 @@
 	<version>1.0-SNAPSHOT</version>
 
 	<modules>
-		<module>mule1-module-smooks-transformer</module>
-		<module>mule-module-smooks-examples</module>
+		<module>mule1-module-smooks</module>
 	</modules>
 
 	<properties>

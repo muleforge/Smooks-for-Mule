@@ -11,7 +11,6 @@
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule1-module-smooks-examples-edi-to-java</artifactId>
 	<name>Smooks EDI to Java Example</name>
-	<version>1.0-SNAPSHOT</version>
 	<description>
 		Is a simple example of how Smooks can be used as a transformer.
 	</description>
