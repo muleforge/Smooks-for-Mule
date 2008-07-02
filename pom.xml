@@ -12,6 +12,7 @@
 
 	<modules>
 		<module>mule1-module-smooks</module>
+		<module>mule2-module-smooks</module>
 	</modules>
 
 	<properties>
@@ -23,6 +24,14 @@
 		<system>Jira</system>
 		<url>http://mule.mulesource.org/jira/browse/${shortId}</url>
 	</issueManagement>
+
+	<developers>
+		<developer>
+			<id>maurice_zeijen</id>
+			<name>Maurice Zeijen</name>
+			<email>maurice@zeijen.net</email>
+		</developer>
+	</developers>
 
 	<scm>
 		<connection>

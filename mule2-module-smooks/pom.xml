@@ -14,14 +14,13 @@
 	<packaging>pom</packaging>
 	<description>Parent Pom Smooks Transformer for Mule 2.x</description>
 
-	<modules>
-		<module>mule1-module-smooks-examples</module>
-		<module>mule1-module-smooks-transformer</module>
-	</modules>
-
 	<properties>
 		<muleVersion>2.0.1</muleVersion>
 	</properties>
+	<modules>
+		<module>mule2-module-smooks-transformer</module>
+		<module>mule2-module-smooks-examples</module>
+	</modules>
 
 	<dependencyManagement>
 
