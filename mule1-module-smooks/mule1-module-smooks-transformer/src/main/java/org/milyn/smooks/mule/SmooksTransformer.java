@@ -123,6 +123,7 @@ public class SmooksTransformer extends AbstractEventAwareTransformer
 
     //	public
 	
+	@Override
 	public void initialise() throws InitialisationException
 	{
 		//	determine the ResultType
@@ -144,17 +145,18 @@ public class SmooksTransformer extends AbstractEventAwareTransformer
         }
 	}
 
-	public String getSmooksConfig()
+	public String getSmooksConfigFile()
 	{
 		return smooksConfigFile;
 	}
 	
-	public void setSmooksConfig( final String smooksConfigFile )
+	public void setSmooksConfigFile( final String smooksConfigFile )
 	{
 		this.smooksConfigFile = smooksConfigFile;
 	}
 	
-    public Object clone() throws CloneNotSupportedException
+    @Override
+	public Object clone() throws CloneNotSupportedException
     {
     	return this;
     }

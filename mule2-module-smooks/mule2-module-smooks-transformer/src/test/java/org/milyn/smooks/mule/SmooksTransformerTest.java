@@ -1,22 +1,18 @@
 package org.milyn.smooks.mule;
 
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.io.IOException;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.milyn.io.StreamUtils;
-import org.mule.impl.RequestContext;
-import org.mule.tck.MuleTestUtils;
-import org.mule.umo.UMOEvent;
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.lifecycle.InitialisationException;
-import org.mule.umo.transformer.TransformerException;
+import org.mule.DefaultMuleMessage;
+import org.mule.api.MuleEventContext;
+import org.mule.api.MuleMessage;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transformer.TransformerException;
+import org.mule.tck.AbstractMuleTestCase;
+
 
 /**
  * Unit test for {@link SmooksTransformer}
@@ -24,72 +20,85 @@ import org.mule.umo.transformer.TransformerException;
  * The test in the class intentionally only test the configuration and <br>
  * execution of {@link SmooksTransformer} and not the actual tranformations<br>
  * that Smooks performs as these are covered in the Smooks project.
- * 
- * @author <a href="mailto:daniel.bevenius@gmail.com">Daniel Bevenius</a>				
+ *
+ * @author <a href="mailto:daniel.bevenius@gmail.com">Daniel Bevenius</a>
  *
  */
-public class SmooksTransformerTest 
+public class SmooksTransformerTest extends AbstractMuleTestCase
 {
 	private SmooksTransformer smooksTransformer;
 
-	private UMOEventContext eventContext;
-	
-	private final String smooksConfigFile = "smooks-config.xml";
-	
-	@Test ( expected = InitialisationException.class )
-	public void initWithoutSmooksConfigFile() throws TransformerException, InitialisationException
+	private MuleEventContext eventContext;
+
+	private final String smooksConfigFile = "/org/milyn/smooks/mule/smooks-config.xml";
+
+	public void test_initWithoutSmooksConfigFile() throws InitialisationException
 	{
-		smooksTransformer.setSmooksConfig( null );
-		smooksTransformer.initialise();
+		boolean thrown = false;
+		try {
+			smooksTransformer.setSmooksConfigFile( null );
+			smooksTransformer.initialise();
+		} catch (InitialisationException e) {
+			thrown = true;
+		}
+		assertTrue("expected InitialisationException to be thrown", thrown);
 	}
-	
-	@Test ( expected = InitialisationException.class )
-	public void illegalResultType() throws TransformerException, InitialisationException
+
+	public void test_illegalResultType()
 	{
-		smooksTransformer.setSmooksConfig( smooksConfigFile );
-		smooksTransformer.setResultType( "badResultType" );
-		smooksTransformer.initialise();
+		boolean thrown = false;
+		try {
+			smooksTransformer.setSmooksConfigFile( smooksConfigFile );
+			smooksTransformer.setResultType( "badResultType" );
+			smooksTransformer.initialise();
+		} catch (InitialisationException e) {
+			thrown = true;
+		}
+		assertTrue("expected InitialisationException to be thrown", thrown);
 	}
-	
-	@Test 
-	public void javaResultBeanId() throws TransformerException
+
+	public void test_javaResultBeanId()
 	{
-		smooksTransformer.setSmooksConfig( smooksConfigFile );
+		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
 		smooksTransformer.setResultType( "JAVA" );
 		smooksTransformer.setJavaResultBeanId( "beanId" );
 		try
 		{
 			smooksTransformer.initialise();
-		} 
+		}
 		catch (InitialisationException e)
 		{
 			fail( "Should not have thrown A InitializationException");
 		}
 	}
-	
-	@Test
-	public void doTransformation() throws TransformerException
+
+
+	public void test_doTransformation() throws TransformerException
 	{
-		smooksTransformer.setSmooksConfig( smooksConfigFile );
+
+		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
 		smooksTransformer.setExcludeNonSerializables( false );
 		byte[] inputMessage = readInputMessage();
-		Object transformedObject = smooksTransformer.transform( inputMessage, "UTF-8", eventContext );
+
+		//Is this correct?
+		MuleMessage message = new DefaultMuleMessage(inputMessage);
+		Object transformedObject = smooksTransformer.transform( message );
 		assertNotNull ( transformedObject );
-		Object attributes = eventContext.getMessage().getProperty( SmooksTransformer.EXECUTION_CONTEXT_ATTR_MAP_KEY );
+
+		Object attributes = message.getProperty( SmooksTransformer.EXECUTION_CONTEXT_ATTR_MAP_KEY );
 		assertNotNull( attributes );
 	}
-	
-	@Test
-	public void doTransformationWithSmooksReportGeneration() throws TransformerException, InitialisationException
+
+	public void test_doTransformationWithSmooksReportGeneration() throws InitialisationException, TransformerException
 	{
 		File reportFile = new File ( "target" + File.separator + "smooks-report.html" );
-		smooksTransformer.setSmooksConfig( smooksConfigFile );
+		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
 		smooksTransformer.setReportPath( reportFile.getAbsolutePath() );
 		smooksTransformer.initialise();
 		byte[] inputMessage = readInputMessage();
 		try
 		{
-    		Object transformedObject = smooksTransformer.transform( inputMessage, "UTF-8", eventContext );
+    		Object transformedObject = smooksTransformer.transform( inputMessage );
     		assertNotNull ( transformedObject );
 			assertTrue( reportFile.exists() );
 		}
@@ -101,35 +110,28 @@ public class SmooksTransformerTest
 			}
 		}
 	}
-	
+
+	@Override
 	@Before
-	public void setUp() throws Exception
+	public void doSetUp() throws Exception
 	{
     	smooksTransformer = new SmooksTransformer();
-		smooksTransformer.setSmooksConfig( smooksConfigFile );
+		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
 		smooksTransformer.initialise();
-		RequestContext.setEvent( getTestEvent ( "Test!" ) );	
-		eventContext = RequestContext.getEventContext();
 	}
-	
-	//	private 
-	
-	private static byte[] readInputMessage() 
+
+	//	private
+
+	private static byte[] readInputMessage()
 	{
-        try 
+        try
         {
-            return StreamUtils.readStream( SmooksTransformerTest.class.getResourceAsStream( "/input-message.xml"));
-        } 
-        catch (IOException e) 
+            return StreamUtils.readStream( SmooksTransformerTest.class.getResourceAsStream( "/org/milyn/smooks/mule/input-message.xml"));
+        }
+        catch (IOException e)
         {
         	e.printStackTrace();
             return "<no-message/>".getBytes();
         }
     }
-	
-	private static UMOEvent getTestEvent(Object data) throws Exception
-    {
-        return MuleTestUtils.getTestEvent(data);
-    }
-	
 }
