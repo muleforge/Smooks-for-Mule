@@ -30,7 +30,7 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 
 	private MuleEventContext eventContext;
 
-	private final String smooksConfigFile = "/org/milyn/smooks/mule/smooks-config.xml";
+	private final String smooksConfigFile = "/smooks-config.xml";
 
 	public void test_initWithoutSmooksConfigFile() throws InitialisationException
 	{
@@ -126,7 +126,7 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 	{
         try
         {
-            return StreamUtils.readStream( SmooksTransformerTest.class.getResourceAsStream( "/org/milyn/smooks/mule/input-message.xml"));
+            return StreamUtils.readStream( SmooksTransformerTest.class.getResourceAsStream( "/input-message.xml"));
         }
         catch (IOException e)
         {

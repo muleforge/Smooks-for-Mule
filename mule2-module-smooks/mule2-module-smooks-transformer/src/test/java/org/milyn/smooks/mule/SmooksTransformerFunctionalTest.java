@@ -22,7 +22,7 @@ public class SmooksTransformerFunctionalTest extends FunctionalTestCase
 {
 	@Override
 	protected String getConfigResources() {
-		return "org/milyn/smooks/mule/mule-config.xml";
+		return "mule-config.xml";
 	}
 
 	@Test

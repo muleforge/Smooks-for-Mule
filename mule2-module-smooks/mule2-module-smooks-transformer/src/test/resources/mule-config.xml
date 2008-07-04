@@ -17,7 +17,7 @@
     </description>
 
 	<custom-transformer name="smooks" class="org.milyn.smooks.mule.SmooksTransformer">
-		<spring:property name="smooksConfigFile" value="org/milyn/smooks/mule/smooks-config.xml" />
+		<spring:property name="smooksConfigFile" value="/smooks-config.xml" />
 		<spring:property name="reportPath" value="target/report.html"></spring:property>
 	</custom-transformer>
 
