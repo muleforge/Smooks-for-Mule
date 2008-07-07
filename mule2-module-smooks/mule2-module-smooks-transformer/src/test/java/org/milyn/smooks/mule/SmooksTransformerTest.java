@@ -21,7 +21,7 @@ import org.mule.tck.AbstractMuleTestCase;
  * execution of {@link SmooksTransformer} and not the actual tranformations<br>
  * that Smooks performs as these are covered in the Smooks project.
  *
- * @author <a href="mailto:daniel.bevenius@gmail.com">Daniel Bevenius</a>
+ * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  *
  */
 public class SmooksTransformerTest extends AbstractMuleTestCase
@@ -32,7 +32,7 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 
 	private final String smooksConfigFile = "/smooks-config.xml";
 
-	public void test_initWithoutSmooksConfigFile() throws InitialisationException
+	public void testInitWithoutSmooksConfigFile() throws InitialisationException
 	{
 		boolean thrown = false;
 		try {
@@ -44,7 +44,7 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 		assertTrue("expected InitialisationException to be thrown", thrown);
 	}
 
-	public void test_illegalResultType()
+	public void testIllegalResultType()
 	{
 		boolean thrown = false;
 		try {
@@ -57,7 +57,7 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 		assertTrue("expected InitialisationException to be thrown", thrown);
 	}
 
-	public void test_javaResultBeanId()
+	public void testJavaResultBeanId()
 	{
 		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
 		smooksTransformer.setResultType( "JAVA" );
@@ -73,7 +73,7 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 	}
 
 
-	public void test_doTransformation() throws TransformerException
+	public void testDoTransformation() throws TransformerException
 	{
 
 		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
@@ -89,7 +89,7 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 		assertNotNull( attributes );
 	}
 
-	public void test_doTransformationWithSmooksReportGeneration() throws InitialisationException, TransformerException
+	public void testDoTransformationWithSmooksReportGeneration() throws InitialisationException, TransformerException
 	{
 		File reportFile = new File ( "target" + File.separator + "smooks-report.html" );
 		smooksTransformer.setSmooksConfigFile( smooksConfigFile );

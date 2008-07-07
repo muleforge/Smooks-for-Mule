@@ -24,12 +24,12 @@
     </transformers>
 
     <model name="SmooksExample">
-        <mule-descriptor name="SmooksExample" implementation="example.Main">
+        <mule-descriptor name="SmooksExample" implementation="org.mule.components.simple.BridgeComponent">
 			 <inbound-router>
                 <endpoint address="stream://System.in" transformers="SmooksTransformer"/>
 
                 <!-- for unit test -->
-                <endpoint address="vm://inputMessage" transformers="SmooksTransformer"/>
+                <endpoint address="vm://messageInput" transformers="SmooksTransformer"/>
             </inbound-router>
 
             <outbound-router>

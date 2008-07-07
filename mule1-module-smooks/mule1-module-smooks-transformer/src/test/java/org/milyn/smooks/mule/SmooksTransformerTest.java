@@ -1,19 +1,12 @@
 package org.milyn.smooks.mule;
 
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.milyn.io.StreamUtils;
 import org.mule.impl.RequestContext;
-import org.mule.tck.MuleTestUtils;
-import org.mule.umo.UMOEvent;
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOEventContext;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.transformer.TransformerException;
@@ -28,7 +21,7 @@ import org.mule.umo.transformer.TransformerException;
  * @author <a href="mailto:daniel.bevenius@gmail.com">Daniel Bevenius</a>
  *
  */
-public class SmooksTransformerTest
+public class SmooksTransformerTest extends AbstractMuleTestCase
 {
 	private SmooksTransformer smooksTransformer;
 
@@ -36,23 +29,32 @@ public class SmooksTransformerTest
 
 	private final String smooksConfigFile = "/smooks-config.xml";
 
-	@Test ( expected = InitialisationException.class )
-	public void initWithoutSmooksConfigFile() throws TransformerException, InitialisationException
+	public void testInitWithoutSmooksConfigFile() throws InitialisationException
 	{
-		smooksTransformer.setSmooksConfigFile( null );
-		smooksTransformer.initialise();
+		boolean thrown = false;
+		try {
+			smooksTransformer.setSmooksConfigFile( null );
+			smooksTransformer.initialise();
+		} catch (InitialisationException e) {
+			thrown = true;
+		}
+		assertTrue("expected InitialisationException to be thrown", thrown);
 	}
 
-	@Test ( expected = InitialisationException.class )
-	public void illegalResultType() throws TransformerException, InitialisationException
+	public void testIllegalResultType()
 	{
-		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
-		smooksTransformer.setResultType( "badResultType" );
-		smooksTransformer.initialise();
+		boolean thrown = false;
+		try {
+			smooksTransformer.setSmooksConfigFile( smooksConfigFile );
+			smooksTransformer.setResultType( "badResultType" );
+			smooksTransformer.initialise();
+		} catch (InitialisationException e) {
+			thrown = true;
+		}
+		assertTrue("expected InitialisationException to be thrown", thrown);
 	}
 
-	@Test
-	public void javaResultBeanId() throws TransformerException
+	public void testJavaResultBeanId()
 	{
 		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
 		smooksTransformer.setResultType( "JAVA" );
@@ -67,8 +69,8 @@ public class SmooksTransformerTest
 		}
 	}
 
-	@Test
-	public void doTransformation() throws TransformerException
+
+	public void testDoTransformation() throws TransformerException
 	{
 		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
 		smooksTransformer.setExcludeNonSerializables( false );
@@ -79,8 +81,8 @@ public class SmooksTransformerTest
 		assertNotNull( attributes );
 	}
 
-	@Test
-	public void doTransformationWithSmooksReportGeneration() throws TransformerException, InitialisationException
+
+	public void testDoTransformationWithSmooksReportGeneration() throws TransformerException, InitialisationException
 	{
 		File reportFile = new File ( "target" + File.separator + "smooks-report.html" );
 		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
@@ -102,8 +104,8 @@ public class SmooksTransformerTest
 		}
 	}
 
-	@Before
-	public void setUp() throws Exception
+	@Override
+	protected void doSetUp() throws Exception
 	{
     	smooksTransformer = new SmooksTransformer();
 		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
@@ -125,11 +127,6 @@ public class SmooksTransformerTest
         	e.printStackTrace();
             return "<no-message/>".getBytes();
         }
-    }
-
-	private static UMOEvent getTestEvent(Object data) throws Exception
-    {
-        return MuleTestUtils.getTestEvent(data);
     }
 
 }

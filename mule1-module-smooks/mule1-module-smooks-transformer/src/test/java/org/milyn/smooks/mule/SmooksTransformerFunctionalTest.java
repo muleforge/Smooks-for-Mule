@@ -2,11 +2,10 @@ package org.milyn.smooks.mule;
 
 import java.io.InputStream;
 
-import org.junit.Test;
-import org.mule.DefaultMuleMessage;
-import org.mule.api.MuleMessage;
-import org.mule.module.client.MuleClient;
+import org.mule.extras.client.MuleClient;
+import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.umo.UMOMessage;
 
 /**
  * Unit test for {@link SmooksTransformer} to see if it works
@@ -22,17 +21,16 @@ public class SmooksTransformerFunctionalTest extends FunctionalTestCase
 		return "mule-config.xml";
 	}
 
-	@Test
 	public void testSmooks() throws Exception
     {
 		InputStream in = getClass().getResourceAsStream("/input-message.xml");
 
         MuleClient client = new MuleClient();
-        MuleMessage reply = client.send("vm://messageInput", new DefaultMuleMessage(in));
+        UMOMessage reply = client.send("vm://messageInput", new MuleMessage(in));
 
         assertNotNull(reply);
         assertNotNull(reply.getPayload());
-        assertFalse("The payload is a NullPayload", "<org.mule.transport.NullPayload></org.mule.transport.NullPayload>".equals(reply.getPayload()));
+        assertFalse("The payload is a NullPayload", "<org.mule.providers.NullPayload></org.mule.providers.NullPayload>".equals(reply.getPayload()));
 
     }
 

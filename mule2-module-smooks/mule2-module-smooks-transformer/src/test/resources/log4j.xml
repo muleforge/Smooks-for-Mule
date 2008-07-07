@@ -12,15 +12,15 @@
 	</appender>
 
 	<logger name="org.milyn">
-		<level value="ERROR" />
+		<level value="WARN" />
 	</logger>
 
 	<logger name="org.milyn.smooks.mule">
-		<level value="DEBUG" />
+		<level value="INFO" />
 	</logger>
 
 	<logger name="org.mule">
-		<level value="INFO" />
+		<level value="WARN" />
 	</logger>
 
 	<root>

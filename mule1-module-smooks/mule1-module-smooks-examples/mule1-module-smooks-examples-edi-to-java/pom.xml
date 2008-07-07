@@ -31,6 +31,40 @@
     </build>
 
 	<dependencies>
+		<!-- Mule Dependencies -->
+
+		<dependency>
+			<groupId>org.mule.tests</groupId>
+			<artifactId>mule-tests-functional</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-module-client</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Mule Transport Dependencies -->
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-vm</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-tcp</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-file</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-stream</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- The Smooks Transformer -->
 
@@ -46,16 +80,9 @@
 			<artifactId>milyn-smooks-edi</artifactId>
 		</dependency>
 
-		<!-- Mule Transport Dependencies -->
-
 		<dependency>
-			<groupId>org.mule.transports</groupId>
-			<artifactId>mule-transport-file</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mule.transports</groupId>
-			<artifactId>mule-transport-stream</artifactId>
+			<groupId>milyn</groupId>
+			<artifactId>milyn-smooks-javabean</artifactId>
 		</dependency>
 
 		<!-- Better testing of XML -->

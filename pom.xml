@@ -236,6 +236,19 @@
 				<version>1.0.1</version>
 			</dependency>
 
+			<dependency>
+				<groupId>milyn</groupId>
+				<artifactId>milyn-smooks-javabean</artifactId>
+				<version>1.0.1</version>
+			</dependency>
+
+			<!-- Defining conflicting dependencies -->
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.3</version>
+			</dependency>
+
 			<!-- log4 j -->
 			<dependency>
 				<groupId>log4j</groupId>

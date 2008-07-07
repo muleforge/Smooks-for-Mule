@@ -16,9 +16,10 @@
     <transformers>
         <transformer name="EDIOrderToJavaOrder" className="org.milyn.smooks.mule.SmooksTransformer">
             <properties>
-                <property name="smooksConfig" value="/transforms/smooks-edi-to-java-config.xml"/>
+                <property name="smooksConfigFile" value="/transforms/smooks-edi-to-java-config.xml"/>
                 <property name="resultType" value="JAVA"/>
                 <property name="javaResultBeanId" value="order"/>
+                <property name="reportPath" value="target/smooks-report/report.html" />
             </properties>
         </transformer>
     </transformers>
@@ -29,6 +30,9 @@
                 <endpoint address="file://./data/in" transformers="EDIOrderToJavaOrder">
                     <filter pattern="*.edi" className="org.mule.providers.file.filters.FilenameWildcardFilter"/>
                 </endpoint>
+
+				<!-- For unit-tests -->
+                <endpoint address="vm://EDIOrderToJavaOrder" transformers="EDIOrderToJavaOrder" />
             </inbound-router>
 
             <outbound-router>
