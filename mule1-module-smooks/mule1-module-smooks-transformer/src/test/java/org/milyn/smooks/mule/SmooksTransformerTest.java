@@ -72,13 +72,36 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 
 	public void testDoTransformation() throws TransformerException
 	{
+		testDoTransformation(null, null);
+		testDoTransformation(false, null);
+		testDoTransformation(true, null);
+		testDoTransformation(true, "executionContextSmooks");
+	}
+
+	private void testDoTransformation(Boolean setExecuctionContextAsMessageKey, String executionContextMessagePropertyKey) throws TransformerException
+	{
 		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
 		smooksTransformer.setExcludeNonSerializables( false );
+		if(setExecuctionContextAsMessageKey != null) {
+			smooksTransformer.setExecutionContextAsMessageProperty(setExecuctionContextAsMessageKey);
+		}
+		if(executionContextMessagePropertyKey != null) {
+			smooksTransformer.setExecutionContextMessagePropertyKey(executionContextMessagePropertyKey);
+		} else {
+			executionContextMessagePropertyKey = SmooksTransformer.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT;
+		}
+
 		byte[] inputMessage = readInputMessage();
 		Object transformedObject = smooksTransformer.transform( inputMessage, "UTF-8", eventContext );
 		assertNotNull ( transformedObject );
-		Object attributes = eventContext.getMessage().getProperty( SmooksTransformer.EXECUTION_CONTEXT_ATTR_MAP_KEY );
-		assertNotNull( attributes );
+
+		Object attributes = eventContext.getMessage().getProperty( executionContextMessagePropertyKey );
+
+		if(setExecuctionContextAsMessageKey != null && setExecuctionContextAsMessageKey) {
+			assertNotNull( attributes );
+		} else {
+			assertNull( attributes );
+		}
 	}
 
 

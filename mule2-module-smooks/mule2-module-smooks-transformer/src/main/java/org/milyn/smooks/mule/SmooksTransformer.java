@@ -34,7 +34,7 @@ public class SmooksTransformer extends AbstractMessageAwareTransformer {
 
 	private static final Log log = LogFactory.getLog(SmooksTransformer.class);
 
-	public static final String EXECUTION_CONTEXT_ATTR_MAP_KEY = "SmooksExecutionContext";
+	public static final String MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT = "SmooksExecutionContext";
 
 	private static final long serialVersionUID = 1L;
 
@@ -57,6 +57,16 @@ public class SmooksTransformer extends AbstractMessageAwareTransformer {
 	 * Filename for smooks configuration. Default is smooks-config.xml
 	 */
     private String smooksConfigFile;
+
+    /*
+     * If true, then the execution context is set as property on the message
+     */
+    private boolean executionContextAsMessageProperty = false;
+
+	/*
+     * The key name of the execution context message property
+     */
+    private String executionContextMessagePropertyKey = MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT;
 
     /*
      * If true, non serializable attributes from the Smooks ExecutionContext will no be included. Default is true.
@@ -128,6 +138,32 @@ public class SmooksTransformer extends AbstractMessageAwareTransformer {
 	}
 
     /**
+	 * @param setExecutionContextMessageProperty the setExecutionContextMessageProperty to set
+	 */
+	public void setExecutionContextAsMessageProperty(
+			boolean executionContextMessageProperty) {
+		this.executionContextAsMessageProperty = executionContextMessageProperty;
+	}
+
+	/**
+	 * @param executionContextMessagePropertyKey the executionContextMessagePropertyKey to set
+	 */
+	public void setExecutionContextMessagePropertyKey(
+			String executionContextMessagePropertyKey) {
+
+		if ( executionContextMessagePropertyKey == null )
+		{
+			throw new IllegalArgumentException( "'executionContextMessagePropertyKey' can not be set to null." );
+		}
+		if ( executionContextMessagePropertyKey.length() == 0 )
+		{
+			throw new IllegalArgumentException( "'executionContextMessagePropertyKey' can not be set to an empty string." );
+		}
+
+		this.executionContextMessagePropertyKey = executionContextMessagePropertyKey;
+	}
+
+    /**
      * @param excludeNonSerializables  - If true, non serializable attributes from the Smooks ExecutionContext will no be included. Default is true.
      */
 	public void setExcludeNonSerializables( boolean excludeNonSerializables )
@@ -161,8 +197,10 @@ public class SmooksTransformer extends AbstractMessageAwareTransformer {
         //	Use the Smooks PayloadProcessor to execute the transformation....
         final Object transformedPayload = payloadProcessor.process( payload, executionContext );
 
-        // Set the Smooks Excecution properties on the Mule Message object
-        message.setProperty(EXECUTION_CONTEXT_ATTR_MAP_KEY, getSerializableObjectsMap( executionContext.getAttributes()) );
+        if(executionContextAsMessageProperty) {
+        	// Set the Smooks Excecution properties on the Mule Message object
+        	message.setProperty(executionContextMessagePropertyKey, getSerializableObjectsMap( executionContext.getAttributes()) );
+        }
 
 		return transformedPayload;
 	}
@@ -177,8 +215,9 @@ public class SmooksTransformer extends AbstractMessageAwareTransformer {
     @SuppressWarnings( "unchecked" )
 	protected Map getSerializableObjectsMap( final Map smooksAttribuesMap )
 	{
-    	if ( !excludeNonSerializables )
-    		return smooksAttribuesMap;
+    	if ( !excludeNonSerializables ) {
+			return smooksAttribuesMap;
+		}
 
 		Map smooksExecutionContextMap = new HashMap();
 

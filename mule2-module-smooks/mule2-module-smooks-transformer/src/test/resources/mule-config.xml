@@ -18,7 +18,10 @@
 
 	<custom-transformer name="smooks" class="org.milyn.smooks.mule.SmooksTransformer">
 		<spring:property name="smooksConfigFile" value="/smooks-config.xml" />
-		<spring:property name="reportPath" value="target/report.html"></spring:property>
+		<spring:property name="reportPath" value="target/report.html" />
+		<spring:property name="executionContextAsMessageProperty" value="true" />
+		<spring:property name="executionContextMessagePropertyKey" value="smooks.executionContext" />
+		<spring:property name="excludeNonSerializables" value="true" />
 	</custom-transformer>
 
     <model name="main">
