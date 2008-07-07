@@ -1,8 +1,11 @@
-package org.milyn.smooks.mule;
+package example;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.junit.Test;
+import org.milyn.smooks.mule.SmooksTransformer;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
@@ -18,17 +21,17 @@ import org.mule.tck.FunctionalTestCase;
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  *
  */
-public class SmooksTransformerFunctionalTest extends FunctionalTestCase
+public class FunctionalTest extends FunctionalTestCase
 {
 	@Override
 	protected String getConfigResources() {
-		return "mule-config.xml";
+		return "mule-edi-to-java-config.xml";
 	}
 
 	@Test
 	public void testSmooks() throws Exception
     {
-		InputStream in = getClass().getResourceAsStream("/input-message.xml");
+		InputStream in = new FileInputStream(new File("data/out/message01.edi"));
 
         MuleClient client = new MuleClient();
         MuleMessage reply = client.send("vm://messageInput", new DefaultMuleMessage(in));

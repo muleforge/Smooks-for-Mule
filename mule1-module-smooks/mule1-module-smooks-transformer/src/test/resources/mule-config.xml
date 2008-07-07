@@ -26,7 +26,10 @@
     <model name="SmooksExample">
         <mule-descriptor name="SmooksExample" implementation="example.Main">
 			 <inbound-router>
-                <endpoint address="stream://System.in"  transformers="SmooksTransformer"/>
+                <endpoint address="stream://System.in" transformers="SmooksTransformer"/>
+
+                <!-- for unit test -->
+                <endpoint address="vm://inputMessage" transformers="SmooksTransformer"/>
             </inbound-router>
 
             <outbound-router>

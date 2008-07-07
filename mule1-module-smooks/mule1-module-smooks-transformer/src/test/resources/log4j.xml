@@ -12,7 +12,7 @@
 	</appender>
 
 	<logger name="org.milyn">
-		<level value="ERROR" />
+		<level value="DEBUG" />
 	</logger>
 
 	<logger name="org.milyn.smooks.mule">

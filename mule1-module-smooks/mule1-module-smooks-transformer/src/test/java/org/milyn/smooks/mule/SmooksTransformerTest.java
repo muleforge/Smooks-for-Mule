@@ -34,7 +34,7 @@ public class SmooksTransformerTest
 
 	private UMOEventContext eventContext;
 
-	private final String smooksConfigFile = "smooks-config.xml";
+	private final String smooksConfigFile = "/smooks-config.xml";
 
 	@Test ( expected = InitialisationException.class )
 	public void initWithoutSmooksConfigFile() throws TransformerException, InitialisationException

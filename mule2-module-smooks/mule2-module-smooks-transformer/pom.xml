@@ -54,6 +54,12 @@
 			<artifactId>milyn-smooks-core</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>milyn</groupId>
+			<artifactId>milyn-smooks-templating</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- log4 j -->
 		<dependency>
 			<groupId>log4j</groupId>

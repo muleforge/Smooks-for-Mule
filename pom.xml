@@ -230,6 +230,12 @@
 				<version>1.0.1</version>
 			</dependency>
 
+			<dependency>
+				<groupId>milyn</groupId>
+				<artifactId>milyn-smooks-templating</artifactId>
+				<version>1.0.1</version>
+			</dependency>
+
 			<!-- log4 j -->
 			<dependency>
 				<groupId>log4j</groupId>

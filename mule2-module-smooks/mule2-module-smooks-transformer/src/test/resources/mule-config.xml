@@ -24,7 +24,7 @@
     <model name="main">
         <service name="EchoUMO">
             <inbound>
-                <vm:inbound-endpoint path="inputMessage" transformer-refs="smooks"/>
+                <vm:inbound-endpoint path="messageInput" transformer-refs="smooks"/>
             </inbound>
 
             <outbound>
