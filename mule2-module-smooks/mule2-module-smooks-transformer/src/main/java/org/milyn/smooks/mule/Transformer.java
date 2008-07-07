@@ -30,9 +30,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:maurice@zeijen.net">maurice@zeijen.net</a>
  *
  */
-public class SmooksTransformer extends AbstractMessageAwareTransformer {
+public class Transformer extends AbstractMessageAwareTransformer {
 
-	private static final Log log = LogFactory.getLog(SmooksTransformer.class);
+	private static final Log log = LogFactory.getLog(Transformer.class);
 
 	public static final String MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT = "SmooksExecutionContext";
 
@@ -83,7 +83,7 @@ public class SmooksTransformer extends AbstractMessageAwareTransformer {
 	 */
 	private String javaResultBeanId;
 
-	public SmooksTransformer() {
+	public Transformer() {
 	}
 
 //	public

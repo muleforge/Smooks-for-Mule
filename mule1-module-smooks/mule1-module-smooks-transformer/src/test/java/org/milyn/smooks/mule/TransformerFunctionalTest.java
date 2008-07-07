@@ -8,13 +8,13 @@ import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
 
 /**
- * Unit test for {@link SmooksTransformer} to see if it works
+ * Unit test for {@link Transformer} to see if it works
  * within the Mule environment.
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  *
  */
-public class SmooksTransformerFunctionalTest extends FunctionalTestCase
+public class TransformerFunctionalTest extends FunctionalTestCase
 {
 	@Override
 	protected String getConfigResources() {

@@ -18,7 +18,7 @@
         This example demonstrates invoking a Groovy script as the service component.
     </description>
 
-	<custom-transformer name="EDIOrderToJavaOrder" class="org.milyn.smooks.mule.SmooksTransformer">
+	<custom-transformer name="EDIOrderToJavaOrder" class="org.milyn.smooks.mule.Transformer">
 		<spring:property name="smooksConfigFile" value="/transforms/smooks-edi-to-java-config.xml" />
 		<spring:property name="resultType" value="JAVA"/>
 		<spring:property name="javaResultBeanId" value="order"/>

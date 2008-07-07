@@ -16,7 +16,7 @@
     </connector>
 
     <transformers>
-        <transformer name="SmooksTransformer"  className="org.milyn.smooks.mule.SmooksTransformer">
+        <transformer name="SmooksTransformer"  className="org.milyn.smooks.mule.Transformer">
         	<properties>
         		<property name="smooksConfigFile" value="smooks-config.xml"/>
       			<property name="executionContextAsMessageProperty" value="true" />

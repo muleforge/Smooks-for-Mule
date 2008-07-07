@@ -78,13 +78,13 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:daniel.bevenius@gmail.com">Daniel Bevenius</a>
  *
  */
-public class SmooksTransformer extends AbstractEventAwareTransformer
+public class Transformer extends AbstractEventAwareTransformer
 {
 	public static final String MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT = "SmooksExecutionContext";
 
 	private static final long serialVersionUID = 1L;
 
-	private final Logger log = LoggerFactory.getLogger( SmooksTransformer.class );
+	private final Logger log = LoggerFactory.getLogger( Transformer.class );
 
 	/*
 	 * Smooks payload processor

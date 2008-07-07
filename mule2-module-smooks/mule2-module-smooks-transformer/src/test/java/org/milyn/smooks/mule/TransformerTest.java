@@ -15,18 +15,18 @@ import org.mule.tck.AbstractMuleTestCase;
 
 
 /**
- * Unit test for {@link SmooksTransformer}
+ * Unit test for {@link Transformer}
  * <p/>
  * The test in the class intentionally only test the configuration and <br>
- * execution of {@link SmooksTransformer} and not the actual tranformations<br>
+ * execution of {@link Transformer} and not the actual tranformations<br>
  * that Smooks performs as these are covered in the Smooks project.
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  *
  */
-public class SmooksTransformerTest extends AbstractMuleTestCase
+public class TransformerTest extends AbstractMuleTestCase
 {
-	private SmooksTransformer smooksTransformer;
+	private Transformer transformer;
 
 	private MuleEventContext eventContext;
 
@@ -36,8 +36,8 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 	{
 		boolean thrown = false;
 		try {
-			smooksTransformer.setSmooksConfigFile( null );
-			smooksTransformer.initialise();
+			transformer.setSmooksConfigFile( null );
+			transformer.initialise();
 		} catch (InitialisationException e) {
 			thrown = true;
 		}
@@ -48,9 +48,9 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 	{
 		boolean thrown = false;
 		try {
-			smooksTransformer.setSmooksConfigFile( smooksConfigFile );
-			smooksTransformer.setResultType( "badResultType" );
-			smooksTransformer.initialise();
+			transformer.setSmooksConfigFile( smooksConfigFile );
+			transformer.setResultType( "badResultType" );
+			transformer.initialise();
 		} catch (InitialisationException e) {
 			thrown = true;
 		}
@@ -59,12 +59,12 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 
 	public void testJavaResultBeanId()
 	{
-		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
-		smooksTransformer.setResultType( "JAVA" );
-		smooksTransformer.setJavaResultBeanId( "beanId" );
+		transformer.setSmooksConfigFile( smooksConfigFile );
+		transformer.setResultType( "JAVA" );
+		transformer.setJavaResultBeanId( "beanId" );
 		try
 		{
-			smooksTransformer.initialise();
+			transformer.initialise();
 		}
 		catch (InitialisationException e)
 		{
@@ -83,22 +83,22 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 	public void testDoTransformation(Boolean setExecuctionContextAsMessageKey, String executionContextMessagePropertyKey) throws TransformerException
 	{
 
-		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
-		smooksTransformer.setExcludeNonSerializables( false );
+		transformer.setSmooksConfigFile( smooksConfigFile );
+		transformer.setExcludeNonSerializables( false );
 		if(setExecuctionContextAsMessageKey != null) {
-			smooksTransformer.setExecutionContextAsMessageProperty(setExecuctionContextAsMessageKey);
+			transformer.setExecutionContextAsMessageProperty(setExecuctionContextAsMessageKey);
 		}
 		if(executionContextMessagePropertyKey != null) {
-			smooksTransformer.setExecutionContextMessagePropertyKey(executionContextMessagePropertyKey);
+			transformer.setExecutionContextMessagePropertyKey(executionContextMessagePropertyKey);
 		} else {
-			executionContextMessagePropertyKey = SmooksTransformer.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT;
+			executionContextMessagePropertyKey = Transformer.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT;
 		}
 
 		byte[] inputMessage = readInputMessage();
 
 		//Is this correct?
 		MuleMessage message = new DefaultMuleMessage(inputMessage);
-		Object transformedObject = smooksTransformer.transform( message );
+		Object transformedObject = transformer.transform( message );
 		assertNotNull ( transformedObject );
 
 		Object attributes = message.getProperty( executionContextMessagePropertyKey );
@@ -113,13 +113,13 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 	public void testDoTransformationWithSmooksReportGeneration() throws InitialisationException, TransformerException
 	{
 		File reportFile = new File ( "target" + File.separator + "smooks-report.html" );
-		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
-		smooksTransformer.setReportPath( reportFile.getAbsolutePath() );
-		smooksTransformer.initialise();
+		transformer.setSmooksConfigFile( smooksConfigFile );
+		transformer.setReportPath( reportFile.getAbsolutePath() );
+		transformer.initialise();
 		byte[] inputMessage = readInputMessage();
 		try
 		{
-    		Object transformedObject = smooksTransformer.transform( inputMessage );
+    		Object transformedObject = transformer.transform( inputMessage );
     		assertNotNull ( transformedObject );
 			assertTrue( reportFile.exists() );
 		}
@@ -136,9 +136,9 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 	@Before
 	public void doSetUp() throws Exception
 	{
-    	smooksTransformer = new SmooksTransformer();
-		smooksTransformer.setSmooksConfigFile( smooksConfigFile );
-		smooksTransformer.initialise();
+    	transformer = new Transformer();
+		transformer.setSmooksConfigFile( smooksConfigFile );
+		transformer.initialise();
 	}
 
 	//	private
@@ -147,7 +147,7 @@ public class SmooksTransformerTest extends AbstractMuleTestCase
 	{
         try
         {
-            return StreamUtils.readStream( SmooksTransformerTest.class.getResourceAsStream( "/input-message.xml"));
+            return StreamUtils.readStream( TransformerTest.class.getResourceAsStream( "/input-message.xml"));
         }
         catch (IOException e)
         {

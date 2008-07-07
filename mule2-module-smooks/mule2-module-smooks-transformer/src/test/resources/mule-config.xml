@@ -16,7 +16,7 @@
         This example demonstrates invoking a Groovy script as the service component.
     </description>
 
-	<custom-transformer name="smooks" class="org.milyn.smooks.mule.SmooksTransformer">
+	<custom-transformer name="smooks" class="org.milyn.smooks.mule.Transformer">
 		<spring:property name="smooksConfigFile" value="/smooks-config.xml" />
 		<spring:property name="reportPath" value="target/report.html" />
 		<spring:property name="executionContextAsMessageProperty" value="true" />
