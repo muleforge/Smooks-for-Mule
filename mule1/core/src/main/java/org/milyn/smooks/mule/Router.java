@@ -18,17 +18,17 @@ import org.milyn.container.ExecutionContext;
 import org.milyn.container.plugin.PayloadProcessor;
 import org.milyn.container.plugin.ResultType;
 import org.milyn.event.report.HtmlReportGenerator;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.MuleSession;
-import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.api.endpoint.OutboundEndpoint;
-import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.routing.CouldNotRouteOutboundMessageException;
-import org.mule.api.routing.RoutingException;
+import org.mule.config.MuleProperties;
 import org.mule.config.i18n.Message;
 import org.mule.routing.outbound.FilteringOutboundRouter;
+import org.mule.umo.UMOException;
+import org.mule.umo.UMOMessage;
+import org.mule.umo.UMOSession;
+import org.mule.umo.endpoint.UMOEndpoint;
+import org.mule.umo.endpoint.UMOImmutableEndpoint;
+import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.routing.CouldNotRouteOutboundMessageException;
+import org.mule.umo.routing.RoutingException;
 import org.xml.sax.SAXException;
 
 /**
@@ -82,15 +82,17 @@ public class Router extends FilteringOutboundRouter {
     // synchronous on the endpoint
 	private boolean honorSynchronicity = false;
 
+	private boolean initialized = false;
 
-	@Override
 	public void initialise() throws InitialisationException
 	{
-		//	Create the Smooks instance
+		// Create the Smooks instance
 		smooks = createSmooksInstance();
 
 		//	Create the Smooks payload processor
 		payloadProcessor = new PayloadProcessor( smooks, ResultType.NORESULT );
+
+		initialized = true;
 	}
 
 	public String getSmooksConfigFile()
@@ -101,6 +103,13 @@ public class Router extends FilteringOutboundRouter {
 	public void setSmooksConfigFile( final String smooksConfigFile )
 	{
 		this.smooksConfigFile = smooksConfigFile;
+
+		try {
+			//The Initializable interface isn't used for router so we need to initialize the router somewhere
+			initialise();
+		} catch (InitialisationException e) {
+			throw new IllegalStateException("Couldn't initialize the Router", e);
+		}
 	}
 
 	/**
@@ -153,14 +162,17 @@ public class Router extends FilteringOutboundRouter {
 
 
 	@Override
-	public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous) throws RoutingException {
+	public UMOMessage route(UMOMessage message, UMOSession session, boolean synchronous) throws RoutingException {
+		if(!initialized) {
+			throw new IllegalStateException("The router is not initialised");
+		}
+
 
 		// Retrieve the payload from the message
 		Object payload = message.getPayload();
 
         //	Create Smooks ExecutionContext.
 		final ExecutionContext executionContext = smooks.createExecutionContext();
-
 
 		// Create the dispatcher which handles the dispatching of messages
 		AbstractMuleDispatcher dispatcher = createDispatcher(executionContext, session, synchronous);
@@ -169,7 +181,7 @@ public class Router extends FilteringOutboundRouter {
 		executionContext.setAttribute(MuleDispatcher.SMOOKS_CONTEXT, dispatcher);
 
 		//	Add smooks reporting if configured
-		addReportingSupport(message, executionContext );
+		addReportingSupport( message, executionContext );
 
         //	Use the Smooks PayloadProcessor to execute the routing....
         payloadProcessor.process( payload, executionContext );
@@ -231,13 +243,13 @@ public class Router extends FilteringOutboundRouter {
 
 
 	@SuppressWarnings("unchecked")
-	private AbstractMuleDispatcher createDispatcher(final ExecutionContext executionContext, final MuleSession muleSession, final  boolean synchronous) {
+	private AbstractMuleDispatcher createDispatcher(final ExecutionContext executionContext, final UMOSession muleSession, final  boolean synchronous) {
 
 		//Create the dispatcher which will dispatch the messages provided by Smooks
 		AbstractMuleDispatcher dispatcher = new AbstractMuleDispatcher(getEndpoints()) {
 
 			@Override
-			public void dispatch(OutboundEndpoint endpoint, MuleMessage message) {
+			public void dispatch(UMOEndpoint endpoint, UMOMessage message) {
 
 				boolean synced = synchronous;
 				if (honorSynchronicity)
@@ -267,7 +279,7 @@ public class Router extends FilteringOutboundRouter {
 						Router.this.dispatch(muleSession, message, endpoint);
 					}
 
-				} catch (MuleException e) {
+				} catch (UMOException e) {
 
 					//TODO: Fixme?
 					throw new RuntimeException(new CouldNotRouteOutboundMessageException(message, endpoint, e));
@@ -278,7 +290,7 @@ public class Router extends FilteringOutboundRouter {
 		return dispatcher;
 	}
 
-	private void addReportingSupport(final MuleMessage message, final ExecutionContext executionContext ) throws RoutingException
+	private void addReportingSupport(UMOMessage message, final ExecutionContext executionContext ) throws RoutingException
 	{
 		if( reportPath != null )
 		{
@@ -290,7 +302,7 @@ public class Router extends FilteringOutboundRouter {
             catch ( final IOException e)
             {
     			final Message errorMsg = createStaticMessage( "Failed to create HtmlReportGenerator instance." );
-	            throw new RoutingException(errorMsg, message, (ImmutableEndpoint)null, e);
+	            throw new RoutingException(errorMsg, message, (UMOImmutableEndpoint) null, e );
             }
         }
 	}

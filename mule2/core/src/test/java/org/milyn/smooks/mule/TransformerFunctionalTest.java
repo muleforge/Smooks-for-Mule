@@ -19,13 +19,13 @@ public class TransformerFunctionalTest extends FunctionalTestCase
 {
 	@Override
 	protected String getConfigResources() {
-		return "mule-config.xml";
+		return "transformer-mule-config.xml";
 	}
 
 	@Test
 	public void testSmooks() throws Exception
     {
-		InputStream in = getClass().getResourceAsStream("/input-message.xml");
+		InputStream in = getClass().getResourceAsStream("/transformer-input-message.xml");
 
         MuleClient client = new MuleClient();
         MuleMessage reply = client.send("vm://messageInput", new DefaultMuleMessage(in));

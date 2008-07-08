@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN" "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="Mule_Smooks_Example" version="1.0">
+
+    <description>
+        This config is for the unit testing
+    </description>
+
+    <model name="Test">
+        <mule-descriptor name="Test" implementation="org.mule.components.simple.BridgeComponent">
+			 <inbound-router>
+                <endpoint address="vm://messageInput"/>
+            </inbound-router>
+
+            <outbound-router>
+                <router className="org.milyn.smooks.mule.Router">
+                    <endpoint name="file1" address="file://./target/routing-test">
+                    	<properties>
+                    		<property name="outputPattern" value="file1.dat"/>
+                    	</properties>
+                    </endpoint>
+            		<endpoint name="file2" address="file://./target/routing-test">
+            			<properties>
+                    		<property name="outputPattern" value="file2-${COUNT}.dat"/>
+                    	</properties>
+            		</endpoint>
+
+                    <properties>
+                    	<property name="smooksConfigFile" value="/router-smooks-config.xml" />
+	            		<property name="reportPath" value="target/smooks-report/report.html" />
+	            		<property name="executionContextAsMessageProperty" value="true" />
+						<property name="executionContextMessagePropertyKey" value="smooks.executionContext" />
+						<property name="excludeNonSerializables" value="true" />
+                    </properties>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+    </model>
+
+</mule-configuration>

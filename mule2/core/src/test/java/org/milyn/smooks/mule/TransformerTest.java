@@ -30,7 +30,7 @@ public class TransformerTest extends AbstractMuleTestCase
 
 	private MuleEventContext eventContext;
 
-	private final String smooksConfigFile = "/smooks-config.xml";
+	private final String smooksConfigFile = "/transformer-smooks-config.xml";
 
 	public void testInitWithoutSmooksConfigFile() throws InitialisationException
 	{

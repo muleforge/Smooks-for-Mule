@@ -126,12 +126,6 @@ public class Transformer extends AbstractMessageAwareTransformer {
 		this.smooksConfigFile = smooksConfigFile;
 	}
 
-    @Override
-	public Object clone() throws CloneNotSupportedException
-    {
-    	return this;
-    }
-
 	public void setResultType( final String resultType )
 	{
 		this.resultType = resultType;

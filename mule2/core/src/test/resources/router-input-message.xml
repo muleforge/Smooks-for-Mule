@@ -1,0 +1,8 @@
+<root>
+	<a value="Hello World" />
+	<b>
+		<c>1</c>
+		<c>2</c>
+		<c>3</c>
+	</b>
+</root>

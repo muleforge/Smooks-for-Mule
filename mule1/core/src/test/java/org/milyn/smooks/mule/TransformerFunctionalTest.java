@@ -23,7 +23,7 @@ public class TransformerFunctionalTest extends FunctionalTestCase
 
 	public void testSmooks() throws Exception
     {
-		InputStream in = getClass().getResourceAsStream("/input-message.xml");
+		InputStream in = getClass().getResourceAsStream("/transformer-input-message.xml");
 
         MuleClient client = new MuleClient();
         UMOMessage reply = client.send("vm://messageInput", new MuleMessage(in));
