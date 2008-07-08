@@ -11,8 +11,8 @@
 	<version>1.0-SNAPSHOT</version>
 
 	<modules>
-		<module>mule1-module-smooks</module>
-		<module>mule2-module-smooks</module>
+		<module>mule1</module>
+		<module>mule2</module>
 	</modules>
 
 	<properties>
