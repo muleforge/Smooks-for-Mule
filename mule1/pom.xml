@@ -10,13 +10,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule1-module-smooks-parent</artifactId>
-	<name>Smooks for Mule 1.x</name>
+	<name>Parent Pom Smooks Mule module for Mule 1.x</name>
 	<packaging>pom</packaging>
-	<description>Parent Pom Smooks Transformer for Mule 1.x</description>
+	<description>Parent Pom Smooks Mule module for Mule 1.x</description>
 
 	<modules>
+		<module>core</module>
 		<module>examples</module>
-		<module>smooks</module>
 	</modules>
 
 	<properties>
