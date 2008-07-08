@@ -18,7 +18,7 @@ public class TransformerFunctionalTest extends FunctionalTestCase
 {
 	@Override
 	protected String getConfigResources() {
-		return "mule-config.xml";
+		return "transformer-mule-config.xml";
 	}
 
 	public void testSmooks() throws Exception

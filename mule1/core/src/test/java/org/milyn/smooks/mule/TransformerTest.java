@@ -143,7 +143,7 @@ public class TransformerTest extends AbstractMuleTestCase
 	{
         try
         {
-            return StreamUtils.readStream( TransformerTest.class.getResourceAsStream( "/input-message.xml"));
+            return StreamUtils.readStream( TransformerTest.class.getResourceAsStream( "/transformer-input-message.xml"));
         }
         catch (IOException e)
         {
