@@ -66,11 +66,11 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- The Smooks Transformer -->
+		<!-- The Smooks Mule Module -->
 
 		<dependency>
 			<groupId>org.mule.modules</groupId>
-			<artifactId>mule1-module-smooks-transformer</artifactId>
+			<artifactId>mule1-module-smooks</artifactId>
 		</dependency>
 
 		<!-- The Smooks dependencies -->

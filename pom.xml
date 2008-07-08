@@ -197,13 +197,13 @@
 
 			<dependency>
 				<groupId>org.mule.modules</groupId>
-				<artifactId>mule1-module-smooks-transformer</artifactId>
+				<artifactId>mule1-module-smooks</artifactId>
 				<version>${version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.mule.modules</groupId>
-				<artifactId>mule2-module-smooks-transformer</artifactId>
+				<artifactId>mule2-module-smooks</artifactId>
 				<version>${version}</version>
 			</dependency>
 

@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule2-module-smooks-parent</artifactId>
-	<name>Parent Pom - Smooks Mule module for Mule 2.x</name>
+	<name>Smooks Mule module for Mule 2.x - Parent Pom</name>
 	<packaging>pom</packaging>
 	<description>Parent Pom Smooks Transformer for Mule 2.x</description>
 
