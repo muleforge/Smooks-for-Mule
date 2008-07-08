@@ -18,8 +18,8 @@
 		<muleVersion>2.0.1</muleVersion>
 	</properties>
 	<modules>
-		<module>mule2-module-smooks-transformer</module>
-		<module>mule2-module-smooks-examples</module>
+		<module>smooks</module>
+		<module>examples</module>
 	</modules>
 
 	<dependencyManagement>

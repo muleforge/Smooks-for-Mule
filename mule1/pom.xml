@@ -15,8 +15,8 @@
 	<description>Parent Pom Smooks Transformer for Mule 1.x</description>
 
 	<modules>
-		<module>mule1-module-smooks-examples</module>
-		<module>mule1-module-smooks-transformer</module>
+		<module>examples</module>
+		<module>smooks</module>
 	</modules>
 
 	<properties>
