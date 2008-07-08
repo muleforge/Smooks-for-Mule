@@ -3,14 +3,14 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>mule2-module-smooks</artifactId>
+		<artifactId>mule2-module-smooks-parent</artifactId>
 		<groupId>org.mule.modules</groupId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule2-module-smooks-examples</artifactId>
-	<name>Smooks Transformer module examples for Mule 1.x </name>
+	<name>Smooks Mule module examples for Mule 2.x </name>
 	<packaging>pom</packaging>
 	<description>Parent POM for all examples </description>
 
