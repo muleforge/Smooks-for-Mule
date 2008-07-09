@@ -53,7 +53,7 @@
 
 	<distributionManagement>
 		<repository>
-			<id>6</id>
+			<id>muleforge.webdav.releases</id>
 			<url>
 				dav:https://dav.muleforge.org/repository/${domainName}/
 			</url>
