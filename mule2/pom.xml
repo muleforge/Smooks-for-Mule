@@ -17,7 +17,7 @@
 	<properties>
 		<muleVersion>2.0.1</muleVersion>
 	</properties>
-	
+
 	<modules>
 		<module>core</module>
 		<module>examples</module>
@@ -36,6 +36,11 @@
 			<dependency>
 				<groupId>org.mule.modules</groupId>
 				<artifactId>mule-module-client</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.modules</groupId>
+				<artifactId>mule-module-spring-config</artifactId>
 				<version>${muleVersion}</version>
 			</dependency>
 			<dependency>

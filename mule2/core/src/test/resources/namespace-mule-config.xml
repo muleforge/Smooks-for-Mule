@@ -10,7 +10,7 @@
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
        http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd
        http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd
-       http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0 ../../main/resources/META-INF/mule-module-smooks.xsd
+       http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0 http://dist.muleforge.org/smooks/schema/mule-module-smooks/1.0/mule-module-smooks.xsd
        ">
 
 
@@ -19,7 +19,7 @@
     </description>
 
 	<smooks:transformer
-		name="smooksTransfomer"
+		name="smooksTransformer"
 		configFile="/transformer-smooks-config.xml"
 		reportPath="target/smooks-report/report.html"
 		executionContextAsMessageProperty="true"
@@ -32,20 +32,24 @@
     <model name="test">
         <service name="TestUMO">
             <inbound>
-                <vm:inbound-endpoint path="messageInput" transformer-refs="smooks"/>
+                <vm:inbound-endpoint path="messageInput" transformer-refs="smooksTransformer"/>
             </inbound>
 
             <outbound>
             	<smooks:router
-            		configFile="/transformer-smooks-config.xml"
+            		configFile="/router-smooks-config.xml"
 					reportPath="target/smooks-report/report.html"
 					executionContextAsMessageProperty="true"
 					executionContextMessagePropertyKey="smooks.executionContext"
-					excludeNonSerializables="true">
+					excludeNonSerializables="false"
+					honorSynchronicity="true"
+					>
 
-					<stdio:outbound-endpoint system="OUT" />
+					<stdio:outbound-endpoint name="endpoint1" system="OUT" />
+            		<stdio:outbound-endpoint name="endpoint2" system="OUT" />
+
             	</smooks:router>
-            </outbound>
+           	</outbound>
         </service>
     </model>
 </mule>

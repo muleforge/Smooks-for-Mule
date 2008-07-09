@@ -11,7 +11,7 @@
     <transformers>
         <transformer name="SmooksTransformer"  className="org.milyn.smooks.mule.Transformer">
         	<properties>
-        		<property name="smooksConfigFile" value="transformer-smooks-config.xml"/>
+        		<property name="configFile" value="transformer-smooks-config.xml"/>
       			<property name="executionContextAsMessageProperty" value="true" />
 				<property name="executionContextMessagePropertyKey" value="smooks.executionContext" />
 				<property name="excludeNonSerializables" value="true" />

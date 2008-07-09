@@ -4,30 +4,34 @@
        xmlns:spring="http://www.springframework.org/schema/beans"
        xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
        xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.0"
+       xmlns:smooks="http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0"
     xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
        http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd
        http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd
+       http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0 http://dist.muleforge.org/smooks/schema/mule-module-smooks/1.0/mule-module-smooks.xsd
        ">
 
 
     <description>
-        This config is for the unit testing
+        This transformer config is for unit testing
     </description>
 
-	<custom-transformer name="smooks" class="org.milyn.smooks.mule.Transformer">
-		<spring:property name="smooksConfigFile" value="/transformer-smooks-config.xml" />
-		<spring:property name="reportPath" value="target/smooks-report/report.html" />
-		<spring:property name="executionContextAsMessageProperty" value="true" />
-		<spring:property name="executionContextMessagePropertyKey" value="smooks.executionContext" />
-		<spring:property name="excludeNonSerializables" value="true" />
-	</custom-transformer>
+	<smooks:transformer
+		name="smooksTransformer"
+		configFile="/transformer-smooks-config.xml"
+		reportPath="target/smooks-report/report.html"
+		executionContextAsMessageProperty="true"
+		executionContextMessagePropertyKey="smooks.executionContext"
+		excludeNonSerializables="false"
+		resultType="STRING"
+	/>
 
     <model name="test">
         <service name="TestUMO">
             <inbound>
-                <vm:inbound-endpoint path="messageInput" transformer-refs="smooks"/>
+                <vm:inbound-endpoint path="messageInput" transformer-refs="smooksTransformer"/>
             </inbound>
 
             <outbound>

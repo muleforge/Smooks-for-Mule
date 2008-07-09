@@ -4,15 +4,17 @@
        xmlns:spring="http://www.springframework.org/schema/beans"
        xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
        xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+       xmlns:smooks="http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0"
     xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
        http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd
        http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
+       http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0 http://dist.muleforge.org/smooks/schema/mule-module-smooks/1.0/mule-module-smooks.xsd
        ">
 
     <description>
-        This tests the routing component
+        This router config is for unit testing
     </description>
 
 	<file:connector name="nonSerializingFileConnector" serialiseObjects="false"/>
@@ -24,18 +26,18 @@
             </inbound>
 
             <outbound>
-            	<custom-outbound-router class="org.milyn.smooks.mule.Router">
-            		<!-- Endpoints -->
-            		<file:outbound-endpoint name="file1" path="target/routing-test" outputPattern="file1.dat" connector-ref="nonSerializingFileConnector"/>
+            	<smooks:router
+            		configFile="/router-smooks-config.xml"
+					reportPath="target/smooks-report/report.html"
+					executionContextAsMessageProperty="true"
+					executionContextMessagePropertyKey="smooks.executionContext"
+					excludeNonSerializables="false"
+					honorSynchronicity="true">
+
+					<file:outbound-endpoint name="file1" path="target/routing-test" outputPattern="file1.dat" connector-ref="nonSerializingFileConnector"/>
             		<file:outbound-endpoint name="file2" path="target/routing-test" outputPattern="file2-${COUNT}.dat" connector-ref="nonSerializingFileConnector"/>
 
-            		<!-- Properties -->
-            		<spring:property name="smooksConfigFile" value="/router-smooks-config.xml" />
-            		<spring:property name="reportPath" value="target/smooks-report/report.html" />
-            		<spring:property name="executionContextAsMessageProperty" value="true" />
-					<spring:property name="executionContextMessagePropertyKey" value="smooks.executionContext" />
-					<spring:property name="excludeNonSerializables" value="true" />
-            	</custom-outbound-router>
+            	</smooks:router>
             </outbound>
         </service>
 

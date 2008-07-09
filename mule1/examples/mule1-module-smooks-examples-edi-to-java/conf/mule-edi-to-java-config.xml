@@ -16,7 +16,7 @@
     <transformers>
         <transformer name="EDIOrderToJavaOrder" className="org.milyn.smooks.mule.Transformer">
             <properties>
-                <property name="smooksConfigFile" value="/transforms/smooks-edi-to-java-config.xml"/>
+                <property name="configFile" value="/transforms/smooks-edi-to-java-config.xml"/>
                 <property name="resultType" value="JAVA"/>
                 <property name="javaResultBeanId" value="order"/>
                 <property name="reportPath" value="target/smooks-report/report.html" />

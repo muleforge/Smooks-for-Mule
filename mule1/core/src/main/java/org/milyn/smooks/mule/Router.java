@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.milyn.Smooks;
 import org.milyn.container.ExecutionContext;
 import org.milyn.container.plugin.PayloadProcessor;
@@ -29,6 +27,8 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.routing.CouldNotRouteOutboundMessageException;
 import org.mule.umo.routing.RoutingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 /**
@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  */
 public class Router extends FilteringOutboundRouter {
 
-	private static final Log log = LogFactory.getLog(Transformer.class);
+	private static final Logger log = LoggerFactory.getLogger(Router.class);
 
 	public static final String MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT = "SmooksExecutionContext";
 
@@ -56,7 +56,7 @@ public class Router extends FilteringOutboundRouter {
 	/*
 	 * Filename for smooks configuration. Default is smooks-config.xml
 	 */
-    private String smooksConfigFile;
+    private String configFile;
 
     /*
      * If true, then the execution context is set as property on the message
@@ -95,14 +95,49 @@ public class Router extends FilteringOutboundRouter {
 		initialized = true;
 	}
 
-	public String getSmooksConfigFile()
-	{
-		return smooksConfigFile;
+	/**
+	 * @return the executionContextAsMessageProperty
+	 */
+	public boolean isExecutionContextAsMessageProperty() {
+		return executionContextAsMessageProperty;
 	}
 
-	public void setSmooksConfigFile( final String smooksConfigFile )
+	/**
+	 * @return the executionContextMessagePropertyKey
+	 */
+	public String getExecutionContextMessagePropertyKey() {
+		return executionContextMessagePropertyKey;
+	}
+
+	/**
+	 * @return the excludeNonSerializables
+	 */
+	public boolean isExcludeNonSerializables() {
+		return excludeNonSerializables;
+	}
+
+	/**
+	 * @return the reportPath
+	 */
+	public String getReportPath() {
+		return reportPath;
+	}
+
+	/**
+	 * @return the honorSynchronicity
+	 */
+	public boolean isHonorSynchronicity() {
+		return honorSynchronicity;
+	}
+
+	public String getConfigFile()
 	{
-		this.smooksConfigFile = smooksConfigFile;
+		return configFile;
+	}
+
+	public void setConfigFile( final String configFile )
+	{
+		this.configFile = configFile;
 
 		try {
 			//The Initializable interface isn't used for router so we need to initialize the router somewhere
@@ -219,7 +254,7 @@ public class Router extends FilteringOutboundRouter {
 
 	private Smooks createSmooksInstance() throws InitialisationException
 	{
-		if ( smooksConfigFile == null )
+		if ( configFile == null )
 		{
 			final Message errorMsg = createStaticMessage( "'smooksConfigFile' parameter must be specified" );
 			throw new InitialisationException( errorMsg, this );
@@ -227,7 +262,7 @@ public class Router extends FilteringOutboundRouter {
 
 		try
 		{
-			return new Smooks ( smooksConfigFile );
+			return new Smooks ( configFile );
 		}
 		catch ( final IOException e)
 		{

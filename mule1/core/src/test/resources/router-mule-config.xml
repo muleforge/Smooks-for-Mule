@@ -28,7 +28,7 @@
             		</endpoint>
 
                     <properties>
-                    	<property name="smooksConfigFile" value="/router-smooks-config.xml" />
+                    	<property name="configFile" value="/router-smooks-config.xml" />
 	            		<property name="reportPath" value="target/smooks-report/report.html" />
 	            		<property name="executionContextAsMessageProperty" value="true" />
 						<property name="executionContextMessagePropertyKey" value="smooks.executionContext" />

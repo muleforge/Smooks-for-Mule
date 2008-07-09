@@ -84,7 +84,7 @@ public class Transformer extends AbstractEventAwareTransformer
 
 	private static final long serialVersionUID = 1L;
 
-	private final Logger log = LoggerFactory.getLogger( Transformer.class );
+	private static final Logger log = LoggerFactory.getLogger( Transformer.class );
 
 	/*
 	 * Smooks payload processor
@@ -104,7 +104,7 @@ public class Transformer extends AbstractEventAwareTransformer
 	/*
 	 * Filename for smooks configuration. Default is smooks-config.xml
 	 */
-    private String smooksConfigFile;
+    private String configFile;
 
     /*
      * If true, then the execution context is set as property on the message
@@ -137,7 +137,7 @@ public class Transformer extends AbstractEventAwareTransformer
 	public void initialise() throws InitialisationException
 	{
 		//	determine the ResultType
-		ResultType resultType = getResultType();
+		ResultType resultType = getResultTypeEnum();
 
 		//	Create the Smooks instance
 		smooks = createSmooksInstance();
@@ -155,14 +155,56 @@ public class Transformer extends AbstractEventAwareTransformer
         }
 	}
 
-	public String getSmooksConfigFile()
-	{
-		return smooksConfigFile;
+	/**
+	 * @return the executionContextAsMessageProperty
+	 */
+	public boolean isExecutionContextAsMessageProperty() {
+		return executionContextAsMessageProperty;
 	}
 
-	public void setSmooksConfigFile( final String smooksConfigFile )
+	/**
+	 * @return the executionContextMessagePropertyKey
+	 */
+	public String getExecutionContextMessagePropertyKey() {
+		return executionContextMessagePropertyKey;
+	}
+
+	/**
+	 * @return the excludeNonSerializables
+	 */
+	public boolean isExcludeNonSerializables() {
+		return excludeNonSerializables;
+	}
+
+	/**
+	 * @return the reportPath
+	 */
+	public String getReportPath() {
+		return reportPath;
+	}
+
+	/**
+	 * @return the javaResultBeanId
+	 */
+	public String getJavaResultBeanId() {
+		return javaResultBeanId;
+	}
+
+	public String getConfigFile()
 	{
-		this.smooksConfigFile = smooksConfigFile;
+		return configFile;
+	}
+
+	/**
+	 * @return the resultType
+	 */
+	public String getResultType() {
+		return resultType;
+	}
+
+	public void setConfigFile( final String configFile )
+	{
+		this.configFile = configFile;
 	}
 
     @Override
@@ -277,7 +319,7 @@ public class Transformer extends AbstractEventAwareTransformer
 
 	private Smooks createSmooksInstance() throws InitialisationException
 	{
-		if ( smooksConfigFile == null )
+		if ( configFile == null )
 		{
 			final Message errorMsg = createStaticMessage( "'smooksConfigFile' parameter must be specified" );
 			throw new InitialisationException( errorMsg, this );
@@ -285,7 +327,7 @@ public class Transformer extends AbstractEventAwareTransformer
 
 		try
 		{
-			return new Smooks ( smooksConfigFile );
+			return new Smooks ( configFile );
 		}
 		catch ( final IOException e)
 		{
@@ -299,7 +341,7 @@ public class Transformer extends AbstractEventAwareTransformer
 		}
 	}
 
-	private ResultType getResultType() throws InitialisationException
+	private ResultType getResultTypeEnum() throws InitialisationException
 	{
 		ResultType resultType = ResultType.STRING;
 		if ( this.resultType != null )

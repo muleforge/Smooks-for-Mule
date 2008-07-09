@@ -33,7 +33,7 @@ public class TransformerTest extends AbstractMuleTestCase
 	{
 		boolean thrown = false;
 		try {
-			transformer.setSmooksConfigFile( null );
+			transformer.setConfigFile( null );
 			transformer.initialise();
 		} catch (InitialisationException e) {
 			thrown = true;
@@ -45,7 +45,7 @@ public class TransformerTest extends AbstractMuleTestCase
 	{
 		boolean thrown = false;
 		try {
-			transformer.setSmooksConfigFile( smooksConfigFile );
+			transformer.setConfigFile( smooksConfigFile );
 			transformer.setResultType( "badResultType" );
 			transformer.initialise();
 		} catch (InitialisationException e) {
@@ -56,7 +56,7 @@ public class TransformerTest extends AbstractMuleTestCase
 
 	public void testJavaResultBeanId()
 	{
-		transformer.setSmooksConfigFile( smooksConfigFile );
+		transformer.setConfigFile( smooksConfigFile );
 		transformer.setResultType( "JAVA" );
 		transformer.setJavaResultBeanId( "beanId" );
 		try
@@ -80,7 +80,7 @@ public class TransformerTest extends AbstractMuleTestCase
 
 	private void testDoTransformation(Boolean setExecuctionContextAsMessageKey, String executionContextMessagePropertyKey) throws TransformerException
 	{
-		transformer.setSmooksConfigFile( smooksConfigFile );
+		transformer.setConfigFile( smooksConfigFile );
 		transformer.setExcludeNonSerializables( false );
 		if(setExecuctionContextAsMessageKey != null) {
 			transformer.setExecutionContextAsMessageProperty(setExecuctionContextAsMessageKey);
@@ -108,7 +108,7 @@ public class TransformerTest extends AbstractMuleTestCase
 	public void testDoTransformationWithSmooksReportGeneration() throws TransformerException, InitialisationException
 	{
 		File reportFile = new File ( "target" + File.separator + "smooks-report.html" );
-		transformer.setSmooksConfigFile( smooksConfigFile );
+		transformer.setConfigFile( smooksConfigFile );
 		transformer.setReportPath( reportFile.getAbsolutePath() );
 		transformer.initialise();
 		byte[] inputMessage = readInputMessage();
@@ -131,7 +131,7 @@ public class TransformerTest extends AbstractMuleTestCase
 	protected void doSetUp() throws Exception
 	{
     	transformer = new Transformer();
-		transformer.setSmooksConfigFile( smooksConfigFile );
+		transformer.setConfigFile( smooksConfigFile );
 		transformer.initialise();
 		RequestContext.setEvent( getTestEvent ( "Test!" ) );
 		eventContext = RequestContext.getEventContext();

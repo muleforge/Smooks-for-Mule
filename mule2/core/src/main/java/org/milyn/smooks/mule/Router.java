@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.milyn.Smooks;
 import org.milyn.container.ExecutionContext;
 import org.milyn.container.plugin.PayloadProcessor;
@@ -29,6 +27,8 @@ import org.mule.api.routing.CouldNotRouteOutboundMessageException;
 import org.mule.api.routing.RoutingException;
 import org.mule.config.i18n.Message;
 import org.mule.routing.outbound.FilteringOutboundRouter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 /**
@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  */
 public class Router extends FilteringOutboundRouter {
 
-	private static final Log log = LogFactory.getLog(Transformer.class);
+	private static final Logger log = LoggerFactory.getLogger(Router.class);
 
 	public static final String MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT = "SmooksExecutionContext";
 
@@ -97,6 +97,43 @@ public class Router extends FilteringOutboundRouter {
 	{
 		return configFile;
 	}
+
+
+	/**
+	 * @return the executionContextAsMessageProperty
+	 */
+	public boolean isExecutionContextAsMessageProperty() {
+		return executionContextAsMessageProperty;
+	}
+
+	/**
+	 * @return the executionContextMessagePropertyKey
+	 */
+	public String getExecutionContextMessagePropertyKey() {
+		return executionContextMessagePropertyKey;
+	}
+
+	/**
+	 * @return the excludeNonSerializables
+	 */
+	public boolean isExcludeNonSerializables() {
+		return excludeNonSerializables;
+	}
+
+	/**
+	 * @return the reportPath
+	 */
+	public String getReportPath() {
+		return reportPath;
+	}
+
+	/**
+	 * @return the honorSynchronicity
+	 */
+	public boolean isHonorSynchronicity() {
+		return honorSynchronicity;
+	}
+
 
 	public void setConfigFile( final String configFile )
 	{

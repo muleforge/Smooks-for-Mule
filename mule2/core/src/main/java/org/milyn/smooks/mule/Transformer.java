@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.milyn.Smooks;
 import org.milyn.container.ExecutionContext;
 import org.milyn.container.plugin.PayloadProcessor;
@@ -21,6 +19,8 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
 import org.mule.config.i18n.Message;
 import org.mule.transformer.AbstractMessageAwareTransformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 /**
@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  */
 public class Transformer extends AbstractMessageAwareTransformer {
 
-	private static final Log log = LogFactory.getLog(Transformer.class);
+	private static final Logger log = LoggerFactory.getLogger(Transformer.class);
 
 	public static final String MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT = "SmooksExecutionContext";
 
@@ -83,16 +83,13 @@ public class Transformer extends AbstractMessageAwareTransformer {
 	 */
 	private String javaResultBeanId;
 
-	public Transformer() {
-	}
-
 //	public
 
 	@Override
 	public void initialise() throws InitialisationException
 	{
 		//	determine the ResultType
-		ResultType resultType = getResultType();
+		ResultType resultType = getResultTypeEnum();
 
 		//	Create the Smooks instance
 		smooks = createSmooksInstance();
@@ -273,8 +270,12 @@ public class Transformer extends AbstractMessageAwareTransformer {
 		}
 	}
 
+	public String getResultType() {
+		return resultType;
+	}
 
-	public ResultType getResultType() throws InitialisationException
+
+	private ResultType getResultTypeEnum() throws InitialisationException
 	{
 		ResultType resultType = ResultType.STRING;
 		if ( this.resultType != null )
