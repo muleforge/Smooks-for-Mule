@@ -15,42 +15,75 @@
 
 	<xsd:element name="router" type="smooksOutboundRouterType" substitutionGroup="mule:abstract-outbound-router">
 		<xsd:annotation>
-            <xsd:documentation>
-                A router that uses Smooks for the routing.
-            </xsd:documentation>
-        </xsd:annotation>
+			<xsd:documentation>An outbound router that uses Smooks to split the message and dispatch the splitted messages to the registered endpoints. Use the org.milyn.smooks.mule.FragmentRouter visitor (DOM and SAX) to dispatch the messages to the endpoints.</xsd:documentation>
+		</xsd:annotation>
 	</xsd:element>
 	<xsd:complexType name="smooksOutboundRouterType">
 		<xsd:complexContent>
 			<xsd:extension base="mule:filteringOutboundRouterType">
-				<xsd:attribute name="configFile" type="xsd:string" use="required" />
-				<xsd:attribute name="reportPath" type="xsd:string"/>
-				<xsd:attribute name="executionContextAsMessageProperty"	type="mule:substitutableBoolean"/>
-				<xsd:attribute name="executionContextMessagePropertyKey" type="xsd:string"/>
-				<xsd:attribute name="excludeNonSerializables" type="mule:substitutableBoolean"/>
-                <xsd:attribute name="honorSynchronicity" type="mule:substitutableBoolean"/>
+				<xsd:attribute name="configFile" type="xsd:string" use="required" >
+					<xsd:annotation>
+						<xsd:documentation>The Smooks configuration file. Can be a path on the file system or on the classpath. </xsd:documentation>
+					</xsd:annotation></xsd:attribute>
+                <xsd:attribute name="honorSynchronicity" type="mule:substitutableBoolean">
+                	<xsd:annotation>
+                		<xsd:documentation>If the synchronicity of the endpoint should override the general synchronicity settings</xsd:documentation>
+                	</xsd:annotation></xsd:attribute>
+				<xsd:attribute name="executionContextAsMessageProperty"	type="mule:substitutableBoolean">
+					<xsd:annotation>
+						<xsd:documentation>If set to &quot;true&quot; then the attributes map of the Smooks execution context is added to the message properties. The property key is defined with the executionContextMessagePropertyKey property. Default is &quot;false&quot; </xsd:documentation></xsd:annotation></xsd:attribute>
+				<xsd:attribute name="executionContextMessagePropertyKey" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>The property key under which the execution context is put. Default is &quot;SmooksExecutionContext&quot; </xsd:documentation></xsd:annotation></xsd:attribute>
+				<xsd:attribute name="excludeNonSerializables" type="mule:substitutableBoolean">
+					<xsd:annotation>
+						<xsd:documentation>If non serializable attributes need to be execluded when setting the Smooks execution context attribute map as a message propeperty. Default is "true" </xsd:documentation>
+					</xsd:annotation></xsd:attribute>
+                <xsd:attribute name="reportPath" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Specifies the path and file name for generating a Smooks Execution Report.  This is a development tool. For more information see the Smooks reporting section in the Smook manual.</xsd:documentation>
+					</xsd:annotation></xsd:attribute>
             </xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 
 	<xsd:element name="transformer" type="smooksTransformerType" substitutionGroup="mule:abstract-transformer">
 		<xsd:annotation>
-            <xsd:documentation>
-                A transformer that uses Smooks for the transformation
-            </xsd:documentation>
-        </xsd:annotation>
+			<xsd:documentation>A transformer that uses Smooks for the transformation.</xsd:documentation>
+		</xsd:annotation>
 	</xsd:element>
 	<xsd:complexType name="smooksTransformerType">
 		<xsd:complexContent>
 			<xsd:extension base="mule:abstractTransformerType">
-				<xsd:attribute name="configFile" type="xsd:string" use="required" />
-				<xsd:attribute name="reportPath" type="xsd:string" />
-				<xsd:attribute name="executionContextAsMessageProperty"	type="mule:substitutableBoolean" />
-				<xsd:attribute name="executionContextMessagePropertyKey" type="mule:substitutableName" />
-				<xsd:attribute name="excludeNonSerializables"	type="mule:substitutableBoolean"/>
-				<xsd:attribute name="javaResultBeanId" type="mule:substitutableName" />
-				<xsd:attribute name="resultType" type="resultTypeType" use="optional" />
-			</xsd:extension>
+				<xsd:attribute name="configFile" type="xsd:string" use="required" >
+					<xsd:annotation>
+						<xsd:documentation>The Smooks configuration file. Can be a path on the file system or on the classpath. </xsd:documentation>
+					</xsd:annotation></xsd:attribute>
+				<xsd:attribute name="resultType" type="resultTypeType" use="optional" >
+					<xsd:annotation>
+						<xsd:documentation>The type of result expected from Smooks ("STRING", "BYTES", "JAVA", "NORESULT"). Default is "STRING". </xsd:documentation>
+					</xsd:annotation></xsd:attribute>
+                <xsd:attribute name="javaResultBeanId" type="mule:substitutableName">
+					<xsd:annotation>
+						<xsd:documentation>The BeanId from which the Object is used as message payload if the resultType is set to "JAVA".</xsd:documentation>
+					</xsd:annotation></xsd:attribute>
+                <xsd:attribute name="executionContextAsMessageProperty" type="mule:substitutableBoolean">
+					<xsd:annotation>
+						<xsd:documentation>If set to &quot;true&quot; then the attributes map of the Smooks execution context is added to the message properties. The property key is defined with the executionContextMessagePropertyKey property. Default is &quot;false&quot; </xsd:documentation>
+					</xsd:annotation></xsd:attribute>
+                <xsd:attribute name="executionContextMessagePropertyKey" type="mule:substitutableName">
+					<xsd:annotation>
+						<xsd:documentation>The property key under which the execution context is put. Default is &quot;SmooksExecutionContext&quot; </xsd:documentation>
+					</xsd:annotation></xsd:attribute>
+                <xsd:attribute name="excludeNonSerializables" type="mule:substitutableBoolean">
+					<xsd:annotation>
+						<xsd:documentation> If non serializable attributes need to be execluded when setting the Smooks execution context attribute map as a message propeperty. Default is &quot;true&quot; </xsd:documentation>
+					</xsd:annotation></xsd:attribute>
+                <xsd:attribute name="reportPath" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>specifies the path and file name for generating a Smooks Execution Report.  This is a development tool. For more information see: Smooks Reporting</xsd:documentation>
+					</xsd:annotation></xsd:attribute>
+            </xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 
