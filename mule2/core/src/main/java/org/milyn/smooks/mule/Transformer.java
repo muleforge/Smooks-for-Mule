@@ -56,7 +56,7 @@ public class Transformer extends AbstractMessageAwareTransformer {
 	/*
 	 * Filename for smooks configuration. Default is smooks-config.xml
 	 */
-    private String smooksConfigFile;
+    private String configFile;
 
     /*
      * If true, then the execution context is set as property on the message
@@ -116,14 +116,34 @@ public class Transformer extends AbstractMessageAwareTransformer {
 	}
 
 
-	public String getSmooksConfigFile()
+	public String getConfigFile()
 	{
-		return smooksConfigFile;
+		return configFile;
 	}
 
-	public void setSmooksConfigFile( final String smooksConfigFile )
+	public boolean isExecutionContextAsMessageProperty() {
+		return executionContextAsMessageProperty;
+	}
+
+	public String getExecutionContextMessagePropertyKey() {
+		return executionContextMessagePropertyKey;
+	}
+
+	public boolean isExcludeNonSerializables() {
+		return excludeNonSerializables;
+	}
+
+	public String getReportPath() {
+		return reportPath;
+	}
+
+	public String getJavaResultBeanId() {
+		return javaResultBeanId;
+	}
+
+	public void setConfigFile( final String configFile )
 	{
-		this.smooksConfigFile = smooksConfigFile;
+		this.configFile = configFile;
 	}
 
 	public void setResultType( final String resultType )
@@ -231,7 +251,7 @@ public class Transformer extends AbstractMessageAwareTransformer {
 
 	private Smooks createSmooksInstance() throws InitialisationException
 	{
-		if ( smooksConfigFile == null )
+		if ( configFile == null )
 		{
 			final Message errorMsg = createStaticMessage( "'smooksConfigFile' parameter must be specified" );
 			throw new InitialisationException( errorMsg, this );
@@ -239,7 +259,7 @@ public class Transformer extends AbstractMessageAwareTransformer {
 
 		try
 		{
-			return new Smooks ( smooksConfigFile );
+			return new Smooks ( configFile );
 		}
 		catch ( final IOException e)
 		{
@@ -254,7 +274,7 @@ public class Transformer extends AbstractMessageAwareTransformer {
 	}
 
 
-	private ResultType getResultType() throws InitialisationException
+	public ResultType getResultType() throws InitialisationException
 	{
 		ResultType resultType = ResultType.STRING;
 		if ( this.resultType != null )

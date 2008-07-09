@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns="http://www.muleforge.org/schema/mule/module/smooks/1.0"
+<xsd:schema xmlns="http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0"
 			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     		xmlns:spring="http://www.springframework.org/schema/beans"
     		xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
-			targetNamespace="http://www.muleforge.org/schema/mule/module/smooks/1.0"
+			targetNamespace="http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0"
 			elementFormDefault="qualified"
 			attributeFormDefault="unqualified">
 
@@ -13,51 +13,61 @@
     <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0"
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
 
-	<xsd:element name="smooks-router" type="smooksOutboundRouterType"
+	<xsd:element name="router" type="smooksOutboundRouterType"
                  substitutionGroup="mule:abstract-outbound-router"/>
 	<xsd:complexType name="smooksOutboundRouterType">
 		<xsd:complexContent>
 			<xsd:extension base="mule:filteringOutboundRouterType">
-				<xsd:attribute name="honorSynchronicity"
-					type="mule:substitutableBoolean" />
-				<xsd:attribute name="smooksConfigFile"
-					type="mule:substitutableName">
+				<xsd:attribute name="configFile"
+					type="xsd:string" use="required">
 				</xsd:attribute>
 				<xsd:attribute name="reportPath"
-					type="mule:substitutableName">
+					type="xsd:string" use="optional">
 				</xsd:attribute>
 				<xsd:attribute name="executionContextAsMessageProperty"
-					type="mule:substitutableBoolean">
+					type="xsd:boolean" use="optional">
 				</xsd:attribute>
 				<xsd:attribute name="executionContextMessagePropertyKey"
-					type="xsd:NMTOKEN">
+					type="xsd:string" use="optional">
 				</xsd:attribute>
-				<xsd:attribute name="excludeNonSerializables" type="mule:substitutableBoolean"></xsd:attribute>
-			</xsd:extension>
+				<xsd:attribute name="excludeNonSerializables" type="xsd:boolean" use="optional"></xsd:attribute>
+                <xsd:attribute name="honorSynchronicity" type="xsd:boolean" use="optional" />
+            </xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:element name="smooks-transformer" type="smooksTransformerType"
+	<xsd:element name="transformer" type="smooksTransformerType"
                  substitutionGroup="mule:abstract-transformer"/>
 	<xsd:complexType name="smooksTransformerType">
 		<xsd:complexContent>
 			<xsd:extension base="mule:abstractTransformerType">
-				<xsd:attribute name="smooksConfigFile"
-					type="mule:substitutableName">
+				<xsd:attribute name="configFile" type="xsd:string" use="required">
 				</xsd:attribute>
-				<xsd:attribute name="reportPath"
-					type="mule:substitutableName">
+				<xsd:attribute name="reportPath" type="xsd:string" use="optional">
 				</xsd:attribute>
 				<xsd:attribute name="executionContextAsMessageProperty"
-					type="mule:substitutableBoolean">
+					type="xsd:boolean" use="optional">
 				</xsd:attribute>
 				<xsd:attribute name="executionContextMessagePropertyKey"
-					type="xsd:NMTOKEN">
+					type="xsd:string" use="optional">
 				</xsd:attribute>
 				<xsd:attribute name="excludeNonSerializables"
-					type="mule:substitutableBoolean">
+					type="xsd:boolean" use="optional">
 				</xsd:attribute>
+				<xsd:attribute name="javaResultBeanId"
+					type="xsd:string" use="optional">
+				</xsd:attribute>
+				<xsd:attribute name="resultType" type="resultTypeType" use="optional"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
+
+	<xsd:simpleType name="resultTypeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="STRING"></xsd:enumeration>
+			<xsd:enumeration value="BYTES"></xsd:enumeration>
+			<xsd:enumeration value="JAVA"></xsd:enumeration>
+			<xsd:enumeration value="NORESULT"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
 </xsd:schema>

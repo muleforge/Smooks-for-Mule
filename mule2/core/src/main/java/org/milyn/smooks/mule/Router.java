@@ -56,7 +56,7 @@ public class Router extends FilteringOutboundRouter {
 	/*
 	 * Filename for smooks configuration. Default is smooks-config.xml
 	 */
-    private String smooksConfigFile;
+    private String configFile;
 
     /*
      * If true, then the execution context is set as property on the message
@@ -93,14 +93,14 @@ public class Router extends FilteringOutboundRouter {
 		payloadProcessor = new PayloadProcessor( smooks, ResultType.NORESULT );
 	}
 
-	public String getSmooksConfigFile()
+	public String getConfigFile()
 	{
-		return smooksConfigFile;
+		return configFile;
 	}
 
-	public void setSmooksConfigFile( final String smooksConfigFile )
+	public void setConfigFile( final String configFile )
 	{
-		this.smooksConfigFile = smooksConfigFile;
+		this.configFile = configFile;
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class Router extends FilteringOutboundRouter {
 
 	private Smooks createSmooksInstance() throws InitialisationException
 	{
-		if ( smooksConfigFile == null )
+		if ( configFile == null )
 		{
 			final Message errorMsg = createStaticMessage( "'smooksConfigFile' parameter must be specified" );
 			throw new InitialisationException( errorMsg, this );
@@ -215,7 +215,7 @@ public class Router extends FilteringOutboundRouter {
 
 		try
 		{
-			return new Smooks ( smooksConfigFile );
+			return new Smooks ( configFile );
 		}
 		catch ( final IOException e)
 		{
