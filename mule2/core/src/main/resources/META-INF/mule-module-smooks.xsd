@@ -20,7 +20,7 @@
 	</xsd:element>
 	<xsd:complexType name="smooksOutboundRouterType">
 		<xsd:complexContent>
-			<xsd:extension base="mule:filteringOutboundRouterType">
+			<xsd:extension base="mule:multipleEndpointFilteringOutboundRouterType">
 				<xsd:attribute name="configFile" type="xsd:string" use="required" >
 					<xsd:annotation>
 						<xsd:documentation>The Smooks configuration file. Can be a path on the file system or on the classpath. </xsd:documentation>

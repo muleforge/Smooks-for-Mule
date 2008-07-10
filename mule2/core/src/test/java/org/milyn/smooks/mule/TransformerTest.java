@@ -72,11 +72,19 @@ public class TransformerTest extends AbstractMuleTestCase
 		}
 	}
 
-	public void testDoTransformation() throws TransformerException
-	{
+	public void testDoTransformationExecContextAttrNotDefinend() throws Exception {
 		testDoTransformation(null, null);
+	}
+
+	public void testDoTransformationWithoutExecContextAttr() throws Exception {
 		testDoTransformation(false, null);
+	}
+
+	public void testDoTransformationWithExecContextAttr() throws Exception {
 		testDoTransformation(true, null);
+	}
+
+	public void testDoTransformationWithExecContextAttrWithOwnAttrKey() throws Exception {
 		testDoTransformation(true, "executionContextSmooks");
 	}
 
