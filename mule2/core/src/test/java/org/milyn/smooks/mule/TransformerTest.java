@@ -7,7 +7,6 @@ import java.io.IOException;
 import org.junit.Before;
 import org.milyn.io.StreamUtils;
 import org.mule.DefaultMuleMessage;
-import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
@@ -27,8 +26,6 @@ import org.mule.tck.AbstractMuleTestCase;
 public class TransformerTest extends AbstractMuleTestCase
 {
 	private Transformer transformer;
-
-	private MuleEventContext eventContext;
 
 	private final String smooksConfigFile = "/transformer-smooks-config.xml";
 

@@ -6,24 +6,20 @@ package org.milyn.smooks.mule;
 import static org.mule.config.i18n.MessageFactory.createStaticMessage;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.milyn.Smooks;
 import org.milyn.container.ExecutionContext;
 import org.milyn.container.plugin.PayloadProcessor;
 import org.milyn.container.plugin.ResultType;
 import org.milyn.event.report.HtmlReportGenerator;
-import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
-import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.routing.CouldNotRouteOutboundMessageException;
 import org.mule.api.routing.RoutingException;
 import org.mule.config.i18n.Message;
 import org.mule.routing.outbound.FilteringOutboundRouter;
@@ -82,6 +78,7 @@ public class Router extends FilteringOutboundRouter {
     // synchronous on the endpoint
 	private boolean honorSynchronicity = false;
 
+	private final Map<String, OutboundEndpoint> endpointMap = new HashMap<String, OutboundEndpoint>();
 
 	@Override
 	public void initialise() throws InitialisationException
@@ -91,6 +88,21 @@ public class Router extends FilteringOutboundRouter {
 
 		//	Create the Smooks payload processor
 		payloadProcessor = new PayloadProcessor( smooks, ResultType.NORESULT );
+
+		initialiseEndpointMap();
+	}
+
+	private void initialiseEndpointMap() {
+		for(Object e :  getEndpoints()) {
+			OutboundEndpoint endpoint = (OutboundEndpoint) e;
+
+			String name = endpoint.getName();
+			if(StringUtils.isEmpty(name)) {
+				throw new IllegalArgumentException("The outbound endpoint list may only contain endpoints which have a name");
+			}
+
+			endpointMap.put(name, endpoint);
+		}
 	}
 
 	public String getConfigFile()
@@ -200,10 +212,10 @@ public class Router extends FilteringOutboundRouter {
 
 
 		// Create the dispatcher which handles the dispatching of messages
-		AbstractMuleDispatcher dispatcher = createDispatcher(executionContext, session, synchronous);
+		NamedOutboundEndpointMuleDispatcher dispatcher = createDispatcher(executionContext, session, synchronous);
 
 		// make the dispatcher available for Smooks
-		executionContext.setAttribute(MuleDispatcher.SMOOKS_CONTEXT, dispatcher);
+		executionContext.setAttribute(NamedEndpointMuleDispatcher.SMOOKS_CONTEXT, dispatcher);
 
 		//	Add smooks reporting if configured
 		addReportingSupport(message, executionContext );
@@ -212,34 +224,6 @@ public class Router extends FilteringOutboundRouter {
         payloadProcessor.process( payload, executionContext );
 
 		return null;
-	}
-
-	/**
-     * Will return a Map containing only the Serializable objects
-     * that exist in the passed-in Map if {@link #excludeNonSerializables} is true.
-     *
-     * @param smooksAttribuesMap 	- Map containing attributes from the Smooks ExecutionContext
-     * @return Map	- Map containing only the Serializable objects from the passed-in map.
-     */
-    @SuppressWarnings( "unchecked" )
-	protected Map getSerializableObjectsMap( final Map smooksAttribuesMap )
-	{
-    	if ( !excludeNonSerializables ) {
-			return smooksAttribuesMap;
-		}
-
-		Map smooksExecutionContextMap = new HashMap();
-
-		Set<Map.Entry> s = smooksAttribuesMap.entrySet();
-		for (Map.Entry me : s)
-		{
-			Object value = me.getValue();
-			if( value instanceof Serializable )
-			{
-				smooksExecutionContextMap.put( me.getKey(), value );
-			}
-		}
-		return smooksExecutionContextMap;
 	}
 
 	private Smooks createSmooksInstance() throws InitialisationException
@@ -267,52 +251,12 @@ public class Router extends FilteringOutboundRouter {
 	}
 
 
-	@SuppressWarnings("unchecked")
-	private AbstractMuleDispatcher createDispatcher(final ExecutionContext executionContext, final MuleSession muleSession, final  boolean synchronous) {
 
-		//Create the dispatcher which will dispatch the messages provided by Smooks
-		AbstractMuleDispatcher dispatcher = new AbstractMuleDispatcher(getEndpoints()) {
-
-			@Override
-			public void dispatch(OutboundEndpoint endpoint, MuleMessage message) {
-
-				boolean synced = synchronous;
-				if (honorSynchronicity)
-                {
-					synced = endpoint.isSynchronous();
-                }
-
-
-				if(executionContextAsMessageProperty) {
-		        	// Set the Smooks Excecution properties on the Mule Message object
-		        	message.setProperty(executionContextMessagePropertyKey, getSerializableObjectsMap( executionContext.getAttributes()) );
-		        }
-
-				try {
-
-					if (honorSynchronicity)
-                    {
-                        message.setBooleanProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, endpoint.isRemoteSync());
-                    }
-
-					if(synced) {
-
-						//We ignore the result because we can't do anything meaning full with it
-						Router.this.send(muleSession, message, endpoint);
-
-					} else {
-						Router.this.dispatch(muleSession, message, endpoint);
-					}
-
-				} catch (MuleException e) {
-
-					//TODO: Fixme?
-					throw new RuntimeException(new CouldNotRouteOutboundMessageException(message, endpoint, e));
-
-				}
-			}
-		};
-		return dispatcher;
+	/**
+	 *	Create the dispatcher which will dispatch the messages provided by Smooks
+	 */
+	private NamedOutboundEndpointMuleDispatcher createDispatcher(final ExecutionContext executionContext, final MuleSession muleSession, final  boolean synchronous) {
+		return new NamedOutboundEndpointMuleDispatcher(endpointMap, this, muleSession, executionContext, executionContextAsMessageProperty, executionContextMessagePropertyKey, excludeNonSerializables, honorSynchronicity, synchronous);
 	}
 
 	private void addReportingSupport(final MuleMessage message, final ExecutionContext executionContext ) throws RoutingException

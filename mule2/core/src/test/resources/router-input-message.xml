@@ -1,4 +1,10 @@
 <root>
+	<properties>
+		<property name="xmlTest1">xmlTest1Value</property>
+	    <property name="xmlTest2">xmlTest2Value</property>
+	    <property name="testOverwritten">overwritten</property>
+	</properties>
+
 	<a value="Hello World" />
 	<b>
 		<c>1</c>

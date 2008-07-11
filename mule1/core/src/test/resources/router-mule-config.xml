@@ -9,9 +9,9 @@
     </description>
 
     <model name="Test">
-        <mule-descriptor name="Test" implementation="org.mule.components.simple.BridgeComponent">
-			 <inbound-router>
-                <endpoint address="vm://messageInput"/>
+        <mule-descriptor name="TestUMO" implementation="org.mule.components.simple.BridgeComponent">
+			<inbound-router>
+            	<endpoint address="vm://messageInput"/>
             </inbound-router>
 
             <outbound-router>
@@ -27,6 +27,13 @@
                     	</properties>
             		</endpoint>
 
+            		<endpoint name="reply" address="vm://replyingEndpoint" />
+					<endpoint name="fileReply" address="file://./target/routing-test">
+            			<properties>
+                    		<property name="outputPattern" value="fileReply.dat"/>
+                    	</properties>
+            		</endpoint>
+
                     <properties>
                     	<property name="configFile" value="/router-smooks-config.xml" />
 	            		<property name="reportPath" value="target/smooks-report/report.html" />
@@ -36,6 +43,12 @@
                     </properties>
                 </router>
             </outbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="ReplyUMO" implementation="org.milyn.smooks.mule.component.TestReplyComponent">
+        	<inbound-router>
+            	<endpoint address="vm://replyingEndpoint"/>
+            </inbound-router>
         </mule-descriptor>
     </model>
 

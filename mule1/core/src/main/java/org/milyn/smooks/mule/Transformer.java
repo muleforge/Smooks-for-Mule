@@ -3,11 +3,7 @@ package org.milyn.smooks.mule;
 import static org.mule.config.i18n.MessageFactory.createStaticMessage;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import org.milyn.Smooks;
 import org.milyn.container.ExecutionContext;
@@ -281,38 +277,10 @@ public class Transformer extends AbstractEventAwareTransformer
         if(executionContextAsMessageProperty) {
 
         	//	Set the Smooks Excecution properties on the Mule Message object
-        	umoEventContext.getMessage().setProperty( executionContextMessagePropertyKey, getSerializableObjectsMap( executionContext.getAttributes() ) );
+        	umoEventContext.getMessage().setProperty( executionContextMessagePropertyKey, ExecutionContextUtil.getSerializableObjectsMap(executionContext.getAttributes(), excludeNonSerializables) );
         }
 
 		return transformedPayload;
-	}
-
-	/**
-     * Will return a Map containing only the Serializable objects
-     * that exist in the passed-in Map if {@link #excludeNonSerializables} is true.
-     *
-     * @param smooksAttribuesMap 	- Map containing attributes from the Smooks ExecutionContext
-     * @return Map	- Map containing only the Serializable objects from the passed-in map.
-     */
-    @SuppressWarnings( "unchecked" )
-	protected Map getSerializableObjectsMap( final Map smooksAttribuesMap )
-	{
-    	if ( !excludeNonSerializables ) {
-			return smooksAttribuesMap;
-		}
-
-		Map smooksExecutionContextMap = new HashMap();
-
-		Set<Map.Entry> s = smooksAttribuesMap.entrySet();
-		for (Map.Entry me : s)
-		{
-			Object value = me.getValue();
-			if( value instanceof Serializable )
-			{
-				smooksExecutionContextMap.put( me.getKey(), value );
-			}
-		}
-		return smooksExecutionContextMap;
 	}
 
 	//	private

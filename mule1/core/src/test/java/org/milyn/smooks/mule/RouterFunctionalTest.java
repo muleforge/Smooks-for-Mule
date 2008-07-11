@@ -4,12 +4,15 @@
 package org.milyn.smooks.mule;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.util.FileUtils;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
@@ -26,6 +29,8 @@ public class RouterFunctionalTest extends FunctionalTestCase {
 			new File(routingTestDir, "file2-1.dat"),
 			new File(routingTestDir, "file2-2.dat"),
 	};
+
+	private final File testReplyFile = new File(routingTestDir, "fileReply.dat");
 
 	@Override
 	protected String getConfigResources() {
@@ -45,6 +50,11 @@ public class RouterFunctionalTest extends FunctionalTestCase {
         for(int i = 0; i < test2Files.length; i++) {
         	assertTrue("File '" + test2Files[i] + "' doesn't exist.", test2Files[i].exists());
         }
+
+        assertTrue("File '" + testReplyFile + "' doesn't exist.", testReplyFile.exists());
+
+        String testReplyFileContent = IOUtils.toString(new FileInputStream(testReplyFile), "UTF-8");
+        assertEquals("Reply value incorrect", "Hello World,testValue,test2Value,10,1215772256000,xmlTest1Value,xmlTest2Value,overwritten", testReplyFileContent);
     }
 
 	/* (non-Javadoc)
@@ -54,16 +64,7 @@ public class RouterFunctionalTest extends FunctionalTestCase {
 	protected void doPreFunctionalSetUp() throws Exception {
 		super.doPreFunctionalSetUp();
 
-		routingTestDir.delete();
+		FileUtils.deleteDirectory(routingTestDir);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.mule.tck.FunctionalTestCase#doFunctionalTearDown()
-	 */
-	@Override
-	protected void doFunctionalTearDown() throws Exception {
-		super.doFunctionalTearDown();
-
-		routingTestDir.delete();
-	}
 }

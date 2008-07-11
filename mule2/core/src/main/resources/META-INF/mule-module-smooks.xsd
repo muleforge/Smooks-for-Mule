@@ -13,6 +13,7 @@
     <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0"
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
 
+
 	<xsd:element name="router" type="smooksOutboundRouterType" substitutionGroup="mule:abstract-outbound-router">
 		<xsd:annotation>
 			<xsd:documentation>An outbound router that uses Smooks to split the message and dispatch the splitted messages to the registered endpoints. Use the org.milyn.smooks.mule.FragmentRouter visitor (DOM and SAX) to dispatch the messages to the endpoints.</xsd:documentation>
@@ -20,7 +21,7 @@
 	</xsd:element>
 	<xsd:complexType name="smooksOutboundRouterType">
 		<xsd:complexContent>
-			<xsd:extension base="mule:multipleEndpointFilteringOutboundRouterType">
+			<xsd:extension base="mule:filteringOutboundRouterType">
 				<xsd:attribute name="configFile" type="xsd:string" use="required" >
 					<xsd:annotation>
 						<xsd:documentation>The Smooks configuration file. Can be a path on the file system or on the classpath. </xsd:documentation>

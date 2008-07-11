@@ -17,8 +17,6 @@
         This router config is for unit testing
     </description>
 
-	<file:connector name="nonSerializingFileConnector" serialiseObjects="false"/>
-
     <model name="main">
         <service name="TestUMO">
             <inbound>
@@ -34,12 +32,24 @@
 					excludeNonSerializables="false"
 					honorSynchronicity="true">
 
-					<file:outbound-endpoint name="file1" path="target/routing-test" outputPattern="file1.dat" connector-ref="nonSerializingFileConnector"/>
-            		<file:outbound-endpoint name="file2" path="target/routing-test" outputPattern="file2-${COUNT}.dat" connector-ref="nonSerializingFileConnector"/>
+					<file:outbound-endpoint name="file1" path="target/routing-test" outputPattern="file1.dat"/>
+            		<file:outbound-endpoint name="file2" path="target/routing-test" outputPattern="file2-${COUNT}.dat"/>
+
+            		<vm:outbound-endpoint name="reply" path="replyingEndpoint" synchronous="true"/>
+            		<file:outbound-endpoint name="fileReply" path="target/routing-test" outputPattern="fileReply.dat"/>
 
             	</smooks:router>
             </outbound>
         </service>
+
+		<service name="ReplyUMO">
+			<inbound>
+				<vm:inbound-endpoint path="replyingEndpoint" synchronous="true"/>
+			</inbound>
+
+			<component class="org.milyn.smooks.mule.component.TestReplyComponent" />
+
+		</service>
 
     </model>
 </mule>
