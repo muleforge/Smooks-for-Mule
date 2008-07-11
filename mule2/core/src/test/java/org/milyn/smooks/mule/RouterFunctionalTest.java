@@ -6,6 +6,8 @@ package org.milyn.smooks.mule;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -54,7 +56,7 @@ public class RouterFunctionalTest extends FunctionalTestCase {
         assertTrue("File '" + testReplyFile + "' doesn't exist.", testReplyFile.exists());
 
         String testReplyFileContent = IOUtils.toString(new FileInputStream(testReplyFile), "UTF-8");
-        assertEquals("Reply value incorrect", "Hello World,testValue,test2Value,10,1215772256000,xmlTest1Value,xmlTest2Value,overwritten", testReplyFileContent);
+        assertEquals("Reply value incorrect", "Hello World,testValue,test2Value,10,1215797456000,xmlTest1Value,xmlTest2Value,overwritten", testReplyFileContent);
     }
 
 
@@ -64,6 +66,9 @@ public class RouterFunctionalTest extends FunctionalTestCase {
 	@Override
 	protected void doSetUp() throws Exception {
 		super.doSetUp();
+
+		TimeZone.setDefault(TimeZone.getTimeZone("EST"));
+		Locale.setDefault(Locale.ENGLISH);
 
 		FileUtils.deleteDirectory(routingTestDir);
 	}
