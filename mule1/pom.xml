@@ -14,6 +14,14 @@
 	<packaging>pom</packaging>
 	<description>Parent Pom Smooks Mule module for Mule 1.x</description>
 
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<modules>
 		<module>core</module>
 		<module>examples</module>
@@ -22,6 +30,19 @@
 	<properties>
 		<muleVersion>1.4.4</muleVersion>
 	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 	<dependencyManagement>
 
@@ -37,6 +58,7 @@
 				<groupId>org.mule.modules</groupId>
 				<artifactId>mule-module-client</artifactId>
 				<version>${muleVersion}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.mule.tests</groupId>
@@ -50,21 +72,25 @@
 				<groupId>org.mule.transports</groupId>
 				<artifactId>mule-transport-vm</artifactId>
 				<version>${muleVersion}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.mule.transports</groupId>
 				<artifactId>mule-transport-tcp</artifactId>
 				<version>${muleVersion}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.mule.transports</groupId>
 				<artifactId>mule-transport-file</artifactId>
 				<version>${muleVersion}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.mule.transports</groupId>
 				<artifactId>mule-transport-stream</artifactId>
 				<version>${muleVersion}</version>
+				<scope>test</scope>
 			</dependency>
 
 		</dependencies>

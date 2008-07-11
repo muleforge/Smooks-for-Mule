@@ -21,18 +21,49 @@
 		<domainName>smooks</domainName>
 	</properties>
 
-	<issueManagement>
-		<system>Jira</system>
-		<url>http://mule.mulesource.org/jira/browse/${shortId}</url>
-	</issueManagement>
+	<url>http://www.mulesource.org/display/${shortId}/Home</url>
+
+	<inceptionYear>2008</inceptionYear>
 
 	<developers>
 		<developer>
 			<id>maurice_zeijen</id>
 			<name>Maurice Zeijen</name>
 			<email>maurice@zeijen.net</email>
+			<timezone>+1</timezone>
 		</developer>
 	</developers>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<mailingLists>
+		<mailingList>
+			<name>User list</name>
+			<subscribe>http://admin.muleforge.org/manage_email/user%40${domainName}.muleforge.org</subscribe>
+			<unsubscribe>http://admin.muleforge.org/lists/user%40${domainName}.muleforge.org/unsubscribe</unsubscribe>
+			<post>user@${domainName}.muleforge.org </post>
+			<archive>http://archive.${domainName}.muleforge.org/user</archive>
+
+		</mailingList>
+		<mailingList>
+			<name>Developer list</name>
+			<subscribe>http://admin.muleforge.org/manage_email/dev%40${domainName}.muleforge.org</subscribe>
+			<unsubscribe>http://admin.muleforge.org/lists/dev%40${domainName}.muleforge.org/unsubscribe</unsubscribe>
+			<post>dev@${domainName}.muleforge.org </post>
+			<archive>http://archive.${domainName}.muleforge.org/dev</archive>
+		</mailingList>
+	</mailingLists>
+
+	<issueManagement>
+		<system>Jira</system>
+		<url>http://mule.mulesource.org/jira/browse/${shortId}</url>
+	</issueManagement>
 
 	<scm>
 		<connection>
@@ -98,18 +129,54 @@
 				</configuration>
 			</plugin>
 			<plugin>
-		        <groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-source-plugin</artifactId>
-		        <executions>
-		          <execution>
-		            <id>attach-sources</id>
-		            <phase>verify</phase>
-		            <goals>
-		              <goal>jar</goal>
-		            </goals>
-		          </execution>
-		        </executions>
-		      </plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--
+			<plugin>
+	            <groupId>com.google.code.maven-license-plugin</groupId>
+	            <artifactId>maven-license-plugin</artifactId>
+	            <version>1.3.1</version
+	            <configuration>
+	                <basedir>${basedir}</basedir>
+	                <header>${basedir}/src/etc/header.txt</header>
+	                <quiet>false</quiet>
+	                <failIfMissing>true</failIfMissing>
+	                <includes>
+	                    <include>src/**</include>
+	                    <include>**/test/**</include>
+	                </includes>
+	                <excludes>
+	                    <exclude>target/**</exclude>
+	                    <exclude>.clover/**</exclude>
+	                </excludes>
+	                <useDefaultExcludes>true</useDefaultExcludes>
+	                <useDefaultMapping>true</useDefaultMapping>
+	                <properties>
+	                    <year>${project.inceptionYear}</year>
+	                    <name>Maurice Zeijen</name>
+	                    <email>maurice@zeijen.net</email>
+	                </properties>
+	                <encoding>UTF-8</encoding>
+	            </configuration>
+	            <executions>
+	                <execution>
+	                    <goals>
+	                        <goal>check</goal>
+	                    </goals>
+	                </execution>
+	            </executions>
+	        </plugin>
+			 -->
 		</plugins>
 	</build>
 

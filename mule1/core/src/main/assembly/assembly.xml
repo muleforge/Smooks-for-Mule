@@ -1,0 +1,45 @@
+<!--
+Assembly descriptor for the full distribution.
+-->
+<assembly>
+	<id>SmooksForMule1Core</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>/lib/user</outputDirectory>
+			<scope>runtime</scope>
+			<useTransitiveFiltering>true</useTransitiveFiltering>
+			<excludes>
+				<exclude>org.freemarker:freemarker</exclude>
+				<exclude>org.mvel:mvel</exclude>
+				<exclude>org.mule:mule-core</exclude>
+				<exclude>hsqldb:hsqldb</exclude>
+				<exclude>log4j:log4j</exclude>
+				<exclude>slf4j</exclude>
+				<exclude>com.thoughtworks.xstream:xstream</exclude>
+			</excludes>
+		</dependencySet>
+	</dependencySets>
+	<fileSets>
+		<fileSet>
+			<includes>
+				<include>README*</include>
+				<include>LICENSE*</include>
+				<include>NOTICE*</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>target</directory>
+			<outputDirectory>/lib/user</outputDirectory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+			<excludes>
+				<exclude>*sources.jar</exclude>
+			</excludes>
+		</fileSet>
+	</fileSets>
+</assembly>

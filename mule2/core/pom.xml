@@ -13,6 +13,14 @@
 	<name>Smooks Mule module for Mule 2.x </name>
 	<description />
 
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<dependencies>
 		<!-- Module Core -->
 		<dependency>

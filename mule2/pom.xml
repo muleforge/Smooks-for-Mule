@@ -14,6 +14,14 @@
 	<packaging>pom</packaging>
 	<description>Parent Pom Smooks Transformer for Mule 2.x</description>
 
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<properties>
 		<muleVersion>2.0.1</muleVersion>
 	</properties>

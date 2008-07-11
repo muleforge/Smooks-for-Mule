@@ -15,12 +15,12 @@
 */
 package example.model;
 
-import java.util.Date;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  *
- * @author maurice_zeijen
+ * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
  *
  */
 public class Header {
@@ -88,7 +88,8 @@ public class Header {
         this.customer = customer;
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         StringBuffer desc = new StringBuffer();
 
         desc.append("\tCustomer: " + customer + "\n");

@@ -13,6 +13,14 @@
 	<name>Smooks Mule module for Mule: Core</name>
 	<description>This project contains the Core classes of the Smooks Mule module.</description>
 
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<dependencies>
 
 		<!-- Smooks Dependencies -->
