@@ -3,16 +3,15 @@ package org.milyn.smooks.mule.component;
 import java.util.Date;
 import java.util.Map;
 
-import org.mule.api.MuleEventContext;
-import org.mule.api.MuleMessage;
-import org.mule.api.lifecycle.Callable;
+import org.mule.umo.UMOEventContext;
+import org.mule.umo.UMOMessage;
+import org.mule.umo.lifecycle.Callable;
 
-public class TestReplyComponent implements Callable {
-
+public class ReplyComponent implements Callable{
 
 	@SuppressWarnings("unchecked")
-	public Object onCall(MuleEventContext eventContext) throws Exception {
-		MuleMessage message = eventContext.getMessage();
+	public Object onCall(UMOEventContext eventContext) throws Exception {
+		UMOMessage message = eventContext.getMessage();
 		Map<String, Object> payload = (Map<String, Object>) message.getPayload();
 
 		String test = (String) message.getProperty("test");
