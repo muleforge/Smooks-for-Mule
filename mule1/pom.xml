@@ -10,9 +10,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule1-module-smooks-parent</artifactId>
-	<name>Smooks Mule module for Mule 1.x - Parent Pom</name>
+	<name>Smooks for Mule 1.x - Parent pom</name>
 	<packaging>pom</packaging>
-	<description>Parent Pom Smooks Mule module for Mule 1.x</description>
+	<description>Parent pom Smooks for Mule  1.x. This project contains the general settings of the Smooks for Mule  1.x Core and it's examples.</description>
 
 	<licenses>
 		<license>

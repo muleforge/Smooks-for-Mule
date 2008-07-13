@@ -10,8 +10,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule-module-smooks-core</artifactId>
-	<name>Smooks Mule module for Mule: Core</name>
-	<description>This project contains the Core classes of the Smooks Mule module.</description>
+	<name>Smooks for Mule - Core</name>
+	<description>This project contains the Core classes of the Smooks for Mule module. It is Mule version independent.</description>
 
 	<licenses>
 		<license>

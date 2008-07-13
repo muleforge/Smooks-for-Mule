@@ -10,10 +10,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule2-module-smooks-examples-edi-to-java</artifactId>
-	<name>Smooks Mule module for Mule 2.x - EDI to Java example </name>
-	<description>
-		Is a simple example of how Smooks can be used as a transformer.
-	</description>
+	<name>Smooks for Mule 2.x - EDI to Java example</name>
+	<description>Is a simple example of how the Smooks for Mule Transformer can be used.</description>
 
 	<licenses>
 		<license>

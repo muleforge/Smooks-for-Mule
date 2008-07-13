@@ -10,8 +10,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule1-module-smooks</artifactId>
-	<name>Smooks for Mule module for Mule 1.x </name>
-	<description />
+	<name>Smooks for Mule 1.x - Core</name>
+	<description>
+		Smooks for Mule 1.x Core library.
+
+		Smooks for Mule enables Message Transformation and Routing using the Smooks Engine.
+
+		Smooks is a Java Framework/Engine for processing XML and non XML data (CSV, EDI etc).
+
+		There is also a version which is compatible with Mule 2.x
+	</description>
 
 	<licenses>
 		<license>

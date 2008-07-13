@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
 	<parent>
 		<artifactId>mule1-module-smooks-examples</artifactId>
 		<groupId>org.mule.modules</groupId>
@@ -10,10 +11,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule1-module-smooks-examples-edi-to-java</artifactId>
-	<name>Smooks Mule module for Mule 1.x - EDI to Java example</name>
-	<description>
-		Is a simple example of how Smooks can be used as a transformer.
-	</description>
+	<name>Smooks for Mule 1.x - EDI to Java example</name>
+	<description>Is a simple example of how the Smooks for Mule Transformer can be used.</description>
 
 	<licenses>
 		<license>

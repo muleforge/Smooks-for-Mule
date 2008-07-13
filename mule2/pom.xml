@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<description>Parent pom Smooks for Mule  2.x. This project contains the general settings of the Smooks for Mule  2.x Core and it's examples.</description>
 	<parent>
 		<artifactId>mule-module-smooks</artifactId>
 		<groupId>org.mule.modules</groupId>
@@ -10,9 +11,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule2-module-smooks-parent</artifactId>
-	<name>Smooks Mule module for Mule 2.x - Parent Pom</name>
+	<name>Smooks for Mule 2.x - Parent Pom</name>
 	<packaging>pom</packaging>
-	<description>Parent Pom Smooks Transformer for Mule 2.x</description>
 
 	<licenses>
 		<license>

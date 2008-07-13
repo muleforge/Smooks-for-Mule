@@ -10,9 +10,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule1-module-smooks-examples</artifactId>
-	<name>Smooks Mule module for Mule 1.x - Examples</name>
+	<name>Smooks for Mule 1.x - Examples</name>
 	<packaging>pom</packaging>
-	<description>Parent POM for all examples </description>
+	<description>Parent POM for all the Smooks for Mule 1.x  examples.</description>
 
 	<licenses>
 		<license>
