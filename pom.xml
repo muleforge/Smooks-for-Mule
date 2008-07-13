@@ -19,7 +19,7 @@
 		<shortId>SMOOKS</shortId>
 		<domainName>smooks</domainName>
 	</properties>
-	<description>Parent pom  for the Smooks for Mule module. 
+	<description>Parent pom  for the Smooks for Mule module.
 Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what version you use you need the Smooks for Mule 1.x or Smooks for Mule 2.x core modules.</description>
 
 	<url>http://www.mulesource.org/display/${shortId}/Home</url>
@@ -223,7 +223,7 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 					</tags>
 				</configuration>
 			</plugin>
-			<!-- <plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
 			</plugin>
@@ -243,7 +243,7 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 						</link>
 					</links>
 				</configuration>
-			</plugin> -->
+			</plugin>
 			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -253,7 +253,7 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 						http://mulesource.org/download/attachments/92/checkstyle.xml?version=1
 					</configLocation>
 				</configuration>
-			</plugin>
+			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
@@ -268,13 +268,13 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<!- - configuration>
+				<!-- configuration>
 					<threshold>Low</threshold>
 					<effort>Max</effort>
-					</configuration - ->
+					</configuration -->
 			</plugin>
 
-			 -->
+
 		</plugins>
 	</reporting>
 

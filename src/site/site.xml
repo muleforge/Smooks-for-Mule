@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="Smooks for Mule">
 
-  <!--<bannerLeft>
-    <name>Hotel Database</name>
-    <src>http://maven.apache.org/images/apache-maven-project.png</src>
-    <href>http://maven.apache.org/</href>
-  </bannerLeft>
-  <bannerRight>
-    <src>http://maven.apache.org/images/maven-small.gif</src>
-  </bannerRight>
-  -->
   <body>
     <links>
       <item name="Smooks for Mule" href="http://www.mulesource.org/display/SMOOKS/Home"/>
@@ -18,13 +9,6 @@
       <item name="Smooks" href="http://milyn.codehaus.org/Smooks"/>
     </links>
 
-	<!--
-    <menu name="Smooks for Mule">
-      <item name="Introduction" href="index.html"/>
-      <item name="User guide" href="userGuide.html" />
-      <item name="Examples" href="examples.html"/>
-    </menu>
-	 -->
 	<menu ref="parent" />
 	<menu ref="modules" />
 	<menu ref="reports" />
