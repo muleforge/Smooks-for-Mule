@@ -36,7 +36,7 @@ import org.mule.umo.transformer.TransformerException;
  * execution of {@link Transformer} and not the actual tranformations<br>
  * that Smooks performs as these are covered in the Smooks project.
  *
- * @author <a href="mailto:daniel.bevenius@gmail.com">Daniel Bevenius</a>
+ * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  *
  */
 public class TransformerTest extends AbstractMuleTestCase

@@ -19,6 +19,11 @@ package org.milyn.smooks.mule;
 import org.mule.routing.outbound.DefaultOutboundRouterCollection;
 import org.mule.tck.FunctionalTestCase;
 
+/**
+ *
+ * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
+ *
+ */
 public class NamespaceTest extends FunctionalTestCase {
 
 	@Override

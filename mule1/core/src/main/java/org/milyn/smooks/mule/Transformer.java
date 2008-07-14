@@ -90,7 +90,7 @@ import org.xml.sax.SAXException;
  * types, which is of particular interest with respect to the Result type e.g. for streaming
  * the Result to a file etc.
  *
- * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
+ * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  *
  */
 public class Transformer extends AbstractEventAwareTransformer

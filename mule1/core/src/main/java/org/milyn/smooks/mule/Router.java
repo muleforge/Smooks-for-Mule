@@ -39,8 +39,8 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 /**
- * @author maurice_zeijen
  *
+ * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  */
 public class Router extends FilteringOutboundRouter {
 

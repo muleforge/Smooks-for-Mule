@@ -39,9 +39,7 @@ import org.xml.sax.SAXException;
  * SmooksTransformer intended to be used with the Mule ESB.
  *
  *
- * @author <a href="mailto:maurice@zeijen.net">maurice@zeijen.net</a>
- *
- */
+ * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a> */
 public class Transformer extends AbstractMessageAwareTransformer {
 
 	private static final Logger log = LoggerFactory.getLogger(Transformer.class);

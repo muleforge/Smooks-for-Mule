@@ -23,6 +23,11 @@ import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 
+/**
+ * 
+ * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
+ *
+ */
 public class ReplyComponent implements Callable {
 
 
