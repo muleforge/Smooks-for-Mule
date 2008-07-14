@@ -1,5 +1,3 @@
-!!!!NOTE!!!!: Example not converted to Mule 2.x yet!!!
-
 +----------------------------+
 | Smooks EDI to Java Example |
 +----------------------------+
