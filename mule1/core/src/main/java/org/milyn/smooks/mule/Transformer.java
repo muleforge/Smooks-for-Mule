@@ -21,10 +21,11 @@ import static org.mule.config.i18n.MessageFactory.createStaticMessage;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.StringUtils;
 import org.milyn.Smooks;
 import org.milyn.container.ExecutionContext;
 import org.milyn.container.plugin.PayloadProcessor;
-import org.milyn.container.plugin.ResultType;
 import org.milyn.event.report.HtmlReportGenerator;
 import org.mule.config.i18n.Message;
 import org.mule.transformers.AbstractEventAwareTransformer;
@@ -42,7 +43,7 @@ import org.xml.sax.SAXException;
  * <pre>
  * Declare the tranformer in the Mule configuration file:
  * &lt;transformers&gt;
- *      &lt;transformer name="SmooksTransformer" className="org.milyn.smooks.mule.SmooksTransformer"/&gt;
+ *      &lt;transformer name="SmooksTransformer" className="org.milyn.smooks.mule.Transformer"/&gt;
  * &lt;/transformers&gt;
  *
  * Configure the transformer with a router:
@@ -61,11 +62,13 @@ import org.xml.sax.SAXException;
  * <h3>Description of configuration properties</h3>
  * <ul>
  * <li><i>smooksConfig</i> - the Smooks configuration file. Can be a path on the file system or on the classpath.
- * <li><i>resultType</i> - type of result expected from Smooks ("STRING", "BYTES", "JAVA", "NORESULT"). Default is "STRING".
+ * <li><i>resultType</i> - type of result expected from Smooks ("STRING", "BYTES", "JAVA", "RESULT", "NORESULT"). Default is "STRING".
  * <li><i>excludeNonSerializables</i> - if true, non serializable attributes from the Smooks ExecutionContext will no be included. Default is true.
  * <li><i>reportPath</i> - specifies the path and file name for generating a Smooks Execution Report.  This is a development tool.
  * <li><i>javaResultBeanId</i> - specifies the Smooks bean context beanId to be mapped as the result when the resultType is "JAVA".  If not specified,
  *                               the whole bean context bean Map is mapped as the result.
+ * <li><i>resultClass</i> - specifies the Class to construct the {@link Result} Object from
+ * <li><i>resultFactoryClass</i> - specifies the Factory class which will create the {@link Result} Object to be used as the result Source.
  * </ul>
  *
  * <h3>Accessing Smooks ExecutionContext attributes</h3>
@@ -101,7 +104,7 @@ public class Transformer extends AbstractEventAwareTransformer
 	/*
 	 * Smooks payload processor
 	 */
-	private PayloadProcessor payloadProcessor;
+	private SmooksPayloadProcessor smooksPayloadProcessor;
 
 	/*
 	 * Smooks instance
@@ -143,25 +146,26 @@ public class Transformer extends AbstractEventAwareTransformer
 	 */
 	private String javaResultBeanId;
 
-    //	public
+	/*
+	 * The classname of the class that will be used as Result object
+	 */
+	private String resultClass;
+
+	/*
+	 * The classname of the factory class that will be used to create the Result object
+	 */
+	private String resultFactoryClass;
+
 
 	@Override
-	public void initialise() throws InitialisationException
-	{
-		//	determine the ResultType
-		ResultType resultType = getResultTypeEnum();
+	public void initialise() throws InitialisationException {
 
 		//	Create the Smooks instance
 		smooks = createSmooksInstance();
 
-		//	Create the Smooks payload processor
-		payloadProcessor = new PayloadProcessor( smooks, resultType );
+		// Create the payload processor
+		smooksPayloadProcessor = createSmooksPayloadProcessor();
 
-		//	set the JavaResult beanId if specified
-		if ( resultType == ResultType.JAVA && javaResultBeanId != null )
-		{
-			payloadProcessor.setJavaResultBeanId( javaResultBeanId );
-        }
 	}
 
 	/**
@@ -214,6 +218,24 @@ public class Transformer extends AbstractEventAwareTransformer
 	public void setConfigFile( final String configFile )
 	{
 		this.configFile = configFile;
+	}
+
+	public String getResultClass() {
+		return resultClass;
+	}
+
+	public void setResultClass(String resultClass) {
+		this.resultClass = resultClass;
+	}
+
+
+	public String getResultFactoryClass() {
+		return resultFactoryClass;
+	}
+
+
+	public void setResultFactoryClass(String resultFactoryClass) {
+		this.resultFactoryClass = resultFactoryClass;
 	}
 
     @Override
@@ -285,7 +307,7 @@ public class Transformer extends AbstractEventAwareTransformer
 		addReportingSupport( executionContext );
 
         //	Use the Smooks PayloadProcessor to execute the transformation....
-        final Object transformedPayload = payloadProcessor.process( payload, executionContext );
+        final Object transformedPayload = smooksPayloadProcessor.process( payload, executionContext );
 
         if(executionContextAsMessageProperty) {
 
@@ -322,19 +344,87 @@ public class Transformer extends AbstractEventAwareTransformer
 		}
 	}
 
+
+	private SmooksPayloadProcessor createSmooksPayloadProcessor() throws InitialisationException {
+		// determine the ResultType
+		ResultType resultType = getResultTypeEnum();
+
+		//	Create the Smooks payload processor
+		SmooksPayloadProcessor payloadProcessor;
+		if(resultType == ResultType.RESULT) {
+			payloadProcessor = new SmooksPayloadProcessor( smooks, resultType, createSourceResultFactory());
+		} else {
+			payloadProcessor = new SmooksPayloadProcessor( smooks, resultType );
+		}
+
+		//	set the JavaResult beanId if specified
+		if ( resultType == ResultType.JAVA && javaResultBeanId != null )
+		{
+			payloadProcessor.setJavaResultBeanId( javaResultBeanId );
+        }
+
+		return payloadProcessor;
+	}
+
+	/**
+	 * Creates a SourceResult Factory
+	 *
+	 * @return
+	 * @throws InitialisationException
+	 */
+	private SourceResultFactory createSourceResultFactory() throws InitialisationException {
+
+		ResultFactory resultFactory;
+		if(!StringUtils.isBlank(resultClass)) {
+			try {
+				resultFactory = new ClassNameResultFactory(resultClass);
+			} catch (ClassNotFoundException e) {
+				final Message errorMsg = createStaticMessage( "The class '"+ resultClass +"' definend in the 'resultClass' property can't be found.");
+				throw new InitialisationException(errorMsg, e, this);
+			} catch (IllegalArgumentException e) {
+				final Message errorMsg = createStaticMessage( e.getMessage() );
+				throw new InitialisationException(errorMsg, e, this);
+			}
+
+		} else if(!StringUtils.isBlank(resultFactoryClass)) {
+			try {
+				resultFactory = (ResultFactory) ClassUtils.getClass(this.getClass().getClassLoader(), resultFactoryClass).newInstance();
+			} catch (ClassNotFoundException e) {
+				final Message errorMsg = createStaticMessage( "The class '"+ resultFactoryClass +"' definend in the 'resultFactoryClass' property can't be found.");
+				throw new InitialisationException(errorMsg, e, this);
+			} catch (InstantiationException e) {
+				final Message errorMsg = createStaticMessage( "The class '"+ resultFactoryClass +"' definend in the 'resultFactoryClass' property can't be instantiated.");
+				throw new InitialisationException(errorMsg, e, this);
+			} catch (IllegalAccessException e) {
+				final Message errorMsg = createStaticMessage( "The class '"+ resultFactoryClass +"' definend in the 'resultFactoryClass' property can't be instantiated.");
+				throw new InitialisationException(errorMsg, e, this);
+			} catch (ClassCastException e) {
+				final Message errorMsg = createStaticMessage( "The class '" + resultFactoryClass + "' does not implement the 'org.milyn.smooks.mule.ResultFactory' interface." );
+				throw new InitialisationException(errorMsg, e, this);
+			}
+
+		} else {
+			final Message errorMsg = createStaticMessage( "The resultType is '" + resultType + "' but no 'resultClass' or 'resultFactoryClass' is correctly defined. On of those need to be defined.");
+
+			throw new InitialisationException(errorMsg, this);
+		}
+
+		return new GenericSourceResultFactory(resultFactory);
+	}
+
 	private ResultType getResultTypeEnum() throws InitialisationException
 	{
 		ResultType resultType = ResultType.STRING;
 		if ( this.resultType != null )
 		{
-	        try
+			try
 	        {
 	            resultType = ResultType.valueOf( this.resultType );
 	        }
 	        catch ( final IllegalArgumentException e )
 	        {
     			final Message errorMsg = createStaticMessage( "Invalid 'resultType' config value '" + resultType + "'.  Valid values are: " + Arrays.asList(ResultType.values() ) );
-	            throw new InitialisationException(errorMsg, e );
+	            throw new InitialisationException(errorMsg, e, this);
 	        }
 		}
 		return resultType;
@@ -352,7 +442,7 @@ public class Transformer extends AbstractEventAwareTransformer
             catch ( final IOException e)
             {
     			final Message errorMsg = createStaticMessage( "Failed to create HtmlReportGenerator instance." );
-	            throw new TransformerException( errorMsg, e );
+	            throw new TransformerException( errorMsg, this, e );
             }
         }
 	}

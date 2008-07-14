@@ -2,13 +2,13 @@
 <!--
 
     Copyright (C) 2008 Maurice Zeijen <maurice@zeijen.net>
-    
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
-    
+
             http://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,35 +74,109 @@
 	<xsd:complexType name="smooksTransformerType">
 		<xsd:complexContent>
 			<xsd:extension base="mule:abstractTransformerType">
-				<xsd:attribute name="configFile" type="xsd:string" use="required" >
+				<xsd:attribute name="configFile" type="xsd:string"
+					use="required">
 					<xsd:annotation>
-						<xsd:documentation>The Smooks configuration file. Can be a path on the file system or on the classpath. </xsd:documentation>
-					</xsd:annotation></xsd:attribute>
-				<xsd:attribute name="resultType" type="resultTypeType" use="optional" >
+						<xsd:documentation>
+							The Smooks configuration file. Can be a path
+							on the file system or on the classpath.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="resultType" type="resultTypeType"
+					use="optional">
 					<xsd:annotation>
-						<xsd:documentation>The type of result expected from Smooks ("STRING", "BYTES", "JAVA", "NORESULT"). Default is "STRING". </xsd:documentation>
-					</xsd:annotation></xsd:attribute>
-                <xsd:attribute name="javaResultBeanId" type="mule:substitutableName">
+						<xsd:documentation>
+							The type of result expected from Smooks
+							("STRING", "BYTES", "JAVA", "RESULT",
+							"NORESULT"). When setting the value to "Result" then
+							the "resultClass" or "resultFactoryClass" must
+							also be set.
+							Default is "STRING".
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="javaResultBeanId"
+					type="mule:substitutableName">
 					<xsd:annotation>
-						<xsd:documentation>The BeanId from which the Object is used as message payload if the resultType is set to "JAVA".</xsd:documentation>
-					</xsd:annotation></xsd:attribute>
-                <xsd:attribute name="executionContextAsMessageProperty" type="mule:substitutableBoolean">
+						<xsd:documentation>
+							The BeanId from which the Object is used as
+							message payload if the resultType is set to
+							"JAVA".
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="resultClass"
+					type="mule:substitutableName">
 					<xsd:annotation>
-						<xsd:documentation>If set to &quot;true&quot; then the attributes map of the Smooks execution context is added to the message properties. The property key is defined with the executionContextMessagePropertyKey property. Default is &quot;false&quot; </xsd:documentation>
-					</xsd:annotation></xsd:attribute>
-                <xsd:attribute name="executionContextMessagePropertyKey" type="mule:substitutableName">
+						<xsd:documentation>
+							When the resultType is set to "RESULT" then
+							this attribute defines the Result Class
+							which will be used. The class must implement
+							the "javax.xml.transform.Result" interface
+							and must have an argument less constructor.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="resultFactoryClass"
+					type="mule:substitutableName">
 					<xsd:annotation>
-						<xsd:documentation>The property key under which the execution context is put. Default is &quot;SmooksExecutionContext&quot; </xsd:documentation>
-					</xsd:annotation></xsd:attribute>
-                <xsd:attribute name="excludeNonSerializables" type="mule:substitutableBoolean">
+						<xsd:documentation>
+							When the resultType is set to "RESULT" then
+							this attribute defines the ResultFactory
+							Class which will be used to create the
+							Result Class. The class must implement the
+							"org.milyn.smooks.mule.ResultFactory"
+							interface and must have an argument less
+							constructor.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="executionContextAsMessageProperty"
+					type="mule:substitutableBoolean">
 					<xsd:annotation>
-						<xsd:documentation> If non serializable attributes need to be execluded when setting the Smooks execution context attribute map as a message propeperty. Default is &quot;true&quot; </xsd:documentation>
-					</xsd:annotation></xsd:attribute>
-                <xsd:attribute name="reportPath" type="xsd:string">
+						<xsd:documentation>
+							If set to &quot;true&quot; then the
+							attributes map of the Smooks execution
+							context is added to the message properties.
+							The property key is defined with the
+							executionContextMessagePropertyKey property.
+							Default is &quot;false&quot;
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="executionContextMessagePropertyKey"
+					type="mule:substitutableName">
 					<xsd:annotation>
-						<xsd:documentation>specifies the path and file name for generating a Smooks Execution Report.  This is a development tool. For more information see: Smooks Reporting</xsd:documentation>
-					</xsd:annotation></xsd:attribute>
-            </xsd:extension>
+						<xsd:documentation>
+							The property key under which the execution
+							context is put. Default is
+							&quot;SmooksExecutionContext&quot;
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="excludeNonSerializables"
+					type="mule:substitutableBoolean">
+					<xsd:annotation>
+						<xsd:documentation>
+							If non serializable attributes need to be
+							execluded when setting the Smooks execution
+							context attribute map as a message
+							propeperty. Default is &quot;true&quot;
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="reportPath" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>
+							specifies the path and file name for
+							generating a Smooks Execution Report. This
+							is a development tool. For more information
+							see: Smooks Reporting
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 
@@ -111,6 +185,7 @@
 			<xsd:enumeration value="STRING"></xsd:enumeration>
 			<xsd:enumeration value="BYTES"></xsd:enumeration>
 			<xsd:enumeration value="JAVA"></xsd:enumeration>
+			<xsd:enumeration value="RESULT"></xsd:enumeration>
 			<xsd:enumeration value="NORESULT"></xsd:enumeration>
 		</xsd:restriction>
 	</xsd:simpleType>

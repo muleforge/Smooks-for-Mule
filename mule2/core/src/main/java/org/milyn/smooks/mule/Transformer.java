@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2008 Maurice Zeijen <maurice@zeijen.net>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,10 +21,10 @@ import static org.mule.config.i18n.MessageFactory.createStaticMessage;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.StringUtils;
 import org.milyn.Smooks;
 import org.milyn.container.ExecutionContext;
-import org.milyn.container.plugin.PayloadProcessor;
-import org.milyn.container.plugin.ResultType;
 import org.milyn.event.report.HtmlReportGenerator;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
@@ -53,7 +53,7 @@ public class Transformer extends AbstractMessageAwareTransformer {
 	/*
 	 * Smooks payload processor
 	 */
-	private PayloadProcessor payloadProcessor;
+	private SmooksPayloadProcessor smooksPayloadProcessor;
 
 	/*
 	 * Smooks instance
@@ -95,33 +95,28 @@ public class Transformer extends AbstractMessageAwareTransformer {
 	 */
 	private String javaResultBeanId;
 
+	/*
+	 * The classname of the class that will be used as Result object
+	 */
+	private String resultClass;
+
+
+
+	/*
+	 * The classname of the factory class that will be used to create the Result object
+	 */
+	private String resultFactoryClass;
+
+
 //	public
 
 	@Override
-	public void initialise() throws InitialisationException
-	{
-		//	determine the ResultType
-		ResultType resultType = getResultTypeEnum();
-
+	public void initialise() throws InitialisationException {
 		//	Create the Smooks instance
 		smooks = createSmooksInstance();
 
 		//	Create the Smooks payload processor
-		payloadProcessor = new PayloadProcessor( smooks, resultType );
-
-		switch(resultType) {
-		case STRING:
-			setReturnClass(String.class);
-			break;
-		case BYTES:
-			setReturnClass(byte[].class);
-			break;
-		case JAVA:
-			if ( javaResultBeanId != null )
-            {
-                payloadProcessor.setJavaResultBeanId( javaResultBeanId );
-            }
-		}
+		smooksPayloadProcessor = createSmooksPayloadProcessor();
 	}
 
 
@@ -148,6 +143,24 @@ public class Transformer extends AbstractMessageAwareTransformer {
 
 	public String getJavaResultBeanId() {
 		return javaResultBeanId;
+	}
+
+	public String getResultClass() {
+		return resultClass;
+	}
+
+
+	public void setResultClass(String resultClass) {
+		this.resultClass = resultClass;
+	}
+
+
+	public String getResultFactoryClass() {
+		return resultFactoryClass;
+	}
+
+	public void setResultFactoryClass(String resultFactoryClass) {
+		this.resultFactoryClass = resultFactoryClass;
 	}
 
 	public void setConfigFile( final String configFile )
@@ -218,7 +231,7 @@ public class Transformer extends AbstractMessageAwareTransformer {
 		addReportingSupport( executionContext );
 
         //	Use the Smooks PayloadProcessor to execute the transformation....
-        final Object transformedPayload = payloadProcessor.process( payload, executionContext );
+        final Object transformedPayload = smooksPayloadProcessor.process( payload, executionContext );
 
         if(executionContextAsMessageProperty) {
         	// Set the Smooks Excecution properties on the Mule Message object
@@ -252,6 +265,73 @@ public class Transformer extends AbstractMessageAwareTransformer {
 			final Message errorMsg = createStaticMessage( "SAXException while trying to get smooks instance: " );
 			throw new InitialisationException( errorMsg, e, this);
 		}
+	}
+
+	private SmooksPayloadProcessor createSmooksPayloadProcessor() throws InitialisationException {
+		// determine the ResultType
+		ResultType resultType = getResultTypeEnum();
+
+		//	Create the Smooks payload processor
+		SmooksPayloadProcessor payloadProcessor;
+		if(resultType == ResultType.RESULT) {
+			payloadProcessor = new SmooksPayloadProcessor( smooks, resultType, createSourceResultFactory());
+		} else {
+			payloadProcessor = new SmooksPayloadProcessor( smooks, resultType );
+		}
+
+		//	set the JavaResult beanId if specified
+		if ( resultType == ResultType.JAVA && javaResultBeanId != null )
+		{
+			payloadProcessor.setJavaResultBeanId( javaResultBeanId );
+        }
+
+		return payloadProcessor;
+	}
+
+	/**
+	 * Creates a SourceResult Factory
+	 *
+	 * @return
+	 * @throws InitialisationException
+	 */
+	private SourceResultFactory createSourceResultFactory() throws InitialisationException {
+
+		ResultFactory resultFactory;
+		if(!StringUtils.isBlank(resultClass)) {
+			try {
+				resultFactory = new ClassNameResultFactory(resultClass);
+			} catch (ClassNotFoundException e) {
+				final Message errorMsg = createStaticMessage( "The class '"+ resultClass +"' definend in the 'resultClass' property can't be found.");
+				throw new InitialisationException(errorMsg, e, this);
+			} catch (IllegalArgumentException e) {
+				final Message errorMsg = createStaticMessage( e.getMessage() );
+				throw new InitialisationException(errorMsg, e, this);
+			}
+
+		} else if(!StringUtils.isBlank(resultFactoryClass)) {
+			try {
+				resultFactory = (ResultFactory) ClassUtils.getClass(this.getClass().getClassLoader(), resultFactoryClass).newInstance();
+			} catch (ClassNotFoundException e) {
+				final Message errorMsg = createStaticMessage( "The class '"+ resultFactoryClass +"' definend in the 'resultFactoryClass' property can't be found.");
+				throw new InitialisationException(errorMsg, e, this);
+			} catch (InstantiationException e) {
+				final Message errorMsg = createStaticMessage( "The class '"+ resultFactoryClass +"' definend in the 'resultFactoryClass' property can't be instantiated.");
+				throw new InitialisationException(errorMsg, e, this);
+			} catch (IllegalAccessException e) {
+				final Message errorMsg = createStaticMessage( "The class '"+ resultFactoryClass +"' definend in the 'resultFactoryClass' property can't be instantiated.");
+				throw new InitialisationException(errorMsg, e, this);
+			} catch (ClassCastException e) {
+				final Message errorMsg = createStaticMessage( "The class '" + resultFactoryClass + "' does not implement the 'org.milyn.smooks.mule.ResultFactory' interface." );
+				throw new InitialisationException(errorMsg, e, this);
+			}
+
+		} else {
+			final Message errorMsg = createStaticMessage( "The resultType is '" + resultType + "' but no 'resultClass' or 'resultFactoryClass' is correctly defined. On of those need to be defined.");
+
+			throw new InitialisationException(errorMsg, this);
+		}
+
+		return new GenericSourceResultFactory(resultFactory);
 	}
 
 	public String getResultType() {

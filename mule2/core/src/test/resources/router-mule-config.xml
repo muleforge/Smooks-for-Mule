@@ -65,7 +65,7 @@
 				<vm:inbound-endpoint path="replyingEndpoint" synchronous="true"/>
 			</inbound>
 
-			<component class="org.milyn.smooks.mule.component.ReplyComponent" />
+			<component class="test.ReplyComponent" />
 
 		</service>
 

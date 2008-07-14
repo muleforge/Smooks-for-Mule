@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package org.milyn.smooks.mule.component;
+package test;
 
 import java.util.Date;
 import java.util.Map;
 
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.UMOMessage;
-import org.mule.umo.lifecycle.Callable;
+import org.mule.api.MuleEventContext;
+import org.mule.api.MuleMessage;
+import org.mule.api.lifecycle.Callable;
 
-public class ReplyComponent implements Callable{
+public class ReplyComponent implements Callable {
+
 
 	@SuppressWarnings("unchecked")
-	public Object onCall(UMOEventContext eventContext) throws Exception {
-		UMOMessage message = eventContext.getMessage();
+	public Object onCall(MuleEventContext eventContext) throws Exception {
+		MuleMessage message = eventContext.getMessage();
 		Map<String, Object> payload = (Map<String, Object>) message.getPayload();
 
 		String test = (String) message.getProperty("test");
