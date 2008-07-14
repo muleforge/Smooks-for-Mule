@@ -89,9 +89,11 @@
 						<xsd:documentation>
 							The type of result expected from Smooks
 							("STRING", "BYTES", "JAVA", "RESULT",
-							"NORESULT"). When setting the value to "Result" then
-							the "resultClass" or "resultFactoryClass" must
-							also be set.
+							"NORESULT"). When setting the value to "JAVA" then
+							you can set the "javaResultBeanId" attribute.
+							When setting the value to "RESULT" then
+							one of the "resultClass" or "resultFactoryClass"
+							attributes must also be set.
 							Default is "STRING".
 						</xsd:documentation>
 					</xsd:annotation>
@@ -114,7 +116,7 @@
 							this attribute defines the Result Class
 							which will be used. The class must implement
 							the "javax.xml.transform.Result" interface
-							and must have an argument less constructor.
+							and must have an argumentless constructor.
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
@@ -127,7 +129,7 @@
 							Class which will be used to create the
 							Result Class. The class must implement the
 							"org.milyn.smooks.mule.ResultFactory"
-							interface and must have an argument less
+							interface and must have an argumentless
 							constructor.
 						</xsd:documentation>
 					</xsd:annotation>
