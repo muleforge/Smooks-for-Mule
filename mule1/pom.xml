@@ -36,8 +36,10 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
+					<finalName>mule1-module-smooks-${version}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
 					<descriptors>
-						<descriptor>src/main/assembly/assembly.xml</descriptor>
+						<descriptor>dist/assembly.xml</descriptor>
 					</descriptors>
 				</configuration>
 			</plugin>

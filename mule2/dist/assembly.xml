@@ -1,0 +1,122 @@
+
+	<!--
+		Copyright (C) 2008 Maurice Zeijen <maurice@zeijen.net> Licensed under
+		the Apache License, Version 2.0 (the "License"); you may not use this
+		file except in compliance with the License. You may obtain a copy of
+		the License at http://www.apache.org/licenses/LICENSE-2.0 Unless
+		required by applicable law or agreed to in writing, software
+		distributed under the License is distributed on an "AS IS" BASIS,
+		WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+		implied. See the License for the specific language governing
+		permissions and limitations under the License.
+	-->
+
+<!--
+Assembly descriptor for the full distribution.
+-->
+<assembly>
+	<id>SmooksForMule2</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<moduleSets>
+		<moduleSet>
+			<includes>
+				<include>org.mule.modules:mule2-module-smooks</include>
+			</includes>
+			<sources>
+
+				<includeModuleDirectory>false</includeModuleDirectory>
+				<fileSets>
+					<fileSet>
+
+						<includes>
+							<include>src/**</include>
+						</includes>
+						<excludes>
+							<exclude>**/assembly/**</exclude>
+						</excludes>
+					</fileSet>
+				</fileSets>
+			</sources>
+
+			<binaries>
+        		<outputDirectory>/lib/user/</outputDirectory>
+				<unpack>false</unpack>
+				<dependencySets>
+					<dependencySet>
+						<scope>runtime</scope>
+						<useTransitiveFiltering>true</useTransitiveFiltering>
+						<excludes>
+							<exclude>org.freemarker:freemarker</exclude>
+							<exclude>org.mvel:mvel</exclude>
+							<exclude>org.mule:mule-core</exclude>
+							<exclude>org.mule.modules:mule-module-spring-config</exclude>
+							<exclude>hsqldb:hsqldb</exclude>
+							<exclude>log4j:log4j</exclude>
+							<exclude>slf4j</exclude>
+							<exclude>com.thoughtworks.xstream:xstream</exclude>
+						</excludes>
+					</dependencySet>
+				</dependencySets>
+
+			</binaries>
+		</moduleSet>
+		<moduleSet>
+			<includes>
+				<include>org.mule.modules:mule2-module-smooks-examples-edi-to-java</include>
+			</includes>
+			<sources>
+				<outputDirectoryMapping>/examples/edi-to-java/</outputDirectoryMapping>
+				<fileSets>
+					<fileSet>
+						<includes>
+							<include>src/**</include>
+							<include>conf/**</include>
+							<include>data/**</include>
+							<include>run*</include>
+						</includes>
+					</fileSet>
+					<fileSet>
+						<directory>/dist</directory>
+						<includes>
+							<include>README*</include>
+							<include>build.xml</include>
+						</includes>
+					</fileSet>
+				</fileSets>
+
+			</sources>
+
+			<binaries>
+        		<outputDirectory>/examples/edi-to-java/lib/user/</outputDirectory>
+				<unpack>false</unpack>
+				<dependencySets>
+					<dependencySet>
+						<scope>runtime</scope>
+						<useTransitiveFiltering>true</useTransitiveFiltering>
+						<excludes>
+							<exclude>commons-lang</exclude>
+							<exclude>commons-logging</exclude>
+							<exclude>xmlbeans:xmlbeans-jsr173-api</exclude>
+							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
+						</excludes>
+					</dependencySet>
+				</dependencySets>
+			</binaries>
+		</moduleSet>
+	</moduleSets>
+	<fileSets>
+		<fileSet>
+			<directory>dist</directory>
+			<outputDirectory>.</outputDirectory>
+			<includes>
+				<include>LICENSE*</include>
+				<include>NOTICE*</include>
+				<include>README*</include>
+				<include>build.xml</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+</assembly>
