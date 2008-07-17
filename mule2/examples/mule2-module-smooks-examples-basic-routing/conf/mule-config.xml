@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
+       xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.0"
+       xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+       xmlns:smooks="http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd
+       http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd
+       http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
+       http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0 http://dist.muleforge.org/smooks/schema/mule-module-smooks/1.0/mule-module-smooks.xsd
+       ">
+
+
+    <description>
+        This example demonstrates invoking a Groovy script as the service component.
+    </description>
+
+	<smooks:transformer
+		name="BasicXSLTTransformation"
+		configFile="/transforms/smooks-config.xml"
+		reportPath="target/smooks-report/report.html"
+		resultType="STRING"
+	/>
+
+    <model name="OrderProcessorModel">
+        <service name="OrderProcessorService">
+            <inbound>
+                <file:inbound-endpoint
+                	path="./data/in"
+                	pollingFrequency="1000"
+                	moveToDirectory="./data/out"
+                	transformer-refs="BasicXSLTTransformation"
+                >
+                	<file:filename-wildcard-filter pattern="*.xml"/>
+                </file:inbound-endpoint>
+
+                <!-- For unit-test -->
+                <vm:inbound-endpoint path="BasicProcessor" transformer-refs="BasicXSLTTransformation" />
+
+            </inbound>
+            <outbound>
+            	<outbound-pass-through-router>
+            		<stdio:outbound-endpoint system="OUT" />
+            	</outbound-pass-through-router>
+            </outbound>
+        </service>
+    </model>
+</mule>

@@ -19,5 +19,5 @@ fi
 MULE_LIB=./conf
 export MULE_LIB
 
-exec "$MULE_BASE/bin/mule" -config ./conf/mule-edi-to-java-config.xml
+exec "$MULE_BASE/bin/mule" -config ./conf/mule-config.xml
 

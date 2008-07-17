@@ -1,0 +1,30 @@
+<project name="Smooks for Mule 2.x - Basic routing example" default="install" basedir=".">
+
+	<property environment="env" />
+
+	<property name="mule.home" value="${env.MULE_HOME}" />
+
+	<target name="check-mule-home">
+
+		<fail message="MULE_HOME environment variable not set" unless="mule.home" />
+
+
+		<fail message="MULE_HOME '${mule.home}' does not exist.">
+			<condition>
+				<not>
+					<available file="${mule.home}" type="dir" />
+				</not>
+			</condition>
+		</fail>
+
+	</target>
+
+	<target name="install" depends="check-mule-home">
+
+		<copy todir="${mule.home}/lib/user">
+			<fileset dir="lib/user" />
+		</copy>
+
+	</target>
+
+</project>

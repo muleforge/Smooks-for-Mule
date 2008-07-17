@@ -26,7 +26,6 @@ Assembly descriptor for the full distribution.
 				<include>org.mule.modules:mule2-module-smooks</include>
 			</includes>
 			<sources>
-
 				<includeModuleDirectory>false</includeModuleDirectory>
 				<fileSets>
 					<fileSet>
@@ -63,6 +62,8 @@ Assembly descriptor for the full distribution.
 
 			</binaries>
 		</moduleSet>
+
+
 		<moduleSet>
 			<includes>
 				<include>org.mule.modules:mule2-module-smooks-examples-edi-to-java</include>
@@ -106,6 +107,51 @@ Assembly descriptor for the full distribution.
 				</dependencySets>
 			</binaries>
 		</moduleSet>
+
+
+		<moduleSet>
+			<includes>
+				<include>org.mule.modules:mule2-module-smooks-examples-basic-transform</include>
+			</includes>
+			<sources>
+				<outputDirectoryMapping>/examples/basic-transform/</outputDirectoryMapping>
+				<fileSets>
+					<fileSet>
+						<includes>
+							<include>src/**</include>
+							<include>conf/**</include>
+							<include>data/**</include>
+							<include>run*</include>
+						</includes>
+					</fileSet>
+					<fileSet>
+						<directory>/dist</directory>
+						<includes>
+							<include>README*</include>
+							<include>build.xml</include>
+						</includes>
+					</fileSet>
+				</fileSets>
+
+			</sources>
+
+			<binaries>
+        		<outputDirectory>/examples/basic-transform/lib/user/</outputDirectory>
+				<unpack>false</unpack>
+				<dependencySets>
+					<dependencySet>
+						<scope>runtime</scope>
+						<useTransitiveFiltering>true</useTransitiveFiltering>
+						<excludes>
+							<exclude>commons-lang</exclude>
+							<exclude>commons-logging</exclude>
+							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
+						</excludes>
+					</dependencySet>
+				</dependencySets>
+			</binaries>
+		</moduleSet>
+
 	</moduleSets>
 	<fileSets>
 		<fileSet>

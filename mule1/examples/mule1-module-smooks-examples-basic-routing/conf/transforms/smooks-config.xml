@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+
+	<resource-config selector="a">
+	    <resource>org.milyn.javabean.BeanPopulator</resource>
+	    <param name="beanClass">java.util.HashMap</param>
+	    <param name="beanId">a</param>
+	    <param name="bindings">
+	    	<binding property="id" selector="a @id" />
+	    	<binding property="value" selector="a" />
+	    </param>
+    </resource-config>
+
+    <resource-config selector="a">
+	    <resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+	    <param name="endpointName">endpointA</param>
+	    <param name="beanId">a</param>
+    </resource-config>
+
+	<resource-config selector="b">
+	    <resource>org.milyn.javabean.BeanPopulator</resource>
+	    <param name="beanClass">java.util.HashMap</param>
+	    <param name="beanId">b</param>
+	    <param name="bindings">
+	    	<binding property="id" selector="b @id" />
+	    	<binding property="value" selector="b" />
+	    </param>
+    </resource-config>
+
+    <resource-config selector="b">
+	    <resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+	    <param name="endpointName">endpointB</param>
+	    <param name="beanId">b</param>
+    </resource-config>
+
+</smooks-resource-list>

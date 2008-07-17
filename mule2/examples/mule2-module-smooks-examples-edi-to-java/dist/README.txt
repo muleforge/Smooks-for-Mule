@@ -24,11 +24,11 @@ can run the example from the command line as follows:
 
     Linux / Unix
     ------------
-    mule -config ./conf/mule-edi-to-java-config.xml
+    mule -config ./conf/mule-config.xml
 
     Windows
     -------
-    mule.bat -config .\conf\mule-edi-to-java-config.xml
+    mule.bat -config .\conf\mule-config.xml
 
 Once Mule is running, copy the EDI sample message from "data/out" to "data/in" and see the
 transformed message objects printed to the console.  At this point, the processed message file

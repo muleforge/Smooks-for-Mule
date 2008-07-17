@@ -1,7 +1,7 @@
 +----------------------------+
 | Smooks EDI to Java Example |
 +----------------------------+
-This example demonstrates how perform an EDI to Java transform in Mule, using Smooks.
+This example demonstrates how perform an EDI to Java transform in Mule 1, using Smooks.
 
 +----------------------+
 | Building the example |
@@ -28,12 +28,14 @@ can run the example from the command line as follows:
 
     Linux / Unix
     ------------
-    mule -config ./conf/mule-edi-to-java-config.xml
+    mule -config ./conf/mule-config.xml
 
     Windows
     -------
-    mule.bat -config .\conf\mule-edi-to-java-config.xml
+    mule.bat -config .\conf\mule-config.xml
 
 Once Mule is running, copy the EDI sample message from "data/out" to "data/in" and see the
 transformed message objects printed to the console.  At this point, the processed message file
 will be back in the "data/out" folder and the process can be repeated.
+
+Take a look at the "target/smooks-report/report.html" for the Smooks execution report.

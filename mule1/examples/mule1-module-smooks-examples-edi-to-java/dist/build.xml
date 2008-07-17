@@ -1,4 +1,4 @@
-<project name="Smooks for Mule 2.x - EDI to Java example" default="install" basedir=".">
+<project name="Smooks for Mule 1.x - EDI to Java example" default="install" basedir=".">
 
 	<property environment="env" />
 

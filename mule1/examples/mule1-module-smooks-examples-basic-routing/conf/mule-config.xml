@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN" "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="Smooks_for_Mule_Basic_Example" version="1.0">
+
+    <description>Smooks for Mule Basic Example</description>
+
+    <connector name="FileConnector" className="org.mule.providers.file.FileConnector">
+        <properties>
+            <property name="pollingFrequency" value="1000"/>
+            <property name="moveToDirectory" value="./data/out"/>
+            <property name="binaryMode" value="false"/>
+        </properties>
+    </connector>
+
+    <model name="Basic">
+        <mule-descriptor name="BasicRouting" implementation="org.mule.components.simple.BridgeComponent">
+            <inbound-router>
+                <endpoint address="file://./data/in">
+                    <filter pattern="*.xml" className="org.mule.providers.file.filters.FilenameWildcardFilter"/>
+                </endpoint>
+
+				<!-- For unit-tests -->
+                <endpoint address="vm://BasicRouting" />
+            </inbound-router>
+
+            <outbound-router>
+                <router className="org.milyn.smooks.mule.Router">
+                    <endpoint name="file1" address="file://./target/routing-test">
+                    	<properties>
+                    		<property name="outputPattern" value="file1.dat"/>
+                    	</properties>
+                    </endpoint>
+            		<endpoint name="file2" address="file://./target/routing-test">
+            			<properties>
+                    		<property name="outputPattern" value="file2-${COUNT}.dat"/>
+                    	</properties>
+            		</endpoint>
+
+            		<endpoint name="reply" address="vm://replyingEndpoint" />
+					<endpoint name="fileReply" address="file://./target/routing-test">
+            			<properties>
+                    		<property name="outputPattern" value="fileReply.dat"/>
+                    	</properties>
+            		</endpoint>
+
+                    <properties>
+                    	<property name="configFile" value="/router-smooks-config.xml" />
+	            		<property name="reportPath" value="target/smooks-report/report.html" />
+	            		<property name="executionContextAsMessageProperty" value="true" />
+						<property name="executionContextMessagePropertyKey" value="smooks.executionContext" />
+						<property name="excludeNonSerializables" value="true" />
+                    </properties>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+    </model>
+
+</mule-configuration>

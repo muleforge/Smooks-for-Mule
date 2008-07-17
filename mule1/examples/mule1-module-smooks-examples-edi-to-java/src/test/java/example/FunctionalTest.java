@@ -45,7 +45,7 @@ public class FunctionalTest extends FunctionalTestCase
 	@Override
 	protected String getConfigResources() {
 
-		return "mule-edi-to-java-config.xml";
+		return "mule-config.xml";
 	}
 
 	@Test
