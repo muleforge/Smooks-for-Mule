@@ -26,11 +26,11 @@ import org.apache.commons.lang.ClassUtils;
  */
 public class ClassNameResultFactory implements ResultFactory {
 
-	private final Class<Result> resultClass;
+	private final Class<? extends Result> resultClass;
 
 
 
-	public ClassNameResultFactory(Class<Result> resultClass) {
+	public ClassNameResultFactory(Class<? extends Result> resultClass) {
 		this.resultClass = resultClass;
 	}
 

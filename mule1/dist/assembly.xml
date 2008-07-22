@@ -20,7 +20,9 @@ Assembly descriptor for the full distribution.
 		<format>zip</format>
 	</formats>
 	<includeBaseDirectory>false</includeBaseDirectory>
+
 	<moduleSets>
+
 		<moduleSet>
 			<includes>
 				<include>org.mule.modules:mule1-module-smooks</include>
@@ -61,7 +63,6 @@ Assembly descriptor for the full distribution.
 				</dependencySets>
 			</binaries>
 		</moduleSet>
-
 
 		<moduleSet>
 			<includes>
@@ -106,7 +107,6 @@ Assembly descriptor for the full distribution.
 			</binaries>
 		</moduleSet>
 
-
 		<moduleSet>
 			<includes>
 				<include>org.mule.modules:mule1-module-smooks-examples-basic-transform</include>
@@ -148,11 +148,55 @@ Assembly descriptor for the full distribution.
 				</dependencySets>
 			</binaries>
 		</moduleSet>
+
+		<moduleSet>
+			<includes>
+				<include>org.mule.modules:mule1-module-smooks-examples-basic-routing</include>
+			</includes>
+			<sources>
+				<outputDirectoryMapping>/examples/basic-routing/</outputDirectoryMapping>
+				<fileSets>
+					<fileSet>
+						<includes>
+							<include>src/**</include>
+							<include>conf/**</include>
+							<include>data/**</include>
+							<include>run*</include>
+						</includes>
+					</fileSet>
+					<fileSet>
+						<directory>/dist</directory>
+						<includes>
+							<include>README*</include>
+							<include>build.xml</include>
+						</includes>
+					</fileSet>
+				</fileSets>
+			</sources>
+
+			<binaries>
+        		<outputDirectory>/examples/basic-transform/lib/user/</outputDirectory>
+				<unpack>false</unpack>
+				<dependencySets>
+					<dependencySet>
+						<scope>runtime</scope>
+						<useTransitiveFiltering>true</useTransitiveFiltering>
+						<excludes>
+							<exclude>commons-lang</exclude>
+							<exclude>commons-logging</exclude>
+							<exclude>org.mule.modules:mule1-module-smooks:jar</exclude>
+						</excludes>
+					</dependencySet>
+				</dependencySets>
+			</binaries>
+		</moduleSet>
+
 	</moduleSets>
+
 	<fileSets>
 		<fileSet>
 			<directory>dist</directory>
-			<outputDirectory>.</outputDirectory>
+			<outputDirectory>/</outputDirectory>
 			<includes>
 				<include>LICENSE*</include>
 				<include>NOTICE*</include>

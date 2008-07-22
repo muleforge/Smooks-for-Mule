@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.milyn.container.ExecutionContext;
+
 /**
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
@@ -40,13 +42,15 @@ public final class ExecutionContextUtil {
      * @return Map	- Map containing only the Serializable objects from the passed-in map.
      */
     @SuppressWarnings( "unchecked" )
-	public static Map getSerializableObjectsMap( final Map smooksAttribuesMap, boolean excludeNonSerializables )
+	public static Map getAtrributesMap( final ExecutionContext executionContext, boolean excludeNonSerializables )
 	{
+    	Map attributes = executionContext.getAttributes();
+
     	Map smooksExecutionContextMap;
     	if ( excludeNonSerializables ) {
     		smooksExecutionContextMap = new HashMap();
 
-    		Set<Map.Entry> s = smooksAttribuesMap.entrySet();
+    		Set<Map.Entry> s = attributes.entrySet();
     		for (Map.Entry me : s)
     		{
     			Object value = me.getValue();
@@ -56,7 +60,7 @@ public final class ExecutionContextUtil {
     			}
     		}
 		} else {
-			smooksExecutionContextMap = smooksAttribuesMap;
+			smooksExecutionContextMap = attributes;
 		}
 
 		return Collections.unmodifiableMap(smooksExecutionContextMap);

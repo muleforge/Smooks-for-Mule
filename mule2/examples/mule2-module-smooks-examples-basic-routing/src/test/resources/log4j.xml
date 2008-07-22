@@ -11,15 +11,11 @@
 		</layout>
 	</appender>
 
-	<logger name="org.milyn">
-		<level value="WARN" />
-	</logger>
-
-	<logger name="org.milyn.smooks.mule">
+	<logger name="example">
 		<level value="INFO" />
 	</logger>
 
-	<logger name="org.mule">
+	<logger name="org.milyn.smooks.mule">
 		<level value="WARN" />
 	</logger>
 

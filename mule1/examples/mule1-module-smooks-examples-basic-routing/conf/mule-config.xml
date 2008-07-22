@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN" "http://mule.mulesource.org/dtds/mule-configuration.dtd">
 
-<mule-configuration id="Smooks_for_Mule_Basic_Example" version="1.0">
+<mule-configuration id="Smooks_for_Mule_Basic_Routing_Example" version="1.0">
 
-    <description>Smooks for Mule Basic Example</description>
+    <description>Smooks for Mule basic routing example</description>
 
     <connector name="FileConnector" className="org.mule.providers.file.FileConnector">
         <properties>
@@ -25,34 +25,43 @@
             </inbound-router>
 
             <outbound-router>
+            	<!--
+            		Define the Mule Router with the VM endpoints.
+            	 -->
                 <router className="org.milyn.smooks.mule.Router">
-                    <endpoint name="file1" address="file://./target/routing-test">
-                    	<properties>
-                    		<property name="outputPattern" value="file1.dat"/>
-                    	</properties>
-                    </endpoint>
-            		<endpoint name="file2" address="file://./target/routing-test">
-            			<properties>
-                    		<property name="outputPattern" value="file2-${COUNT}.dat"/>
-                    	</properties>
-            		</endpoint>
-
-            		<endpoint name="reply" address="vm://replyingEndpoint" />
-					<endpoint name="fileReply" address="file://./target/routing-test">
-            			<properties>
-                    		<property name="outputPattern" value="fileReply.dat"/>
-                    	</properties>
-            		</endpoint>
+                    <endpoint name="endpointA" address="vm://AComponent" />
+            		<endpoint name="endpointB" address="vm://BComponent" />
 
                     <properties>
-                    	<property name="configFile" value="/router-smooks-config.xml" />
+
+                    	<!-- 
+                    		Defines where the Smooks configuration is located 
+                    	-->
+                    	<property name="configFile" value="routing/smooks-config.xml" />
+
+                    	 <!--
+                    		Defines that a execution report needs to be written.
+                    		Take a look at the Smooks report. It shows how Smooks processes the
+                    		message.
+                    		Warning: Don't set this in a production environment. It costs a lot
+                    		of performance!
+                    	 -->
 	            		<property name="reportPath" value="target/smooks-report/report.html" />
-	            		<property name="executionContextAsMessageProperty" value="true" />
-						<property name="executionContextMessagePropertyKey" value="smooks.executionContext" />
-						<property name="excludeNonSerializables" value="true" />
                     </properties>
                 </router>
             </outbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="AService" implementation="example.AComponent">
+        	<inbound-router>
+        		<endpoint address="vm://AComponent" />
+        	</inbound-router>
+        </mule-descriptor>
+
+        <mule-descriptor name="BService" implementation="example.BComponent">
+        	<inbound-router>
+        		<endpoint address="vm://BComponent" />
+        	</inbound-router>
         </mule-descriptor>
     </model>
 

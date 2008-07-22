@@ -16,16 +16,12 @@
 
 package example;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.junit.Test;
-import org.milyn.io.StreamUtils;
 import org.mule.DefaultMuleMessage;
-import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.IOUtils;
@@ -46,25 +42,11 @@ public class FunctionalTest extends FunctionalTestCase
 	}
 
 
-	@Test
 	public void testSmooks() throws Exception {
 		InputStream in = IOUtils.getResourceAsStream("test-message01.xml", this.getClass());
 
 		MuleClient client = new MuleClient();
-		MuleMessage reply = client.send("vm://BasicProcessor",	new DefaultMuleMessage(in));
-
-		assertNotNull(reply);
-		assertNotNull(reply.getPayload());
-
-		Object payload = reply.getPayload();
-
-		assert payload instanceof String : "The message payload is not an instance of String";
-
-		String result = (String) payload;
-
-		byte[] expected = StreamUtils.readStream(IOUtils.getResourceAsStream("expected.xml", this.getClass()));
-
-		assertTrue(StreamUtils.compareCharStreams(new ByteArrayInputStream(expected), new ByteArrayInputStream(result.getBytes())));
+		client.send("vm://BasicRouting", new DefaultMuleMessage(in));
 
 		assert getReportFile().exists() : "The report file wasn't created";
 	}

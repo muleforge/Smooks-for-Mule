@@ -17,37 +17,60 @@
 
 
     <description>
-        This example demonstrates invoking a Groovy script as the service component.
+        This example demonstrates how to do Routing with the Smooks Router
     </description>
 
-	<smooks:transformer
-		name="BasicXSLTTransformation"
-		configFile="/transforms/smooks-config.xml"
-		reportPath="target/smooks-report/report.html"
-		resultType="STRING"
-	/>
-
-    <model name="OrderProcessorModel">
-        <service name="OrderProcessorService">
+    <model name="BasicModel">
+        <service name="BasicService">
             <inbound>
                 <file:inbound-endpoint
                 	path="./data/in"
                 	pollingFrequency="1000"
-                	moveToDirectory="./data/out"
-                	transformer-refs="BasicXSLTTransformation"
-                >
+                	moveToDirectory="./data/out">
                 	<file:filename-wildcard-filter pattern="*.xml"/>
                 </file:inbound-endpoint>
 
                 <!-- For unit-test -->
-                <vm:inbound-endpoint path="BasicProcessor" transformer-refs="BasicXSLTTransformation" />
+                <vm:inbound-endpoint path="BasicRouting" />
 
             </inbound>
             <outbound>
-            	<outbound-pass-through-router>
-            		<stdio:outbound-endpoint system="OUT" />
-            	</outbound-pass-through-router>
+            	<!--
+            		Define the Mule Router with the VM endpoints.
+
+               		configFile: Defines where the Smooks configuration is located
+               		reportPath:	Defines that a execution report needs to be written.
+                    			Take a look at the Smooks report. It shows how Smooks processes the
+                    			message.
+                    			Warning: Don't set this in a production environment. It costs a lot
+                    			of performance!
+               	-->
+           		<smooks:router
+           			configFile="routing/smooks-config.xml"
+           			reportPath="target/smooks-report/report.html">
+
+					<vm:outbound-endpoint name="endpointA" path="AComponent" />
+					<vm:outbound-endpoint name="endpointB" path="BComponent" />
+           		</smooks:router>
             </outbound>
+        </service>
+
+        <service name="AService">
+			<inbound>
+                <vm:inbound-endpoint path="AComponent" />
+            </inbound>
+
+            <component class="example.AComponent"/>
+
+        </service>
+
+        <service name="BService">
+			<inbound>
+                <vm:inbound-endpoint path="BComponent" />
+            </inbound>
+
+            <component class="example.BComponent"/>
+
         </service>
     </model>
 </mule>

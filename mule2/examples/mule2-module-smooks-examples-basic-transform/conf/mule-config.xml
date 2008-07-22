@@ -17,18 +17,32 @@
 
 
     <description>
-        This example demonstrates invoking a Groovy script as the service component.
+        This example demonstrates transforming an XML message with the Smooks Transformer
     </description>
 
+	<!--
+		Defines the Mule transformer
+
+ 		configFile: Defines where the Smooks configuration is located
+      	resultType: Defines which result type is required. STRING is the default value.
+                	This property is just here for the illustration because it is
+                	so important in case when you need a different result type.
+ 		reportPath:	Defines that a execution report needs to be written.
+      				Take a look at the Smooks report. It shows how Smooks processes the
+      				message.
+      				Warning: Don't set this in a production environment. It costs a lot
+      				of performance!
+
+ 	-->
 	<smooks:transformer
 		name="BasicXSLTTransformation"
 		configFile="/transforms/smooks-config.xml"
-		reportPath="target/smooks-report/report.html"
 		resultType="STRING"
+		reportPath="target/smooks-report/report.html"
 	/>
 
-    <model name="OrderProcessorModel">
-        <service name="OrderProcessorService">
+    <model name="BasicModel">
+        <service name="BasicService">
             <inbound>
                 <file:inbound-endpoint
                 	path="./data/in"

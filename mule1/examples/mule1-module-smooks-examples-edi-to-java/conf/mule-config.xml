@@ -14,11 +14,39 @@
     </connector>
 
     <transformers>
+    	<!--
+    		Defines the Smooks Transformer
+    	 -->
         <transformer name="EDIOrderToJavaOrder" className="org.milyn.smooks.mule.Transformer">
             <properties>
+
+            	<!--
+                	Defines where the Smooks configuration is located
+                -->
                 <property name="configFile" value="/transforms/smooks-config.xml"/>
+
+                <!--
+                	Defines which result type is required. In this case
+      				a Java result is configured. When setting JAVA as value
+      				you also need to define the javaResultBeanId to tell the
+      				module which java bean to retrieve as result payload from
+      				the Smooks BeanMap.
+                 -->
                 <property name="resultType" value="JAVA"/>
+
+                <!--
+                	The beanId to use when retrieving the Javabean
+      				from the Smooks BeanMap
+                 -->
                 <property name="javaResultBeanId" value="order"/>
+
+                <!--
+               		Defines that a execution report needs to be written.
+               		Take a look at the Smooks report. It shows how Smooks processes the
+               		message.
+               		Warning: Don't set this in a production environment. It costs a lot
+               		of performance!
+               	 -->
                 <property name="reportPath" value="target/smooks-report/report.html" />
             </properties>
         </transformer>

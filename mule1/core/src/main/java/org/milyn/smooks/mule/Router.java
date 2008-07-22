@@ -16,7 +16,7 @@
 
 package org.milyn.smooks.mule;
 
-import static org.mule.config.i18n.MessageFactory.createStaticMessage;
+import static org.mule.config.i18n.MessageFactory.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -93,15 +93,29 @@ public class Router extends FilteringOutboundRouter {
 
 	private Map<String, UMOEndpoint> endpointMap;
 
-	public void initialise() throws InitialisationException
+	private InitialisationException initialisationException;
+
+
+	public void initialise()
 	{
 		// Create the Smooks instance
-		smooks = createSmooksInstance();
+		try {
+			smooks = createSmooksInstance();
 
-		//	Create the Smooks payload processor
-		smooksPayloadProcessor = new SmooksPayloadProcessor( smooks, ResultType.NORESULT );
+			//	Create the Smooks payload processor
+			smooksPayloadProcessor = new SmooksPayloadProcessor( smooks, ResultType.NORESULT );
 
-		initialized = true;
+			initialized = true;
+		} catch (InitialisationException e) {
+			initialisationException = e;
+		}
+	}
+
+	/**
+	 * @return the initialisationException
+	 */
+	public InitialisationException getInitialisationException() {
+		return initialisationException;
 	}
 
 	/**
@@ -148,12 +162,9 @@ public class Router extends FilteringOutboundRouter {
 	{
 		this.configFile = configFile;
 
-		try {
-			//The Initializable interface isn't used for router so we need to initialize the router somewhere
-			initialise();
-		} catch (InitialisationException e) {
-			throw new IllegalStateException("Couldn't initialize the Router", e);
-		}
+		//The Initializable interface isn't used for router so we need to initialize the router somewhere
+		initialise();
+
 	}
 
 	/**
@@ -208,7 +219,13 @@ public class Router extends FilteringOutboundRouter {
 	@Override
 	public UMOMessage route(UMOMessage message, UMOSession session, boolean synchronous) throws RoutingException {
 		if(!initialized) {
-			throw new IllegalStateException("The router is not initialised");
+			String eMessage = "The router is not initialised";
+
+			if(initialisationException != null) {
+				throw new IllegalStateException(eMessage, initialisationException);
+			} else {
+				throw new IllegalStateException(eMessage);
+			}
 		}
 
 

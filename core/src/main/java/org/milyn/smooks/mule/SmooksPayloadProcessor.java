@@ -56,7 +56,7 @@ public class SmooksPayloadProcessor {
 		return smooksResultType;
 	}
 
-	 public final Object process(final Object message_payload, final ExecutionContext executionContext) throws SmooksException {
+	public Object process(final Object message_payload, final ExecutionContext executionContext) throws SmooksException {
 
 		 Object payload;
 		 if(message_payload instanceof SourceResult == false && resultType == ResultType.RESULT) {

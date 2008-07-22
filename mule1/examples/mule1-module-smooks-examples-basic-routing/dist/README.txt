@@ -1,5 +1,5 @@
 +-------------------------------------+
-| Smooks Basic routing Example        |
+| Smooks Basic Routing Example        |
 +-------------------------------------+
 This example demonstrates how to route message fragments in Mule 1, using Smooks.
 

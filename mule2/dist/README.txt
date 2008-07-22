@@ -1,5 +1,5 @@
 +---------------------+
-| Smooks for Mule 1.x |
+| Smooks for Mule 2.x |
 +---------------------+
 
  Smooks for Mule enables Message Transformation and
@@ -64,10 +64,19 @@
 
  Transformation:
 
+  * Basic Transform
+    A basic transformation example showing in the most basic
+    way how to transform an XML message with Smooks and XSLT
+
   * EDI to Java example (edi-to-java)
     A simple example demonstrating how to transform a EDI-fact
     data to Java beans.
 
+ Routing:
+
+  * Basic Routing
+    A basic routing example showing how Smooks can rout
+    transformed message parts to multiple endpoints.
 
 +------------------------+
 | Smooks                 |

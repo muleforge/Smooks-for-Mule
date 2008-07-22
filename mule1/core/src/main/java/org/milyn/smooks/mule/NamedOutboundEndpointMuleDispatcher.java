@@ -174,7 +174,7 @@ public class NamedOutboundEndpointMuleDispatcher implements NamedEndpointMuleDis
 
 		if(executionContextAsMessageProperty) {
         	// Set the Smooks Excecution properties on the Mule Message object
-        	message.setProperty(executionContextMessagePropertyKey, ExecutionContextUtil.getSerializableObjectsMap(executionContext.getAttributes(), excludeNonSerializables));
+        	message.setProperty(executionContextMessagePropertyKey, ExecutionContextUtil.getAtrributesMap(executionContext, excludeNonSerializables));
         }
 
 		try {

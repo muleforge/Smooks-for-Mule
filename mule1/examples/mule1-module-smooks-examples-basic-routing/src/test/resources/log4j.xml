@@ -15,8 +15,12 @@
 		<level value="WARN" />
 	</logger>
 
+		<logger name="example">
+		<level value="info" />
+	</logger>
+
 	<logger name="org.milyn.smooks.mule">
-		<level value="INFO" />
+		<level value="WARN" />
 	</logger>
 
 	<logger name="org.mule">

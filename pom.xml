@@ -7,7 +7,7 @@
 	<artifactId>mule-module-smooks</artifactId>
 	<name>Smooks for Mule</name>
 	<packaging>pom</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0-BETA</version>
 
 	<modules>
 	    <module>core</module>
@@ -161,6 +161,7 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 	                    <exclude>**/*.edi</exclude>
 	                    <exclude>**/spring.handlers</exclude>
 	                    <exclude>**/spring.schemas</exclude>
+	                    <exclude>**/test/**</exclude>
 	                </excludes>
 	                <useDefaultExcludes>true</useDefaultExcludes>
 	                <useDefaultMapping>true</useDefaultMapping>
@@ -171,14 +172,14 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 	                </properties>
 	                <encoding>UTF-8</encoding>
 	            </configuration>
-	            <executions>
+	            <!-- <executions>
 	                <execution>
 	                	<inherited>false</inherited>
 	                    <goals>
 	                        <goal>check</goal>
 	                    </goals>
 	                </execution>
-	            </executions>
+	            </executions> -->
 	        </plugin>
 
 			<plugin>
@@ -359,6 +360,18 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 	            <version>1.0</version>
 	            <scope>test</scope>
 	        </dependency>
+
+			<dependency>
+				<groupId>org.easymock</groupId>
+				<artifactId>easymock</artifactId>
+				<version>2.4</version>
+			</dependency>
+
+			<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymockclassextension</artifactId>
+			<version>2.3</version>
+		</dependency>
 
 		</dependencies>
 	</dependencyManagement>

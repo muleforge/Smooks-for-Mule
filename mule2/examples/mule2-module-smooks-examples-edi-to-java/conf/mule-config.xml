@@ -17,15 +17,34 @@
 
 
     <description>
-        This example demonstrates invoking a Groovy script as the service component.
+        This example demonstrates transforming a EDI message to
+        Java Beans with the Smooks transformer
     </description>
 
+	<!--
+		Defines the Mule transformer
+
+ 		configFile: Defines where the Smooks configuration is located
+      	resultType: Defines which result type is required. In this case
+      				a Java result is configured. When setting JAVA as value
+      				you also need to define the javaResultBeanId to tell the
+      				module which java bean to retrieve as result payload from
+      				the Smooks BeanMap.
+      	javaResultBeanId: The beanId to use when retrieving the Javabean
+      					  from the Smooks BeanMap
+ 		reportPath:	Defines that a execution report needs to be written.
+      				Take a look at the Smooks report. It shows how Smooks processes the
+      				message.
+      				Warning: Don't set this in a production environment. It costs a lot
+      				of performance!
+
+ 	-->
 	<smooks:transformer
 		name="EDIOrderToJavaOrder"
-		configFile="/transforms/smooks-edi-to-java-config.xml"
-		reportPath="target/smooks-report/report.html"
+		configFile="/transforms/smooks-config.xml"
 		resultType="JAVA"
 		javaResultBeanId="order"
+		reportPath="target/smooks-report/report.html"
 	/>
 
     <model name="OrderProcessorModel">
