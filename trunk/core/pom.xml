@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>mule-module-smooks</artifactId>
+		<groupId>org.mule.modules</groupId>
+		<version>1.0-BETA</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.mule.modules</groupId>
+	<artifactId>mule-module-smooks-core</artifactId>
+	<name>Smooks for Mule - Core</name>
+	<description>This project contains the Core classes of the Smooks for Mule module. It is Mule version independent.</description>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<dependencies>
+
+		<!-- Smooks Dependencies -->
+		<dependency>
+			<groupId>milyn</groupId>
+			<artifactId>milyn-smooks-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>milyn</groupId>
+			<artifactId>milyn-smooks-javabean</artifactId>
+		</dependency>
+
+		<!-- logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+
+		<!-- junit  -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymockclassextension</artifactId>
+		</dependency>
+
+	</dependencies>
+
+</project>

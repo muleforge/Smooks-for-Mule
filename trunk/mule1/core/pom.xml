@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>mule1-module-smooks-parent</artifactId>
+		<groupId>org.mule.modules</groupId>
+		<version>1.0-BETA</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.mule.modules</groupId>
+	<artifactId>mule1-module-smooks</artifactId>
+	<name>Smooks for Mule 1.x - Core</name>
+	<description>
+		Smooks for Mule 1.x Core library.
+
+		Smooks for Mule enables Message Transformation and Routing using the Smooks Engine.
+
+		Smooks is a Java Framework/Engine for processing XML and non XML data (CSV, EDI etc).
+
+		There is also a version which is compatible with Mule 2.x
+	</description>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2-beta-2</version>
+				<configuration>
+					<descriptors>
+						<descriptor>/src/main/assembly/assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<!-- Module Core -->
+		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-module-smooks-core</artifactId>
+		</dependency>
+
+		<!-- Mule Dependencies -->
+		<dependency>
+			<groupId>org.mule</groupId>
+			<artifactId>mule-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-module-client</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.tests</groupId>
+			<artifactId>mule-tests-functional</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Mule Transport Dependencies -->
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-vm</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-tcp</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-file</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-stream</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Smooks Dependencies -->
+		<dependency>
+			<groupId>milyn</groupId>
+			<artifactId>milyn-smooks-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>milyn</groupId>
+			<artifactId>milyn-smooks-templating</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- log4 j -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+
+		<!-- junit  -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>

@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+
+    <!--
+    Configure the EDI Parser to parse the message stream into a stream of SAX events.
+    -->
+    <resource-config selector="org.xml.sax.driver">
+	    <resource>org.milyn.smooks.edi.SmooksEDIParser</resource>
+		<param name="mapping-model">/transforms/edi-to-xml-order-mapping.xml</param>
+	</resource-config>
+
+
+    <!--
+    Create an "example.beans.Order" bean instance when we visit the start of the <order> element.
+    Assign the new bean instance to the beanId of "order".
+    Target the to be created Header bean under the beanId "header" via the ${header} bean binding.
+    As soon as this bean is created it will be set on this bean instance.
+    Target the to be created ArrayList instance under the beanId "orderItems" via the ${orderItems} bean binding.
+    As soon as this list is created it will be set on this bean instance.
+    -->
+    <resource-config selector="order">
+        <resource>org.milyn.javabean.BeanPopulator</resource>
+        <param name="beanId">order</param>
+        <param name="beanClass">example.model.Order</param>
+        <param name="bindings">
+        	<binding property="header" selector="${header}" />
+        	<binding property="orderItems" selector="${orderItems}" />
+        </param>
+    </resource-config>
+
+    <!--
+    Create an "example.beans.Header" bean instance when we visit the start of the <order> element.
+    Note, we're creating this bean instance before we encounter the actual <header> element.
+    This bean is set on the on the previous declared Order bean as soon as it is created, because
+    it is target by that bean via a bean binding.
+    Target the to be created Customer instance under the beanId "customer" via the ${customer} bean binding.
+    As soon as this bean is created it will be set on this bean instance.
+    -->
+    <resource-config selector="order">
+        <resource>org.milyn.javabean.BeanPopulator</resource>
+        <param name="beanClass">example.model.Header</param>
+        <param name="bindings">
+            <!-- Header bindings... -->
+            <binding property="customer" selector="${customer}" />
+            <binding property="orderId" selector="header order-id" />
+            <binding property="orderStatus" type="Long" selector="header/status-code" />
+            <binding property="netAmount" type="BigDecimal" selector="header/net-amount" />
+            <binding property="totalAmount" type="BigDecimal" selector="header/total-amount" />
+            <binding property="tax" type="BigDecimal" selector="header/tax" />
+            <binding property="date" type="OrderDateLong" selector="header/date" />
+        </param>
+    </resource-config>
+
+    <!--
+    Create an "example.beans.Customer" bean instance when we visit the start of the
+    <customer-details> element.
+	This bean is set on the on the previous declared Header bean as soon as it is created, because
+    it is target by that bean via a bean binding.
+    -->
+    <resource-config selector="customer-details">
+        <resource>org.milyn.javabean.BeanPopulator</resource>
+        <param name="beanClass">example.model.Customer</param>
+        <param name="bindings">
+            <!-- Customer bindings... -->
+            <binding property="userName" selector="customer-details/username" />
+            <binding property="firstName" selector="customer-details/name/firstname" />
+            <binding property="lastName" selector="customer-details/name/lastname" />
+            <binding property="state" selector="customer-details/state" />
+        </param>
+    </resource-config>
+
+	<!--
+	Create an ArrayList when we visit the start of the <order> element.
+	This list is set on the on the previous declared Order bean as soon as it is created, because
+    it is target by that bean via a bean binding.
+	Target the to be created OrderItem beans under the beanId "orderItem" via the ${orderItem} bean binding.
+    As soon as these beans are created they will be added to this list.
+	 -->
+	<resource-config selector="order">
+        <resource>org.milyn.javabean.BeanPopulator</resource>
+        <param name="beanClass">java.util.ArrayList</param>
+        <param name="beanId">orderItems</param>
+        <param name="bindings">
+        	<binding selector="${orderItem}" />
+        </param>
+	</resource-config>
+
+    <!--
+    Create an "example.beans.OrderItem" bean instance when we visit the start of the <order-item> element.
+    This bean is add to the on the previous declared ArrayList as soon as it is created, because
+    it is target by that ArrayList via a bean binding.
+    -->
+    <resource-config selector="order-item">
+        <resource>org.milyn.javabean.BeanPopulator</resource>
+        <param name="beanClass">example.model.OrderItem</param>
+        <param name="bindings">
+            <!-- OrderItem bindings... -->
+            <binding property="quantity" type="Integer" selector="order-item/quantity" />
+            <binding property="productId" type="String" selector="order-item/product-id" />
+            <binding property="price" type="BigDecimal" selector="order-item/price" />
+            <binding property="title" selector="order-item/title" />
+        </param>
+    </resource-config>
+
+    <!--
+    Configure a special decoder for the <date> field of the <header> - to set the date format.
+    -->
+    <resource-config selector="decoder:OrderDateLong">
+        <resource>org.milyn.javabean.decoders.DateDecoder</resource>
+        <param name="format">EEE MMM dd HH:mm:ss z yyyy</param>
+        <param name="locale-language">en</param>
+        <param name="locale-country">IE</param>
+    </resource-config>
+
+</smooks-resource-list>

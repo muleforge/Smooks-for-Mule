@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+
+	<!--
+	    At the end of every "a" element, route the HashMap under beanId "a" to the
+	    "endpointA" Endpoint. This must be configured before the BeanPopulator
+	    of beanId "a" to be executed after the BeanPopulater set all the entries on the
+	    Map. This is because the MuleDispatcher by default executes after the element
+	    is visited (so called visitAfter event). The visitAfter on visitors, like the MuleDispather,
+	    are executed in the reverse order as they are declared. Take a look in the Smooks report
+	    file to see it illustrated.
+	-->
+    <resource-config selector="a">
+	    <resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+	    <param name="endpointName">endpointA</param>
+	    <param name="beanId">a</param>
+    </resource-config>
+
+	<!--
+		At the beginning of every "a" element a HashMap is created and binded
+		to the "a" bindId. It gets two entries. The first with the name "id" and the value
+		is the "id" attribute value. The second with the name "value" and the value is
+		contents of the "a" element.
+	-->
+	<resource-config selector="a">
+	    <resource>org.milyn.javabean.BeanPopulator</resource>
+	    <param name="beanClass">java.util.HashMap</param>
+	    <param name="beanId">a</param>
+	    <param name="bindings">
+	    	<binding property="id" selector="a @id" />
+	    	<binding property="value" selector="a"/>
+	    </param>
+    </resource-config>
+
+	<!-- Same as with the "a" element but then for the "b" element -->
+    <resource-config selector="b">
+	    <resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+	    <param name="endpointName">endpointB</param>
+	    <param name="beanId">b</param>
+    </resource-config>
+
+	<!-- Same as with the "a" element but then for the "b" element -->
+	<resource-config selector="b">
+	    <resource>org.milyn.javabean.BeanPopulator</resource>
+	    <param name="beanClass">java.util.HashMap</param>
+	    <param name="beanId">b</param>
+	    <param name="bindings">
+	    	<binding property="id" selector="b @id" />
+	    	<binding property="value" selector="b" />
+	    </param>
+    </resource-config>
+
+
+</smooks-resource-list>

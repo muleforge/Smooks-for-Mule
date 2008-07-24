@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>mule1-module-smooks-parent</artifactId>
+		<groupId>org.mule.modules</groupId>
+		<version>1.0-BETA</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.mule.modules</groupId>
+	<artifactId>mule1-module-smooks-examples</artifactId>
+	<name>Smooks for Mule 1.x - Examples</name>
+	<packaging>pom</packaging>
+	<description>Parent POM for all the Smooks for Mule 1.x  examples.</description>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<modules>
+	  <module>mule1-module-smooks-examples-basic-transform</module>
+	  <module>mule1-module-smooks-examples-basic-routing</module>
+		<module>mule1-module-smooks-examples-edi-to-java</module>
+	</modules>
+</project>

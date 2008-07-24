@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<description>Parent pom Smooks for Mule  2.x. This project contains the general settings of the Smooks for Mule  2.x Core and it's examples.</description>
+	<parent>
+		<artifactId>mule-module-smooks</artifactId>
+		<groupId>org.mule.modules</groupId>
+		<version>1.0-BETA</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.mule.modules</groupId>
+	<artifactId>mule2-module-smooks-parent</artifactId>
+	<name>Smooks for Mule 2.x - Parent Pom</name>
+	<packaging>pom</packaging>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<properties>
+		<muleVersion>2.0.1</muleVersion>
+	</properties>
+
+	<modules>
+		<module>core</module>
+		<module>examples</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<finalName>mule2-module-smooks-${version}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+					<descriptors>
+						<descriptor>dist/assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencyManagement>
+
+		<dependencies>
+
+			<!-- Mule Dependencies -->
+			<dependency>
+				<groupId>org.mule</groupId>
+				<artifactId>mule-core</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.modules</groupId>
+				<artifactId>mule-module-client</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.modules</groupId>
+				<artifactId>mule-module-spring-config</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.tests</groupId>
+				<artifactId>mule-tests-functional</artifactId>
+				<version>${muleVersion}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<!-- Mule Transport Dependencies -->
+			<dependency>
+				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-vm</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-tcp</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-file</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-stdio</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<!--
+			<dependency>
+				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-stream</artifactId>
+				<version>${muleVersion}</version>
+			</dependency> -->
+
+		</dependencies>
+
+	</dependencyManagement>
+
+</project>
