@@ -29,6 +29,8 @@ import org.mule.api.routing.CouldNotRouteOutboundMessageException;
 import org.mule.routing.outbound.AbstractOutboundRouter;
 
 /**
+ * This is the Mule 2.x implementation of the NamedEndpointMuleDispatcher. It
+ * is used by the Smook {@link MuleDispatcher} to actually dispatch a message.
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  */

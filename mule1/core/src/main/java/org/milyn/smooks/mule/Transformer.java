@@ -37,58 +37,87 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 /**
- * SmooksTransformer intended to be used with the Mule ESB.
+ * The Transformer intended to be used with the Mule ESB.
  * <p/>
  * <h3>Usage:</h3>
  * <pre>
- * Declare the tranformer in the Mule configuration file:
+ * Declare the transformer in the Mule configuration file:
  * &lt;transformers&gt;
- *      &lt;transformer name="SmooksTransformer" className="org.milyn.smooks.mule.Transformer"/&gt;
+ *      &lt;transformer name="SmooksTransformer" className="org.milyn.smooks.mule.Transformer"&gt;
+ *      	&lt;properties&gt;
+ *      		&lt;property name="configFile" value="smooks-config.xml"/&gt;
+ *      	&lt;/properties&gt;
+ *      &lt;/transformer&gt;
  * &lt;/transformers&gt;
  *
- * Configure the transformer with a router:
+ * Configure the router with a transformer:
  * &lt;inbound-router&gt;
  *     &lt;endpoint address="stream://System.in"  transformers="SmooksTransformer"/&gt;
  * &lt;/inbound-router&gt;
  *
+ * Required properties:
+ * &lt;property name="configFile" value="smooks-config.xml" /&gt;
+ *
  * Optional properties:
- * &lt;property name="smooksConfig" value="smooks-config.xml" /&gt;
  * &lt;property name="resultType" value="STRING" /&gt;
- * &lt;property name="excludeNonSerializables" value="false" /&gt;
- * &lt;property name="reportPath" value="/tmp/smooks-report.html" /&gt;
  * &lt;property name="javaResultBeanId" value="orderBean" /&gt;
+ * &lt;property name="resultClass" value="javax.xml.transform.dom.DOMResult" /&gt;
+ * &lt;property name="resultFactoryClass" value="your.package.SomeResultFactory" /&gt;
+ * &lt;property name="reportPath" value="/tmp/smooks-report.html" /&gt;
+ * &lt;property name="executionContextAsMessageProperty" value="false" /&gt;
+ * &lt;property name="executionContextMessagePropertyKey" value="SmooksExecutionContext" /&gt;
+ * &lt;property name="excludeNonSerializables" value="false" /&gt;
  * </pre>
  *
  * <h3>Description of configuration properties</h3>
  * <ul>
- * <li><i>smooksConfig</i> - the Smooks configuration file. Can be a path on the file system or on the classpath.
+ * <li><i>configFile</i> - the Smooks configuration file. Can be a path on the file system or on the classpath.
  * <li><i>resultType</i> - type of result expected from Smooks ("STRING", "BYTES", "JAVA", "RESULT", "NORESULT"). Default is "STRING".
- * <li><i>excludeNonSerializables</i> - if true, non serializable attributes from the Smooks ExecutionContext will no be included. Default is true.
- * <li><i>reportPath</i> - specifies the path and file name for generating a Smooks Execution Report.  This is a development tool.
  * <li><i>javaResultBeanId</i> - specifies the Smooks bean context beanId to be mapped as the result when the resultType is "JAVA".  If not specified,
  *                               the whole bean context bean Map is mapped as the result.
- * <li><i>resultClass</i> - specifies the Class to construct the {@link Result} Object from
- * <li><i>resultFactoryClass</i> - specifies the Factory class which will create the {@link Result} Object to be used as the result Source.
+ * <li><i>resultClass</i> - When the resultType is set to "RESULT" then this attribute defines the Result Class which will be used.
+ * 							The class must implement the {@link javax.xml.transform.Result} interface and must have an argumentless constructor.
+ * <li><i>resultFactoryClass</i> - When the resultType is set to "RESULT" then this attribute defines the ResultFactory	Class which will be used
+ * 								   to create the	Result Class. The class must implement the	{@link org.milyn.smooks.mule.ResultFactory} interface and
+ * 								   must have an argumentless constructor.
+ * <li><i>reportPath</i> - specifies the path and file name for generating a Smooks Execution Report.  This is a development tool.
+ * <li><i>executionContextAsMessageProperty</i> - If set to "true" then the attributes map of the Smooks execution context is added to the message properties.
+ * 												  The property key is defined with the executionContextMessagePropertyKey property. Default is "false"
+ * <li><i>executionContextMessagePropertyKey</i> - The property key under which the execution context is put. Default is "SmooksExecutionContext"
+ * <li><i>excludeNonSerializables</i> - if true, non serializable attributes from the Smooks ExecutionContext will no be included. Default is true.
  * </ul>
  *
  * <h3>Accessing Smooks ExecutionContext attributes</h3>
- * After Smooks has performed the filtering the transform method will make the attributes that have been set in the
- * the ExecutionContext available for other actions in the Mule ESB.
- * The attributes (Map) can be accessed by using the {@link #MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT} key like this:
+ * After Smooks finished filtering they payload and if the "executionContextAsMessageProperty" property is set to <code>true</code>
+ * then the transform method will make the attributes that have been set in the the ExecutionContext available for
+ * other actions in the Mule ESB by setting the attributes map as a property of the message.
+ * The attributes can be accessed by using the key defined under the property "executionContextMessagePropertyKey". Default
+ * "SmooksExecutionContext" is used, which is set under the constant {@link #MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT}.
+ * An example of accessing the attributes map is:
  * <pre>
- * umoEventContext.getMessage().get( SmooksTransformer.EXECUTION_CONTEXT_ATTR_MAP_KEY );
+ * umoEventContext.getMessage().get( SmooksTransformer.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT );
  * </pre>
+ *
  * <h3>Specifying the Source and Result Types</h3>
  * From the object payload data type, this Transformer is able to automatically determine the type of
  * {@link javax.xml.transform.Source} to use (via the Smooks {@link PayloadProcessor}).  The
  * {@link javax.xml.transform.Result} type to be used can be specified via the "resultType"
- * property, as outlined above.
+ * property, as outlined above. If the result is required but shouldn't be a String, Bytes or Java then it
+ * is also possible to set the "resultClass" property or the "resultFactoryClass" properties. The resultType
+ * must be set to "RESULT" then.
+ * By defining the resultClass property with a classname the transformer will try to instantiate that class.
+ * The defined class must have a argumentless constructor and must implement the {@link javax.xml.transform.Result} interface.
+ * The resulting Result object will be used by Smooks as result and will be returned as the transformation result.
+ * If you need to use a factory class to instantiate the result class then this is also possible. By
+ * setting the "resultFactoryClass" with the class name of the factory the transformer will instantiate
+ * that factory an use its createResult() method to instantiate the Result object.
+ * The Factory must implement the {@link org.milyn.smooks.mule.ResultFactory} and have an argumentless constructor.
+ *
  * <p/>
- * It is expected that the above mechanism will be satisfactory for most usecase, but not all.
- * For the other usecases, this action supports {@link org.milyn.container.plugin.SourceResult}
+ * It is expected that the above mechanism will be satisfactory for most use cases, but not all.
+ * For the other use cases, this transformer supports {@link org.milyn.container.plugin.SourceResult}
  * payloads. This allows you to manually specify other Source and Result
- * types, which is of particular interest with respect to the Result type e.g. for streaming
- * the Result to a file etc.
+ * types.
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  *

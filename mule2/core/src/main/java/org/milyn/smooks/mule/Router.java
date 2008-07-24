@@ -41,6 +41,73 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 /**
+ * The Router intended to be used with the Mule ESB.
+ * <p/>
+ * <h3>Usage:</h3>
+ * Declare the router in the Mule configuration file:
+ * <pre>
+ * &lt;outbound&gt;
+ * 	&lt;smooks:router configFile="/smooks-config.xml"&gt;
+ * 		&lt;jms:outbound-endpoint name="order" queue="order.queue"/&gt;
+ * 		&lt;jms:outbound-endpoint name="order-important" queue="order.important.queue"/&gt;
+ *	&lt;/smooks:router&gt;
+ * &lt;/outbound&gt;
+ *
+ * <b>Required attributes/properties:</b>
+ * &lt;property name="configFile" value="smooks-config.xml" /&gt;
+ *
+ * <b>Optional attributes/properties:</b>
+ * &lt;property name="resultType" value="STRING" /&gt;
+ * &lt;property name="reportPath" value="/tmp/smooks-report.html" /&gt;
+ * &lt;property name="executionContextAsMessageProperty" value="false" /&gt;
+ * &lt;property name="executionContextMessagePropertyKey" value="SmooksExecutionContext" /&gt;
+ * &lt;property name="excludeNonSerializables" value="false" /&gt;
+ * </pre>
+ *
+ * <h3>Description of configuration attributes/properties</h3>
+ * <ul>
+ * <li><i>configFile</i> - the Smooks configuration file. Can be a path on the file system or on the classpath.
+ * <li><i>reportPath</i> - specifies the path and file name for generating a Smooks Execution Report.  This is a development tool.
+ * <li><i>executionContextAsMessageProperty</i> - If set to "true" then the attributes map of the Smooks execution context is added to the message
+ * 												  properties of every message that gets created by this router. The property key is defined with
+ * 												  the executionContextMessagePropertyKey property. Default is "false"
+ * <li><i>executionContextMessagePropertyKey</i> - The property key under which the execution context is put. Default is "SmooksExecutionContext"
+ * <li><i>excludeNonSerializables</i> - if true, non serializable attributes from the Smooks ExecutionContext will no be included. Default is true.
+ * </ul>
+ *
+ * <h3>Defining Endpoints</h3>
+ * As normal with Mule router you must at least define one endpoint to route the messages to. For this router it is
+ * also required that you define the name of the router. That name is used as reference within the Smooks configuration
+ * so that it knows which endpoint to use.
+ *
+ * <h3>Using the Smooks MuleDispatcher</h3>
+ * Within the Smooks Router the {@link org.milyn.smooks.mule.MuleDispatcher} resource is used to actually route the message parts
+ * to one of the defined endpoints (using the endpoint name). The following example demonstrates how to configure a MuleDispatcher:
+ *
+ * <pre>
+ * &lt;resource-config selector="order"&gt;
+ * 	&lt;resource&gt;org.milyn.smooks.mule.MuleDispatcher&lt;/resource&gt;
+ * 	&lt;param name="endpointName"&gt;orderEndpoint&lt;/param&gt;
+ * 	&lt;param name="beanId"&gt;orderBean&lt;/param&gt;
+ * &lt;/resource-config&gt;
+ * </pre>
+ *
+ * In this example Smooks calls the {@link MuleDispatcher} when it is in the visit after phase of the "order" element. The {@link MuleDispatcher}
+ * creates a new Mule message and it will use the object found under the beanId "orderBean" in the Smooks BeanMap as it's payload. It
+ * then dispatches that message to the endpoint with the name "orderEndpoint".
+ * <p/>
+ * More information on the configuration options of the {@link MuleDispatcher} can be found in the javadoc of the {@link MuleDispatcher} itself.
+ *
+ * <h3>Accessing Smooks ExecutionContext attributes</h3>
+ * When the {@link MuleDispatcher} dispatches a message and if the "executionContextAsMessageProperty" property
+ * is set to <code>true</code> then the MuleDispatcher will make the attributes that have been set in the
+ * ExecutionContext at that moment available for other actions in the Mule ESB by setting the attributes map as a property of the message.
+ * The attributes can be accessed by using the key defined under the property "executionContextMessagePropertyKey". Default
+ * "SmooksExecutionContext" is used, which is set under the constant {@link #MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT}.
+ * An example of accessing the attributes map is:
+ * <pre>
+ * umoEventContext.getMessage().get( SmooksTransformer.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT );
+ * </pre>
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  *
