@@ -39,7 +39,8 @@
 	<smooks:transformer
 		name="smooksTransformer"
 		configFile="/transformer-smooks-config.xml"
-		reportPath="target/smooks-report/report.html"
+		profile="someProfile"
+		profileMessagePropertyKey="smooksProfile"
 		executionContextAsMessageProperty="true"
 		executionContextMessagePropertyKey="smooks.executionContext"
 		excludeNonSerializables="false"
@@ -47,6 +48,7 @@
 		javaResultBeanId="a"
 		resultClass="javax.xml.transform.dom.DOMResult"
 		resultFactoryClass="test.DummyResultFactory"
+		reportPath="target/smooks-report/report.html"
 	/>
 
     <model name="test">
@@ -58,11 +60,13 @@
             <outbound>
             	<smooks:router
             		configFile="/router-smooks-config.xml"
-					reportPath="target/smooks-report/report.html"
+            		profile="someProfile"
+					profileMessagePropertyKey="smooksProfile"
 					executionContextAsMessageProperty="true"
 					executionContextMessagePropertyKey="smooks.executionContext"
 					excludeNonSerializables="false"
 					honorSynchronicity="true"
+					reportPath="target/smooks-report/report.html"
 					>
 
 					<stdio:outbound-endpoint name="endpoint1" system="OUT" />

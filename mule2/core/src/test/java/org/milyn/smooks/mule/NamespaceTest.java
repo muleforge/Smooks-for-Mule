@@ -37,7 +37,8 @@ public class NamespaceTest extends FunctionalTestCase {
 
 		assert t != null;
 		assert "/transformer-smooks-config.xml".equals(t.getConfigFile());
-		assert "target/smooks-report/report.html".equals(t.getReportPath());
+		assert "someProfile".equals(t.getProfile());
+		assert "smooksProfile".equals(t.getProfileMessagePropertyKey());
 		assert "smooks.executionContext".equals(t.getExecutionContextMessagePropertyKey());
 		assert "javax.xml.transform.dom.DOMResult".equals(t.getResultClass());
 		assert "test.DummyResultFactory".equals(t.getResultFactoryClass());
@@ -45,7 +46,7 @@ public class NamespaceTest extends FunctionalTestCase {
 		assert "a".equals(t.getJavaResultBeanId());
         assert true == t.isExecutionContextAsMessageProperty();
         assert false == t.isExcludeNonSerializables();
-
+        assert "target/smooks-report/report.html".equals(t.getReportPath());
     }
 
 	public void testRouterConfig() throws Exception {
@@ -56,12 +57,14 @@ public class NamespaceTest extends FunctionalTestCase {
 		Router r = (Router) routers.getRouters().get(0);
 
 		assert r != null;
-		assert "/router-smooks-config.xml".equals(r.getConfigFile());
+		assert "someProfile".equals(r.getProfile());
+		assert "smooksProfile".equals(r.getProfileMessagePropertyKey());
 		assert "target/smooks-report/report.html".equals(r.getReportPath());
         assert "smooks.executionContext".equals(r.getExecutionContextMessagePropertyKey());
         assert true == r.isExecutionContextAsMessageProperty();
         assert false == r.isExcludeNonSerializables();
         assert true == r.isHonorSynchronicity();
+        assert "/router-smooks-config.xml".equals(r.getConfigFile());
 	}
 
 }

@@ -1,38 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Copyright (C) 2008 Maurice Zeijen <maurice@zeijen.net>
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-            http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
--->
-
-<xsd:schema xmlns="http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0"
-			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    		xmlns:spring="http://www.springframework.org/schema/beans"
-    		xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
-			targetNamespace="http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0"
-			elementFormDefault="qualified"
-			attributeFormDefault="unqualified">
-
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-    <xsd:import namespace="http://www.springframework.org/schema/beans"
-                schemaLocation="http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"/>
-    <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0"
-                schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
-
-
-	<xsd:element name="router" type="smooksOutboundRouterType" substitutionGroup="mule:abstract-outbound-router">
+	<!--
+		Copyright (C) 2008 Maurice Zeijen <maurice@zeijen.net> Licensed under
+		the Apache License, Version 2.0 (the "License"); you may not use this
+		file except in compliance with the License. You may obtain a copy of
+		the License at http://www.apache.org/licenses/LICENSE-2.0 Unless
+		required by applicable law or agreed to in writing, software
+		distributed under the License is distributed on an "AS IS" BASIS,
+		WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+		implied. See the License for the specific language governing
+		permissions and limitations under the License.
+	-->
+<xsd:schema
+	xmlns="http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:spring="http://www.springframework.org/schema/beans"
+	xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+	targetNamespace="http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+	<xsd:import namespace="http://www.springframework.org/schema/beans"
+		schemaLocation="http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" />
+	<xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0"
+		schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
+	<xsd:element name="router" type="smooksOutboundRouterType"
+		substitutionGroup="mule:abstract-outbound-router">
 		<xsd:annotation>
 			<xsd:documentation>An outbound router that uses Smooks to split the message and dispatch the splitted messages to the registered endpoints. Use the org.milyn.smooks.mule.FragmentRouter visitor (DOM and SAX) to dispatch the messages to the endpoints.</xsd:documentation>
 		</xsd:annotation>
@@ -40,28 +30,48 @@
 	<xsd:complexType name="smooksOutboundRouterType">
 		<xsd:complexContent>
 			<xsd:extension base="mule:filteringOutboundRouterType">
-				<xsd:attribute name="configFile" type="xsd:string" use="required" >
+				<xsd:attribute name="configFile" type="xsd:string"
+					use="required">
 					<xsd:annotation>
 						<xsd:documentation>The Smooks configuration file. Can be a path on the file system or on the classpath. </xsd:documentation>
-					</xsd:annotation></xsd:attribute>
-                <xsd:attribute name="honorSynchronicity" type="mule:substitutableBoolean">
-                	<xsd:annotation>
-                		<xsd:documentation>If the synchronicity of the endpoint should override the general synchronicity settings</xsd:documentation>
-                	</xsd:annotation></xsd:attribute>
-				<xsd:attribute name="executionContextAsMessageProperty"	type="mule:substitutableBoolean">
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="profile" type="xsd:string">
 					<xsd:annotation>
-						<xsd:documentation>If set to &quot;true&quot; then the attributes map of the Smooks execution context is added to the message properties. The property key is defined with the executionContextMessagePropertyKey property. Default is &quot;false&quot; </xsd:documentation></xsd:annotation></xsd:attribute>
+						<xsd:documentation>The Smooks profile to execute. If a profile name was found on the message then that one is used.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="profileMessagePropertyKey" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation> The message property to look for a possible profile name. If the property is set and the value is a string then that value is used as profile name. Default "MessageProfile".</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="honorSynchronicity" type="mule:substitutableBoolean">
+					<xsd:annotation>
+						<xsd:documentation>If the synchronicity of the endpoint should override the general synchronicity settings</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="executionContextAsMessageProperty"
+					type="mule:substitutableBoolean">
+					<xsd:annotation>
+						<xsd:documentation>If set to &quot;true&quot; then the attributes map of the Smooks execution context is added to the message properties. The property key is defined with the executionContextMessagePropertyKey property. Default is &quot;false&quot; </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
 				<xsd:attribute name="executionContextMessagePropertyKey" type="xsd:string">
 					<xsd:annotation>
-						<xsd:documentation>The property key under which the execution context is put. Default is &quot;SmooksExecutionContext&quot; </xsd:documentation></xsd:annotation></xsd:attribute>
+						<xsd:documentation>The property key under which the execution context is put. Default is &quot;SmooksExecutionContext&quot; </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
 				<xsd:attribute name="excludeNonSerializables" type="mule:substitutableBoolean">
 					<xsd:annotation>
 						<xsd:documentation>If non serializable attributes need to be execluded when setting the Smooks execution context attribute map as a message propeperty. Default is "true" </xsd:documentation>
-					</xsd:annotation></xsd:attribute>
+					</xsd:annotation>
+				</xsd:attribute>
                 <xsd:attribute name="reportPath" type="xsd:string">
 					<xsd:annotation>
 						<xsd:documentation>Specifies the path and file name for generating a Smooks Execution Report.  This is a development tool. For more information see the Smooks reporting section in the Smook manual.</xsd:documentation>
-					</xsd:annotation></xsd:attribute>
+					</xsd:annotation>
+				</xsd:attribute>
             </xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -134,7 +144,17 @@
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
-				<xsd:attribute name="executionContextAsMessageProperty"
+                <xsd:attribute name="profile" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>The Smooks profile to execute. If a profile name was found on the message then that one is used.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+                <xsd:attribute name="profileMessagePropertyKey" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation> The message property to look for a possible profile name. If the property is set and the value is a string then that value is used as profile name. Default "MessageProfile".</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+                <xsd:attribute name="executionContextAsMessageProperty"
 					type="mule:substitutableBoolean">
 					<xsd:annotation>
 						<xsd:documentation>
@@ -168,7 +188,7 @@
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
-				<xsd:attribute name="reportPath" type="xsd:string">
+                <xsd:attribute name="reportPath" type="xsd:string">
 					<xsd:annotation>
 						<xsd:documentation>
 							specifies the path and file name for
@@ -178,7 +198,7 @@
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
-			</xsd:extension>
+            </xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 

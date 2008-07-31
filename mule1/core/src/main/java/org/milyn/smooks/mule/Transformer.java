@@ -16,7 +16,8 @@
 
 package org.milyn.smooks.mule;
 
-import static org.mule.config.i18n.MessageFactory.createStaticMessage;
+import static org.milyn.smooks.mule.Constants.*;
+import static org.mule.config.i18n.MessageFactory.*;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ import org.milyn.event.report.HtmlReportGenerator;
 import org.mule.config.i18n.Message;
 import org.mule.transformers.AbstractEventAwareTransformer;
 import org.mule.umo.UMOEventContext;
+import org.mule.umo.UMOMessage;
 import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.transformer.TransformerException;
 import org.slf4j.Logger;
@@ -53,21 +55,7 @@ import org.xml.sax.SAXException;
  * Configure the router with a transformer:
  * &lt;inbound-router&gt;
  *     &lt;endpoint address="stream://System.in"  transformers="SmooksTransformer"/&gt;
- * &lt;/inbound-router&gt;
- *
- * Required properties:
- * &lt;property name="configFile" value="smooks-config.xml" /&gt;
- *
- * Optional properties:
- * &lt;property name="resultType" value="STRING" /&gt;
- * &lt;property name="javaResultBeanId" value="orderBean" /&gt;
- * &lt;property name="resultClass" value="javax.xml.transform.dom.DOMResult" /&gt;
- * &lt;property name="resultFactoryClass" value="your.package.SomeResultFactory" /&gt;
- * &lt;property name="reportPath" value="/tmp/smooks-report.html" /&gt;
- * &lt;property name="executionContextAsMessageProperty" value="false" /&gt;
- * &lt;property name="executionContextMessagePropertyKey" value="SmooksExecutionContext" /&gt;
- * &lt;property name="excludeNonSerializables" value="false" /&gt;
- * </pre>
+ * &lt;/inbound-router&gt;</pre>
  *
  * <h3>Description of configuration properties</h3>
  * <ul>
@@ -80,11 +68,14 @@ import org.xml.sax.SAXException;
  * <li><i>resultFactoryClass</i> - When the resultType is set to "RESULT" then this attribute defines the ResultFactory	Class which will be used
  * 								   to create the	Result Class. The class must implement the	{@link org.milyn.smooks.mule.ResultFactory} interface and
  * 								   must have an argumentless constructor.
- * <li><i>reportPath</i> - specifies the path and file name for generating a Smooks Execution Report.  This is a development tool.
+ * <li><i>profile</i> - the smooks profile to execute. If a profile name was found on the message then that one is used.
+ * <li><i>profileMessagePropertyKey</i> - the message property to look for a possible profile name. If the property is set and the value is a string then
+ *                                        that value is used as profile name. Default "MessageProfile".
  * <li><i>executionContextAsMessageProperty</i> - If set to "true" then the attributes map of the Smooks execution context is added to the message properties.
  * 												  The property key is defined with the executionContextMessagePropertyKey property. Default is "false"
  * <li><i>executionContextMessagePropertyKey</i> - The property key under which the execution context is put. Default is "SmooksExecutionContext"
  * <li><i>excludeNonSerializables</i> - if true, non serializable attributes from the Smooks ExecutionContext will no be included. Default is true.
+ * <li><i>reportPath</i> - specifies the path and file name for generating a Smooks Execution Report.  This is a development tool.
  * </ul>
  *
  * <h3>Accessing Smooks ExecutionContext attributes</h3>
@@ -124,7 +115,6 @@ import org.xml.sax.SAXException;
  */
 public class Transformer extends AbstractEventAwareTransformer
 {
-	public static final String MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT = "SmooksExecutionContext";
 
 	private static final long serialVersionUID = 1L;
 
@@ -149,6 +139,17 @@ public class Transformer extends AbstractEventAwareTransformer
 	 * Filename for smooks configuration. Default is smooks-config.xml
 	 */
     private String configFile;
+
+    /*
+	 * The smooks profile to be used
+	 */
+    private String profile;
+
+	/*
+	 * The key name where the message profile can be located
+	 */
+    private String profileMessagePropertyKey = MESSAGE_PROPERTY_KEY_PROFILE;
+
 
     /*
      * If true, then the execution context is set as property on the message
@@ -235,6 +236,34 @@ public class Transformer extends AbstractEventAwareTransformer
 	public String getConfigFile()
 	{
 		return configFile;
+	}
+
+	/**
+	 * @return the profile
+	 */
+	public String getProfile() {
+		return profile;
+	}
+
+	/**
+	 * @param profile the profile to set
+	 */
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+
+	/**
+	 * @return the profileMessagePropertyKey
+	 */
+	public String getProfileMessagePropertyKey() {
+		return profileMessagePropertyKey;
+	}
+
+	/**
+	 * @param profileMessagePropertyKey the profileMessagePropertyKey to set
+	 */
+	public void setProfileMessagePropertyKey(String profileMessagePropertyKey) {
+		this.profileMessagePropertyKey = profileMessagePropertyKey;
 	}
 
 	/**
@@ -330,7 +359,14 @@ public class Transformer extends AbstractEventAwareTransformer
 	public Object transform( final Object payload, String encoding, UMOEventContext umoEventContext ) throws TransformerException
 	{
         //	Create Smooks ExecutionContext.
-		ExecutionContext executionContext = smooks.createExecutionContext();
+		ExecutionContext executionContext;
+
+		String profile = retrieveProfile(umoEventContext.getMessage());
+		if(profile != null) {
+			executionContext = smooks.createExecutionContext(profile);
+		} else {
+			executionContext = smooks.createExecutionContext();
+		}
 
 		//	Add smooks reporting if configured
 		addReportingSupport( executionContext );
@@ -347,7 +383,19 @@ public class Transformer extends AbstractEventAwareTransformer
 		return transformedPayload;
 	}
 
-	//	private
+
+	private String retrieveProfile(UMOMessage message) {
+
+		Object messageProfile = message.getProperty(profileMessagePropertyKey);
+
+		if(messageProfile != null && messageProfile instanceof String) {
+
+			return (String) messageProfile;
+
+		}
+
+		return profile;
+	}
 
 	private Smooks createSmooksInstance() throws InitialisationException
 	{

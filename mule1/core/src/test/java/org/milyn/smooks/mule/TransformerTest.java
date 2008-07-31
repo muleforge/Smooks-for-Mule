@@ -188,7 +188,7 @@ public class TransformerTest extends AbstractMuleTestCase
 		if(executionContextMessagePropertyKey != null) {
 			transformer.setExecutionContextMessagePropertyKey(executionContextMessagePropertyKey);
 		} else {
-			executionContextMessagePropertyKey = Transformer.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT;
+			executionContextMessagePropertyKey = Constants.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT;
 		}
 
 		byte[] inputMessage = readInputMessage();

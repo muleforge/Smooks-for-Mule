@@ -16,7 +16,8 @@
 
 package org.milyn.smooks.mule;
 
-import static org.mule.config.i18n.MessageFactory.createStaticMessage;
+import static org.milyn.smooks.mule.Constants.*;
+import static org.mule.config.i18n.MessageFactory.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -51,28 +52,20 @@ import org.xml.sax.SAXException;
  * 		&lt;jms:outbound-endpoint name="order" queue="order.queue"/&gt;
  * 		&lt;jms:outbound-endpoint name="order-important" queue="order.important.queue"/&gt;
  *	&lt;/smooks:router&gt;
- * &lt;/outbound&gt;
- *
- * <b>Required attributes/properties:</b>
- * &lt;property name="configFile" value="smooks-config.xml" /&gt;
- *
- * <b>Optional attributes/properties:</b>
- * &lt;property name="resultType" value="STRING" /&gt;
- * &lt;property name="reportPath" value="/tmp/smooks-report.html" /&gt;
- * &lt;property name="executionContextAsMessageProperty" value="false" /&gt;
- * &lt;property name="executionContextMessagePropertyKey" value="SmooksExecutionContext" /&gt;
- * &lt;property name="excludeNonSerializables" value="false" /&gt;
- * </pre>
+ * &lt;/outbound&gt;</pre>
  *
  * <h3>Description of configuration attributes/properties</h3>
  * <ul>
  * <li><i>configFile</i> - the Smooks configuration file. Can be a path on the file system or on the classpath.
- * <li><i>reportPath</i> - specifies the path and file name for generating a Smooks Execution Report.  This is a development tool.
+ * <li><i>profile</i> - the Smooks profile to execute. If a profile name was found on the message then that one is used.
+ * <li><i>profileMessagePropertyKey</i> - the message property to look for a possible profile name. If the property is set and the value is a string then
+ *                                        that value is used as profile name. Default "MessageProfile".
  * <li><i>executionContextAsMessageProperty</i> - If set to "true" then the attributes map of the Smooks execution context is added to the message
  * 												  properties of every message that gets created by this router. The property key is defined with
  * 												  the executionContextMessagePropertyKey property. Default is "false"
  * <li><i>executionContextMessagePropertyKey</i> - The property key under which the execution context is put. Default is "SmooksExecutionContext"
  * <li><i>excludeNonSerializables</i> - if true, non serializable attributes from the Smooks ExecutionContext will no be included. Default is true.
+ * <li><i>reportPath</i> - specifies the path and file name for generating a Smooks Execution Report.  This is a development tool.
  * </ul>
  *
  * <h3>Defining Endpoints</h3>
@@ -116,8 +109,6 @@ public class Router extends FilteringOutboundRouter {
 
 	private static final Logger log = LoggerFactory.getLogger(Router.class);
 
-	public static final String MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT = "SmooksExecutionContext";
-
 	private static final long serialVersionUID = 1L;
 
 	/*
@@ -134,6 +125,16 @@ public class Router extends FilteringOutboundRouter {
 	 * Filename for smooks configuration. Default is smooks-config.xml
 	 */
     private String configFile;
+
+    /*
+	 * The smooks profile to be used
+	 */
+    private String profile;
+
+	/*
+	 * The key name where the message profile can be located
+	 */
+    private String profileMessagePropertyKey = MESSAGE_PROPERTY_KEY_PROFILE;
 
     /*
      * If true, then the execution context is set as property on the message
@@ -191,6 +192,33 @@ public class Router extends FilteringOutboundRouter {
 		return configFile;
 	}
 
+    /**
+	 * @return the profile
+	 */
+	public String getProfile() {
+		return profile;
+	}
+
+	/**
+	 * @param profile the profile to set
+	 */
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+
+	/**
+	 * @return the profileMessagePropertyKey
+	 */
+	public String getProfileMessagePropertyKey() {
+		return profileMessagePropertyKey;
+	}
+
+	/**
+	 * @param profileMessagePropertyKey the profileMessagePropertyKey to set
+	 */
+	public void setProfileMessagePropertyKey(String profileMessagePropertyKey) {
+		this.profileMessagePropertyKey = profileMessagePropertyKey;
+	}
 
 	/**
 	 * @return the executionContextAsMessageProperty
@@ -289,8 +317,14 @@ public class Router extends FilteringOutboundRouter {
 		Object payload = message.getPayload();
 
         //	Create Smooks ExecutionContext.
-		final ExecutionContext executionContext = smooks.createExecutionContext();
+		ExecutionContext executionContext;
 
+		String profile = retrieveProfile(message);
+		if(profile != null) {
+			executionContext = smooks.createExecutionContext(profile);
+		} else {
+			executionContext = smooks.createExecutionContext();
+		}
 
 		// Create the dispatcher which handles the dispatching of messages
 		NamedOutboundEndpointMuleDispatcher dispatcher = createDispatcher(executionContext, session, synchronous);
@@ -305,6 +339,19 @@ public class Router extends FilteringOutboundRouter {
         payloadProcessor.process( payload, executionContext );
 
 		return null;
+	}
+
+	private String retrieveProfile(MuleMessage message) {
+
+		Object messageProfile = message.getProperty(profileMessagePropertyKey);
+
+		if(messageProfile != null && messageProfile instanceof String) {
+
+			return (String) messageProfile;
+
+		}
+
+		return profile;
 	}
 
 	private Smooks createSmooksInstance() throws InitialisationException

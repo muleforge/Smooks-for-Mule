@@ -56,13 +56,13 @@ public class ExecutionContextUtilTest extends TestCase {
 
 
 
+	@SuppressWarnings("unchecked")
 	public void testGetAtrributesMapIsImmutable() {
 
 		boolean thrown = false;
 
 		ExecutionContext executionContext = new MockExecutionContext();
 
-		@SuppressWarnings("unchecked")
 		Map attributesMap = ExecutionContextUtil.getAtrributesMap(executionContext, false);
 
 		try {
