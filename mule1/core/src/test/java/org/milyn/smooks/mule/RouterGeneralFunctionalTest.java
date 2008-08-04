@@ -24,16 +24,17 @@ import java.util.TimeZone;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import org.mule.DefaultMuleMessage;
-import org.mule.module.client.MuleClient;
+import org.mule.extras.client.MuleClient;
+import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.FileUtils;
 
 /**
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
+ *
  */
-public class RouterFunctionalTest extends FunctionalTestCase {
+public class RouterGeneralFunctionalTest extends FunctionalTestCase {
 
 	private final File routingTestDir = new File("target/routing-test");
 
@@ -53,12 +54,12 @@ public class RouterFunctionalTest extends FunctionalTestCase {
 	}
 
 	@Test
-	public void testSmooks() throws Exception
+	public void testRouter() throws Exception
     {
 		InputStream in = getClass().getResourceAsStream("/router-input-message.xml");
 
         MuleClient client = new MuleClient();
-        client.send("vm://messageInput", new DefaultMuleMessage(in));
+        client.send("vm://messageInput", new MuleMessage(in));
 
         assertTrue("File '" + test1File + "' doesn't exist.", test1File.exists());
 
@@ -72,13 +73,12 @@ public class RouterFunctionalTest extends FunctionalTestCase {
         assertEquals("Reply value incorrect", "Hello World,testValue,test2Value,10,1215797456000,xmlTest1Value,xmlTest2Value,overwritten", testReplyFileContent);
     }
 
-
 	/* (non-Javadoc)
-	 * @see org.mule.tck.AbstractMuleTestCase#doSetUp()
+	 * @see org.mule.tck.FunctionalTestCase#doPreFunctionalSetUp()
 	 */
 	@Override
-	protected void doSetUp() throws Exception {
-		super.doSetUp();
+	protected void doPreFunctionalSetUp() throws Exception {
+		super.doPreFunctionalSetUp();
 
 		TimeZone.setDefault(TimeZone.getTimeZone("EST"));
 		Locale.setDefault(Locale.ENGLISH);

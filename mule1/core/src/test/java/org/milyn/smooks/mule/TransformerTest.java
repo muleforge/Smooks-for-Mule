@@ -47,6 +47,8 @@ public class TransformerTest extends AbstractMuleTestCase
 
 	private final String smooksConfigFile = "/transformer-smooks-config.xml";
 
+	private final String smooksProfiledConfigFile = "/transformer-smooks-config-profiled.xml";
+
 	public void testInitWithoutSmooksConfigFile() throws InitialisationException
 	{
 		boolean thrown = false;
@@ -178,7 +180,7 @@ public class TransformerTest extends AbstractMuleTestCase
 		testDoTransformation(true, "executionContextSmooks");
 	}
 
-	private void testDoTransformation(Boolean setExecuctionContextAsMessageKey, String executionContextMessagePropertyKey) throws TransformerException
+	private void testDoTransformation(Boolean setExecuctionContextAsMessageKey, String executionContextMessagePropertyKey) throws Exception
 	{
 		transformer.setConfigFile( smooksConfigFile );
 		transformer.setExcludeNonSerializables( false );
@@ -190,6 +192,8 @@ public class TransformerTest extends AbstractMuleTestCase
 		} else {
 			executionContextMessagePropertyKey = Constants.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT;
 		}
+
+		transformer.initialise();
 
 		byte[] inputMessage = readInputMessage();
 		Object transformedObject = transformer.transform( inputMessage, "UTF-8", eventContext );
@@ -253,23 +257,75 @@ public class TransformerTest extends AbstractMuleTestCase
 		assertTrue("transformed Object not a DOMResult", transformedObject instanceof DOMResult);
 	}
 
+	public void testDoTransformationWithProfileInConfig() throws TransformerException, InitialisationException
+	{
+		transformer.setConfigFile( smooksProfiledConfigFile );
+		transformer.setProfile("profile1");
+		transformer.setResultType("STRING");
+		transformer.initialise();
+
+		byte[] inputMessage = readInputMessage();
+
+		Object transformedObject = transformer.transform( inputMessage, "UTF-8", eventContext );
+		assertNotNull ( transformedObject );
+		assertTrue("transformed Object not a String", transformedObject instanceof String);
+		assertTrue("result doesn't contain right xml", transformedObject.toString().contains("<yyy></yyy>"));
+	}
+
+	public void testDoTransformationWithProfileInMessage() throws TransformerException, InitialisationException
+	{
+		final String messagePropertyProfileKey = "smooksMessageProfile";
+
+		transformer.setConfigFile( smooksProfiledConfigFile );
+		transformer.setResultType("STRING");
+		transformer.setProfileMessagePropertyKey(messagePropertyProfileKey);
+		transformer.initialise();
+
+		byte[] inputMessage = readInputMessage();
+
+		eventContext.getMessage().setStringProperty(messagePropertyProfileKey, "profile2");
+
+		Object transformedObject = transformer.transform( inputMessage, "UTF-8", eventContext );
+		assertNotNull ( transformedObject );
+		assertTrue("transformed Object not a String", transformedObject instanceof String);
+		assertTrue("result doesn't contain right xml", transformedObject.toString().contains("<zzz></zzz>"));
+	}
+
+
+	public void testDoTransformationWithProfileInConfigAndMessageMessage() throws TransformerException, InitialisationException
+	{
+		final String messagePropertyProfileKey = "smooksMessageProfile";
+
+		transformer.setConfigFile( smooksProfiledConfigFile );
+		transformer.setResultType("STRING");
+		transformer.setProfile("profile1");
+		transformer.setProfileMessagePropertyKey(messagePropertyProfileKey);
+		transformer.initialise();
+
+		byte[] inputMessage = readInputMessage();
+
+		eventContext.getMessage().setStringProperty(messagePropertyProfileKey, "profile2");
+
+		Object transformedObject = transformer.transform( inputMessage, "UTF-8", eventContext );
+		assertNotNull ( transformedObject );
+		assertTrue("transformed Object not a String", transformedObject instanceof String);
+		assertTrue("result doesn't contain right xml", transformedObject.toString().contains("<zzz></zzz>"));
+	}
+
 	@Override
 	protected void doSetUp() throws Exception
 	{
     	transformer = new Transformer();
-		transformer.setConfigFile( smooksConfigFile );
-		transformer.initialise();
 		RequestContext.setEvent( getTestEvent ( "Test!" ) );
 		eventContext = RequestContext.getEventContext();
 	}
 
 	//	private
-
 	private static byte[] readInputMessage()
 	{
         try
         {
-            return StreamUtils.readStream( TransformerTest.class.getResourceAsStream( "/transformer-input-message.xml"));
+            return StreamUtils.readStream( TransformerTest.class.getResourceAsStream("/transformer-input-message.xml"));
         }
         catch (IOException e)
         {

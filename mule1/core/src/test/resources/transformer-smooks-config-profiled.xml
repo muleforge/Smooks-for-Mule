@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+
+    Copyright (C) 2008 Maurice Zeijen <maurice@zeijen.net>
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+
+	<profiles>
+		<profile base-profile="profile1"></profile>
+		<profile base-profile="profile2"></profile>
+	</profiles>
+
+	<resource-config selector="c b">
+	    <resource>/transformer.xsl</resource>
+    </resource-config>
+
+	<resource-config selector="c b" target-profile="profile1">
+	    <resource>/transformer-profile1.xsl</resource>
+    </resource-config>
+
+    <resource-config selector="c b" target-profile="profile2">
+	    <resource>/transformer-profile2.xsl</resource>
+    </resource-config>
+
+</smooks-resource-list>
