@@ -23,7 +23,7 @@
 	</licenses>
 
 	<properties>
-		<muleVersion>2.0.1</muleVersion>
+		<muleVersion>2.0.2</muleVersion>
 	</properties>
 
 	<modules>
