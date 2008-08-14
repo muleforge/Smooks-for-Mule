@@ -23,8 +23,8 @@
 	</licenses>
 
 	<modules>
-	  <module>mule1-module-smooks-examples-basic-transform</module>
-	  <module>mule1-module-smooks-examples-basic-routing</module>
-		<module>mule1-module-smooks-examples-edi-to-java</module>
+	  <module>basic-transformation</module>
+	  <module>basic-routing</module>
+	  <module>edi-to-java-transformation</module>
 	</modules>
 </project>

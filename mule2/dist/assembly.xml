@@ -67,10 +67,10 @@ Assembly descriptor for the full distribution.
 
 		<moduleSet>
 			<includes>
-				<include>org.mule.modules:mule2-module-smooks-examples-edi-to-java</include>
+				<include>org.mule.modules:mule2-module-smooks-examples-edi-to-java-transformation</include>
 			</includes>
 			<sources>
-				<outputDirectoryMapping>/examples/edi-to-java/</outputDirectoryMapping>
+				<outputDirectoryMapping>/examples/edi-to-java-transformation/</outputDirectoryMapping>
 				<fileSets>
 					<fileSet>
 						<includes>
@@ -92,7 +92,7 @@ Assembly descriptor for the full distribution.
 			</sources>
 
 			<binaries>
-        		<outputDirectory>/examples/edi-to-java/lib/user/</outputDirectory>
+        		<outputDirectory>/examples/edi-to-java-transformation/lib/user/</outputDirectory>
 				<unpack>false</unpack>
 				<dependencySets>
 					<dependencySet>
@@ -111,10 +111,10 @@ Assembly descriptor for the full distribution.
 
 		<moduleSet>
 			<includes>
-				<include>org.mule.modules:mule2-module-smooks-examples-basic-transform</include>
+				<include>org.mule.modules:mule2-module-smooks-examples-basic-transformation</include>
 			</includes>
 			<sources>
-				<outputDirectoryMapping>/examples/basic-transform/</outputDirectoryMapping>
+				<outputDirectoryMapping>/examples/basic-transformation/</outputDirectoryMapping>
 				<fileSets>
 					<fileSet>
 						<includes>
@@ -136,7 +136,7 @@ Assembly descriptor for the full distribution.
 			</sources>
 
 			<binaries>
-        		<outputDirectory>/examples/basic-transform/lib/user/</outputDirectory>
+        		<outputDirectory>/examples/basic-transformation/lib/user/</outputDirectory>
 				<unpack>false</unpack>
 				<dependencySets>
 					<dependencySet>

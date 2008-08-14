@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+
+	<resource-config selector="global-parameters">
+        <param name="stream.filter.type">SAX</param>
+    </resource-config>
+
+	<import file="read/edi-product-reader.xml" />
+
+	<import file="database/datasource.xml" />
+
+	<import file="routing/route-to-database.xml" />
+
+	<import file="enrich/stock-service.xml" />
+
+	<import file="binding/bean-binding.xml" />
+
+	<import file="enrich/part-data.xml" />
+
+</smooks-resource-list>

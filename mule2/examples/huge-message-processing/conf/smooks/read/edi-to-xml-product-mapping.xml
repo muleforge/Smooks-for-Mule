@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	This is the Smooks EDI mapping file. For more information on this file look
+	at the xsd or in the Smooks documentation.
+ -->
+<medi:edimap xmlns:medi="http://www.milyn.org/schema/edi-message-mapping-1.0.xsd">
+
+	<medi:description name="Products" version="1.0" />
+
+	<medi:delimiters segment="&#10;" field="|" component="^" sub-component="~" />
+
+	<medi:segments xmltag="products">
+
+		<medi:segment segcode="PRD" xmltag="product" minOccurs="1" maxOccurs="-1" >
+			<medi:field xmltag="id" />
+			<medi:field xmltag="name" />
+			<medi:field xmltag="brand" />
+			<medi:field xmltag="category" />
+			<medi:field xmltag="price" />
+			<medi:field xmltag="tax" />
+			<medi:field xmltag="guarantee" />
+
+			<medi:segment segcode="PRT" xmltag="part" minOccurs="0" maxOccurs="-1" >
+				<medi:field xmltag="id" />
+				<medi:field xmltag="quantity" />
+				<medi:field xmltag="built-in" />
+			</medi:segment>
+
+			<medi:segment segcode="SPC" xmltag="spec" minOccurs="0" maxOccurs="-1" >
+				<medi:field xmltag="name" />
+				<medi:field xmltag="value" />
+			</medi:segment>
+		</medi:segment>
+	</medi:segments>
+
+</medi:edimap>

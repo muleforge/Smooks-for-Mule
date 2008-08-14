@@ -10,8 +10,8 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
-	<artifactId>mule1-module-smooks-examples-basic-transform</artifactId>
-	<name>Smooks for Mule 1.x - Basic Transform example</name>
+	<artifactId>mule1-module-smooks-examples-basic-transformation</artifactId>
+	<name>Smooks for Mule 1.x - Basic Transformation example</name>
 	<description>Is a basic example of how the Smooks for Mule Transformer can be used.</description>
 
 	<licenses>

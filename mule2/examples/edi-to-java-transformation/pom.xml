@@ -9,9 +9,9 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
-	<artifactId>mule2-module-smooks-examples-basic-transform</artifactId>
-	<name>Smooks for Mule 2.x - Basic Transform example</name>
-	<description>Is a basic example of how the Smooks for Mule Transformer can be used.</description>
+	<artifactId>mule2-module-smooks-examples-edi-to-java-transformation</artifactId>
+	<name>Smooks for Mule 2.x - EDI to Java example</name>
+	<description>Is a simple example of how the Smooks for Mule Transformer can be used.</description>
 
 	<licenses>
 		<license>
@@ -22,19 +22,19 @@
 	</licenses>
 
 	<build>
-      <defaultGoal>install</defaultGoal>
+        <defaultGoal>install</defaultGoal>
 
-      <!-- Allow config files to be in the "conf" directory to make it easier for users to find them. -->
-      <resources>
-          <resource>
-              <directory>conf</directory>
-          </resource>
-          <resource>
-              <directory>src/main/resources</directory>
-          </resource>
-      </resources>
+        <!-- Allow config files to be in the "conf" directory to make it easier for users to find them. -->
+        <resources>
+            <resource>
+                <directory>conf</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
 
-  </build>
+    </build>
 
 	<dependencies>
 
@@ -87,7 +87,11 @@
 		<!-- The Smooks dependencies -->
 		<dependency>
 			<groupId>milyn</groupId>
-			<artifactId>milyn-smooks-templating</artifactId>
+			<artifactId>milyn-smooks-edi</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>milyn</groupId>
+			<artifactId>milyn-smooks-javabean</artifactId>
 		</dependency>
 
 		<!-- Better testing of XML -->
