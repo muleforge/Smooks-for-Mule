@@ -86,6 +86,11 @@
 			</dependency>
 			<dependency>
 				<groupId>org.mule.transports</groupId>
+				<artifactId>mule-transport-jms</artifactId>
+				<version>${muleVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mule.transports</groupId>
 				<artifactId>mule-transport-file</artifactId>
 				<version>${muleVersion}</version>
 			</dependency>

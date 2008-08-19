@@ -13,43 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package example.service;
+package example.util;
 
 import java.util.concurrent.CountDownLatch;
-
-import example.util.Application;
-import example.util.LatchShutdownHook;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
  *
  */
-public class ServiceManager extends Application{
+public class LatchShutdownHook extends Thread {
 
-	private final Service[] services = {
-			new DatabaseService(),
-			new JMSService()
-	};
+	private final CountDownLatch waitForShutdown;
 
-	public static void main(String[] args) {
-		new ServiceManager().run();
+	/**
+	 * @param waitForShutdown
+	 */
+	public LatchShutdownHook(CountDownLatch waitForShutdown) {
+		this.waitForShutdown = waitForShutdown;
 	}
 
-	protected void start() {
-
-		for(Service service : services) {
-			service.start();
-		}
-
-
-	}
-
-	protected void stop() {
-
-		for(int i = services.length-1; 0 <= i; i--) {
-			services[i].stop();
-		}
-
-	}
+	@Override
+	public void run() {
+    	waitForShutdown.countDown();
+    }
 }
+

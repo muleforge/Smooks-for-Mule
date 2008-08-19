@@ -1,41 +1,34 @@
 <?xml version="1.0"?>
 <smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
 
-	<!--
-	  	Normally this part wouldn't be arround, but by counting the number of records int the ext_product
-	  	table we can make sure that we don't blow up the EXT_PRODUCT and EXT_PARTS table with to much records.
-	-->
+	<!-- In the real world we wouldn't do this count. It is only here for the example, to prevent flooding
+	     of the database with thousands of records -->
 	<resource-config selector="product">
-	    <resource>org.milyn.routing.db.SQLExecutor</resource>
-	    <param name="executeBefore">true</param>
-	    <param name="datasource">ExternalDatabase</param>
-	    <param name="statement">select count(*) as "numberProducts" from EXT_PRODUCT</param>
-	    <param name="resultSetName">productCount</param>
+		<resource>org.milyn.routing.db.SQLExecutor</resource>
+		<param name="executeBefore">true</param>
+		<param name="datasource">ExternalDatabase</param>
+		<param name="statement">select count(*) as "numberProducts" from EXT_PRODUCT</param>
+		<param name="resultSetName">productCount</param>
 	</resource-config>
 
-
 	<resource-config selector="product">
-	    <resource>org.milyn.routing.db.SQLExecutor</resource>
-	    <condition evaluator="org.milyn.javabean.expression.BeanMapExpressionEvaluator">
-	       <!--
-	       	productStock > 20 && productCount[0].numberProducts < 100
-	       -->
-	    </condition>
-	    <param name="executeBefore">false</param>
-	    <param name="datasource">ExternalDatabase</param>
-	    <param name="statement">insert into EXT_PRODUCT values(${product.id}, ${product.name}, ${product.brand}, ${product.category}, ${product.price}, ${product.tax}, now())</param>
+		<resource>org.milyn.routing.db.SQLExecutor</resource>
+		<condition evaluator="org.milyn.javabean.expression.BeanMapExpressionEvaluator">
+			<!-- productStock > 20 && productCount[0].numberProducts < 100  -->
+		</condition>
+		<param name="executeBefore">false</param>
+		<param name="datasource">ExternalDatabase</param>
+		<param name="statement">insert into EXT_PRODUCT values(${product.id}, ${product.name}, ${product.brand}, ${product.category}, ${product.price}, ${product.tax}, now())</param>
 	</resource-config>
 
 	<resource-config selector="product part">
-	    <resource>org.milyn.routing.db.SQLExecutor</resource>
-	    <condition evaluator="org.milyn.javabean.expression.BeanMapExpressionEvaluator">
-	       <!--
-	       	productStock > 20 && productCount[0].numberProducts < 100
-	       -->
-	    </condition>
-	    <param name="executeBefore">false</param>
-	    <param name="datasource">ExternalDatabase</param>
-	    <param name="statement">insert into EXT_PART values(${part.id}, ${product.id}, ${partDetails[0].NAME}, ${partDetails[0].BRAND})</param>
+		<resource>org.milyn.routing.db.SQLExecutor</resource>
+		<condition evaluator="org.milyn.javabean.expression.BeanMapExpressionEvaluator"><!--
+			productStock > 20 && productCount[0].numberProducts < 100
+		--></condition>
+		<param name="executeBefore">false</param>
+		<param name="datasource">ExternalDatabase</param>
+		<param name="statement">insert into EXT_PART values(${part.id}, ${product.id}, ${partDetails[0].NAME}, ${partDetails[0].BRAND})</param>
 	</resource-config>
 
 </smooks-resource-list>

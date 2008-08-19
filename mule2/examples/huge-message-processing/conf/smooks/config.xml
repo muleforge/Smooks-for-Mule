@@ -9,6 +9,10 @@
 
 	<import file="database/datasource.xml" />
 
+	<import file="routing/route-to-jms-all-receiver.xml" />
+
+	<import file="routing/route-to-jms-pc-and-laptop-receiver.xml" />
+
 	<import file="routing/route-to-database.xml" />
 
 	<import file="enrich/stock-service.xml" />

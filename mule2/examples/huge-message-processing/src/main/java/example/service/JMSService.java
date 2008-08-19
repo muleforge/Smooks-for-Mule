@@ -16,9 +16,9 @@
 
 package example.service;
 
-import javax.jms.ConnectionFactory;
-
-import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.broker.BrokerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
@@ -26,16 +26,25 @@ import org.apache.activemq.ActiveMQConnectionFactory;
  */
 public class JMSService implements Service {
 
-	@SuppressWarnings("unused")
-	private ConnectionFactory connectionFactory;
+	private static final Logger logger = LoggerFactory.getLogger(JMSService.class.getName());
+
+	private BrokerService broker;
 
 	/* (non-Javadoc)
 	 * @see example.service.Service#start()
 	 */
 	public void start() {
 		try {
-			connectionFactory = new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false");
+			if (logger.isInfoEnabled()) {
+				logger.info("creating JMS Broker Service");
+			}
 
+			//broker = BrokerFactory.createBroker(getClass().getClassLoader().getResource("activemq.xml").toURI());
+			BrokerService broker = new BrokerService();
+			broker.setPersistent(false);
+			broker.addConnector("tcp://localhost:61616");
+			broker.setUseShutdownHook(false);
+			broker.start();
 		} catch (Exception e) {
 			throw new RuntimeException("Could not start the BrokerService");
 		}
@@ -45,6 +54,13 @@ public class JMSService implements Service {
 	 * @see example.service.Service#stop()
 	 */
 	public void stop() {
+		try {
+			broker.stop();
+		} catch(Exception e) {
+			if (logger.isErrorEnabled()) {
+				logger.error("Exeption while trying to stop the JMS service broker", e);
+			}
+		}
 	}
 
 }

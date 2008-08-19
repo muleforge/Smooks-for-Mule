@@ -139,7 +139,7 @@ public class EdiGenerator {
 		writeField(++productCodeCounter);
 		writeField(completeSystem ? randomEntry(completeSystemNames) : randomEntry(names));
 		writeField(randomEntry(brands));
-		writeField(completeSystem ? "Complete System" : randomEntry(categoryCodes));
+		writeField(completeSystem ? "Complete Systems" : randomEntry(categoryCodes));
 		writeField(randomMoney());
 		writeField("19");
 		writeField(randomInt(1, 10) + " years");
@@ -323,7 +323,7 @@ public class EdiGenerator {
 	private static final DecimalFormat moneyFormat = new DecimalFormat("0.00");
 
 	private static final String[] categoryCodes = new String[] {
-		     //"Complete System", => This category is special and is coded into the logic to appear a lot more often
+		     //"Complete Systems", => This category is special and is coded into the logic to appear a lot more often
 			"Laptops",
 			"Graphic cards",
 			"Input devices",

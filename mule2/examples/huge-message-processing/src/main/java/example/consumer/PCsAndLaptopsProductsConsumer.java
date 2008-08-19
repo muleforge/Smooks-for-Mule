@@ -13,43 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package example.consumer;
 
-package example.service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.CountDownLatch;
-
-import example.util.Application;
-import example.util.LatchShutdownHook;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
  *
  */
-public class ServiceManager extends Application{
+public class PCsAndLaptopsProductsConsumer extends JMSConsumer {
 
-	private final Service[] services = {
-			new DatabaseService(),
-			new JMSService()
-	};
+	private static final Logger logger = LoggerFactory.getLogger(PCsAndLaptopsProductsConsumer.class.getName());
 
-	public static void main(String[] args) {
-		new ServiceManager().run();
+	/**
+	 *
+	 */
+	public PCsAndLaptopsProductsConsumer() {
+		super("ConnectionFactory", "PCsAndLaptops", new LoggingMessageListener());
 	}
 
-	protected void start() {
 
-		for(Service service : services) {
-			service.start();
-		}
-
-
+	public static void main(String[] args) throws Exception {
+		logger.info("Starting the \"PC's and Laptops consumer\"");
+		logger.info("From command line, use [Ctrl]+[C] to stop the application");
+		new PCsAndLaptopsProductsConsumer().run();
 	}
 
-	protected void stop() {
-
-		for(int i = services.length-1; 0 <= i; i--) {
-			services[i].stop();
-		}
-
-	}
 }

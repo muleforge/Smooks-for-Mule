@@ -7,12 +7,12 @@
 		<param name="Target" value="System.out" />
 		<param name="Threshold" value="debug.out" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%-5p %d{dd-MM HH:mm:ss,SSS} (%F:%M:%L)  -%m%n" />
+			<param name="ConversionPattern" value="%-5p %d{dd-MM HH:mm:ss,SSS} (%F:%M:%L)  %m%n" />
 		</layout>
 	</appender>
 
 	<logger name="example">
-		<level value="INFO" />
+		<level value="DEBUG" />
 	</logger>
 
 	<logger name="org.milyn">

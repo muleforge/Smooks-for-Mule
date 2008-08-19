@@ -5,6 +5,7 @@
        xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
        xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.0"
        xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+       xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
        xmlns:smooks="http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0"
     xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
@@ -12,6 +13,7 @@
        http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd
        http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd
        http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
+       http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd
        http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0 http://dist.muleforge.org/smooks/schema/mule-module-smooks/1.0/mule-module-smooks.xsd
        ">
 
@@ -22,6 +24,7 @@
 
 	<file:connector name="dataIn" streaming="true" />
 
+	<jms:activemq-connector name="jmsConnector" brokerURL="tcp://localhost:61616" persistentDelivery="false" specification="1.1"  />
 
     <model name="OrderProcessorModel">
         <service name="OrderProcessorService">
@@ -41,7 +44,13 @@
             </inbound>
             <outbound>
             	<smooks:router configFile="/smooks/config.xml" reportPath="target/smooks-report.html" honorSynchronicity="true">
+
 					<vm:outbound-endpoint name="StockServiceEndpoint" path="StockService" synchronous="true"/>
+
+					<jms:outbound-endpoint name="ReceiveAllProductsEndpoint" queue="example.AllProducts" connector-ref="jmsConnector"/>
+
+					<jms:outbound-endpoint name="ReceivePCsAndLaptopsEndpoint" queue="example.PCsAndLaptops" connector-ref="jmsConnector"/>
+
             	</smooks:router>
             </outbound>
         </service>

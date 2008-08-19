@@ -63,6 +63,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-jms</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
 			<artifactId>mule-transport-tcp</artifactId>
 			<scope>test</scope>
 		</dependency>
