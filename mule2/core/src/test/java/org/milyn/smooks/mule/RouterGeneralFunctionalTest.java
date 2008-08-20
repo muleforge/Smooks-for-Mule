@@ -37,6 +37,8 @@ public class RouterGeneralFunctionalTest extends FunctionalTestCase {
 
 	private final File routingTestDir = new File("target/routing-test");
 
+	private final File reportFile = new File ( "target" + File.separator + "smooks-report" + File.separator +  "report.html" );
+
 	private final File test1File = new File(routingTestDir, "file1.dat");
 
 	private final File[] test2Files = new File[] {
@@ -70,6 +72,8 @@ public class RouterGeneralFunctionalTest extends FunctionalTestCase {
 
         String testReplyFileContent = IOUtils.toString(new FileInputStream(testReplyFile), "UTF-8");
         assertEquals("Reply value incorrect", "Hello World,testValue,test2Value,10,1215797456000,xmlTest1Value,xmlTest2Value,overwritten", testReplyFileContent);
+
+        assertTrue(reportFile.exists());
     }
 
 
@@ -84,6 +88,10 @@ public class RouterGeneralFunctionalTest extends FunctionalTestCase {
 		Locale.setDefault(Locale.ENGLISH);
 
 		FileUtils.deleteDirectory(routingTestDir);
+
+		if(reportFile.exists()) {
+			reportFile.delete();
+		}
 	}
 
 }

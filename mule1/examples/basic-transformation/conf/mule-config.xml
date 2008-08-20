@@ -50,7 +50,7 @@
         <mule-descriptor name="BasicProcessor" implementation="org.mule.components.simple.BridgeComponent">
 
             <inbound-router>
-                <endpoint address="file://./data/in" transformers="BasicXSLTTransformation">
+                <endpoint address="file://./data/in" connector="FileConnector" transformers="BasicXSLTTransformation">
                     <filter pattern="*.xml" className="org.mule.providers.file.filters.FilenameWildcardFilter"/>
                 </endpoint>
 

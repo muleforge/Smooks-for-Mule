@@ -16,12 +16,16 @@
 
 package org.milyn.smooks.mule;
 
+import java.io.File;
 import java.io.InputStream;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
+import org.mule.util.FileUtils;
 
 /**
  * Unit test for {@link Transformer} to see if it works
@@ -32,6 +36,9 @@ import org.mule.umo.UMOMessage;
  */
 public class TransformerFunctionalTest extends FunctionalTestCase
 {
+
+	private final File reportFile = new File ( "target" + File.separator + "smooks-report" + File.separator +  "report.html" );
+
 	@Override
 	protected String getConfigResources() {
 		return "transformer-mule-config.xml";
@@ -48,6 +55,15 @@ public class TransformerFunctionalTest extends FunctionalTestCase
         assertNotNull(reply.getPayload());
         assertFalse("The payload is a NullPayload", "<org.mule.providers.NullPayload></org.mule.providers.NullPayload>".equals(reply.getPayload()));
 
+        assertTrue(reportFile.exists());
     }
 
+	@Override
+	protected void doPreFunctionalSetUp() throws Exception {
+		super.doPreFunctionalSetUp();
+
+		if(reportFile.exists()) {
+			reportFile.delete();
+		}
+	}
 }

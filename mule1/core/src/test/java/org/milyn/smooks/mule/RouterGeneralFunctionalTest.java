@@ -36,7 +36,9 @@ import org.mule.util.FileUtils;
  */
 public class RouterGeneralFunctionalTest extends FunctionalTestCase {
 
-	private final File routingTestDir = new File("target/routing-test");
+	private final File routingTestDir = new File("target" + File.separator +  "routing-test");
+
+	private final File reportFile = new File ( "target" + File.separator + "smooks-report" + File.separator +  "report.html" );
 
 	private final File test1File = new File(routingTestDir, "file1.dat");
 
@@ -58,6 +60,8 @@ public class RouterGeneralFunctionalTest extends FunctionalTestCase {
     {
 		InputStream in = getClass().getResourceAsStream("/router-input-message.xml");
 
+
+
         MuleClient client = new MuleClient();
         client.send("vm://messageInput", new MuleMessage(in));
 
@@ -71,6 +75,8 @@ public class RouterGeneralFunctionalTest extends FunctionalTestCase {
 
         String testReplyFileContent = IOUtils.toString(new FileInputStream(testReplyFile), "UTF-8");
         assertEquals("Reply value incorrect", "Hello World,testValue,test2Value,10,1215797456000,xmlTest1Value,xmlTest2Value,overwritten", testReplyFileContent);
+
+        assertTrue(reportFile.exists());
     }
 
 	/* (non-Javadoc)
@@ -84,6 +90,10 @@ public class RouterGeneralFunctionalTest extends FunctionalTestCase {
 		Locale.setDefault(Locale.ENGLISH);
 
 		FileUtils.deleteDirectory(routingTestDir);
+
+		if(reportFile.exists()) {
+			reportFile.delete();
+		}
 	}
 
 }

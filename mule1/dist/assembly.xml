@@ -175,7 +175,7 @@ Assembly descriptor for the full distribution.
 			</sources>
 
 			<binaries>
-        		<outputDirectory>/examples/basic-transform/lib/user/</outputDirectory>
+        		<outputDirectory>/examples/basic-routing/lib/user/</outputDirectory>
 				<unpack>false</unpack>
 				<dependencySets>
 					<dependencySet>

@@ -55,7 +55,7 @@
     <model name="OrderProcessor">
         <mule-descriptor name="OrderProcessor" implementation="org.mule.components.simple.BridgeComponent">
             <inbound-router>
-                <endpoint address="file://./data/in" transformers="EDIOrderToJavaOrder">
+                <endpoint address="file://./data/in" connector="FileConnector" transformers="EDIOrderToJavaOrder">
                     <filter pattern="*.edi" className="org.mule.providers.file.filters.FilenameWildcardFilter"/>
                 </endpoint>
 

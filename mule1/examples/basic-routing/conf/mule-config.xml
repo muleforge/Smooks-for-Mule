@@ -16,7 +16,7 @@
     <model name="Basic">
         <mule-descriptor name="BasicRouting" implementation="org.mule.components.simple.BridgeComponent">
             <inbound-router>
-                <endpoint address="file://./data/in">
+                <endpoint address="file://./data/in" connector="FileConnector">
                     <filter pattern="*.xml" className="org.mule.providers.file.filters.FilenameWildcardFilter"/>
                 </endpoint>
 
@@ -34,8 +34,8 @@
 
                     <properties>
 
-                    	<!-- 
-                    		Defines where the Smooks configuration is located 
+                    	<!--
+                    		Defines where the Smooks configuration is located
                     	-->
                     	<property name="configFile" value="routing/smooks-config.xml" />
 
