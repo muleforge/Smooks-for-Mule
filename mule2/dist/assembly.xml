@@ -50,14 +50,11 @@ Assembly descriptor for the full distribution.
 						<scope>runtime</scope>
 						<useTransitiveFiltering>true</useTransitiveFiltering>
 						<excludes>
-							<exclude>org.freemarker:freemarker</exclude>
-							<exclude>org.mvel:mvel</exclude>
 							<exclude>org.mule:mule-core</exclude>
 							<exclude>org.mule.modules:mule-module-spring-config</exclude>
 							<exclude>hsqldb:hsqldb</exclude>
 							<exclude>log4j:log4j</exclude>
 							<exclude>slf4j</exclude>
-							<exclude>com.thoughtworks.xstream:xstream</exclude>
 						</excludes>
 					</dependencySet>
 				</dependencySets>
