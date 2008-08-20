@@ -219,8 +219,8 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 
 		if(log.isInfoEnabled()) {
 			String payloadMsg;
-			if(expression == null && beanId == null) {
-				payloadMsg = " with no payload (expression and beanId not set)";
+			if(payload == null) {
+				payloadMsg = " with no payload";
 			} else {
 				payloadMsg = " with a " + payload.getClass().getName() + " payload";
 

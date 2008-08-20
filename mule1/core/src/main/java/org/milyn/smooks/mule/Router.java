@@ -319,6 +319,10 @@ public class Router extends FilteringOutboundRouter {
 	@Override
 	public UMOMessage route(UMOMessage message, UMOSession session, boolean synchronous) throws RoutingException {
 		if(!initialized) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Initializing router");
+			}
+
 			String eMessage = "The router is not initialised";
 
 			if(initialisationException != null) {
@@ -327,7 +331,9 @@ public class Router extends FilteringOutboundRouter {
 				throw new IllegalStateException(eMessage);
 			}
 		}
-
+		if (logger.isDebugEnabled()) {
+			logger.debug("Routing message '" + message.toString() + "'");
+		}
 
 		// Retrieve the payload from the message
 		Object payload = message.getPayload();
@@ -337,10 +343,19 @@ public class Router extends FilteringOutboundRouter {
 
 		String profile = retrieveProfile(message);
 		if(profile != null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Creating execution context with profile '" + profile + "'");
+			}
+
 			executionContext = smooks.createExecutionContext(profile);
 		} else {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Creating execution context");
+			}
+
 			executionContext = smooks.createExecutionContext();
 		}
+
 
 		// Create the dispatcher which handles the dispatching of messages
 		NamedOutboundEndpointMuleDispatcher dispatcher = createDispatcher(executionContext, session, synchronous);
@@ -350,6 +365,10 @@ public class Router extends FilteringOutboundRouter {
 
 		//	Add smooks reporting if configured
 		addReportingSupport( message, executionContext );
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Processing message '" + message.toString() + "'");
+		}
 
         //	Use the Smooks PayloadProcessor to execute the routing....
         smooksPayloadProcessor.process( payload, executionContext );
@@ -425,6 +444,10 @@ public class Router extends FilteringOutboundRouter {
 		if(endpointMap == null) {
 			synchronized (this) {
 				if(endpointMap == null) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Initializing endpoint map");
+					}
+
 					Map<String, UMOEndpoint> lEndpointMap = new HashMap<String, UMOEndpoint>();
 
 					for(Object e :  getEndpoints()) {
@@ -433,6 +456,10 @@ public class Router extends FilteringOutboundRouter {
 						String name = endpoint.getName();
 						if(StringUtils.isEmpty(name)) {
 							throw new IllegalArgumentException("The outbound endpoint list may only contain endpoints which have a name");
+						}
+
+						if (logger.isDebugEnabled()) {
+							logger.debug("Registered endpoint '" + name + "' in endpoint map.");
 						}
 
 						lEndpointMap.put(name, endpoint);

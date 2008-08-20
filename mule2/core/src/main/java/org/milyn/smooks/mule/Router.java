@@ -175,12 +175,20 @@ public class Router extends FilteringOutboundRouter {
 	}
 
 	private void initialiseEndpointMap() {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Initializing endpoint map");
+		}
+
 		for(Object e :  getEndpoints()) {
 			OutboundEndpoint endpoint = (OutboundEndpoint) e;
 
 			String name = endpoint.getName();
 			if(StringUtils.isEmpty(name)) {
 				throw new IllegalArgumentException("The outbound endpoint list may only contain endpoints which have a name");
+			}
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("Registered endpoint '" + name + "' in endpoint map.");
 			}
 
 			endpointMap.put(name, endpoint);
@@ -312,6 +320,9 @@ public class Router extends FilteringOutboundRouter {
 
 	@Override
 	public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous) throws RoutingException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Routing message '" + message.toString() + "'");
+		}
 
 		// Retrieve the payload from the message
 		Object payload = message.getPayload();
@@ -321,8 +332,16 @@ public class Router extends FilteringOutboundRouter {
 
 		String profile = retrieveProfile(message);
 		if(profile != null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Creating execution context with profile '" + profile + "'");
+			}
+
 			executionContext = smooks.createExecutionContext(profile);
 		} else {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Creating execution context");
+			}
+
 			executionContext = smooks.createExecutionContext();
 		}
 
@@ -334,6 +353,10 @@ public class Router extends FilteringOutboundRouter {
 
 		//	Add smooks reporting if configured
 		addReportingSupport(message, executionContext );
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Processing message '" + message.toString() + "'");
+		}
 
         //	Use the Smooks PayloadProcessor to execute the routing....
         payloadProcessor.process( payload, executionContext );
