@@ -3,10 +3,10 @@
 
 	<resource-config selector="product">
 		<resource>org.milyn.smooks.mule.MuleDispatcher</resource>
-		<condition evaluator="org.milyn.javabean.expression.BeanMapExpressionEvaluator">
-			<!-- product.category == "Complete Systems" || product.category == "Laptops"  -->
+		<!--<condition evaluator="org.milyn.javabean.expression.BeanMapExpressionEvaluator">
+			 product.category == "Complete Systems" || product.category == "Laptops"
 		</condition>
-		<param name="endpointName">ReceivePCsAndLaptopsEndpoint</param>
+		--><param name="endpointName">ReceivePCsAndLaptopsEndpoint</param>
 		<param name="beanId">JSON_ReceivePCsAndLaptops</param>
 	</resource-config>
 

@@ -24,6 +24,11 @@ import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.IOUtils;
 
+import example.consumer.AllProductsConsumer;
+import example.consumer.JMSConsumer;
+import example.consumer.PCsAndLaptopsProductsConsumer;
+import example.service.ServiceManager;
+
 /**
  * Unit test for this example
  *
@@ -32,9 +37,14 @@ import org.mule.util.IOUtils;
  */
 public class FunctionalTest extends FunctionalTestCase
 {
+	private ServiceManager serviceManager;
+
+	private AllProductsConsumer allProductsConsumer;
+
+	private PCsAndLaptopsProductsConsumer pcsAndLaptopsProductsConsumer;
+
 	@Override
 	protected String getConfigResources() {
-
 		return "mule-config.xml";
 	}
 
@@ -47,6 +57,31 @@ public class FunctionalTest extends FunctionalTestCase
 		client.send("vm://TestMessageIn",	new DefaultMuleMessage(in));
 
 	}
+
+	@Override
+	protected void suitePreSetUp() throws Exception {
+		serviceManager = new ServiceManager();
+		serviceManager.start();
+
+		allProductsConsumer = new AllProductsConsumer();
+		allProductsConsumer.start();
+
+		pcsAndLaptopsProductsConsumer = new PCsAndLaptopsProductsConsumer();
+		pcsAndLaptopsProductsConsumer.start();
+
+		super.suitePreSetUp();
+	}
+
+
+	@Override
+	protected void suitePostTearDown() throws Exception {
+		super.suitePostTearDown();
+
+		pcsAndLaptopsProductsConsumer.stop();
+		allProductsConsumer.stop();
+		serviceManager.stop();
+	}
+
 //
 //	private void assertOrder(Order order) {
 //

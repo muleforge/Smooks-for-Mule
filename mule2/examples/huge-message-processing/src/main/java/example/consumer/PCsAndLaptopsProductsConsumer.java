@@ -15,6 +15,8 @@
  */
 package example.consumer;
 
+import javax.jms.MessageListener;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +34,10 @@ public class PCsAndLaptopsProductsConsumer extends JMSConsumer {
 	 */
 	public PCsAndLaptopsProductsConsumer() {
 		super("ConnectionFactory", "PCsAndLaptops", new LoggingMessageListener());
+	}
+
+	public PCsAndLaptopsProductsConsumer(MessageListener messageListener) {
+		super("ConnectionFactory", "PCsAndLaptops", messageListener);
 	}
 
 

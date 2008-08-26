@@ -36,7 +36,7 @@ public class ServiceManager extends Application{
 		new ServiceManager().run();
 	}
 
-	protected void start() {
+	public void start() {
 
 		for(Service service : services) {
 			service.start();
@@ -45,7 +45,7 @@ public class ServiceManager extends Application{
 
 	}
 
-	protected void stop() {
+	public void stop() {
 
 		for(int i = services.length-1; 0 <= i; i--) {
 			services[i].stop();

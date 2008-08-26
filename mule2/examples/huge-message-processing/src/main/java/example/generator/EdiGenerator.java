@@ -25,10 +25,14 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 
 /**
@@ -96,7 +100,8 @@ public class EdiGenerator {
 				int lastProgress = 0;
 				for(int i = 0; i < numProducts; i++) {
 
-					boolean completeSystem = random.nextBoolean();
+					// One of five is a complete system
+					boolean completeSystem = random.nextInt(5) == 0;
 
 					writeProduct(completeSystem);
 
@@ -160,13 +165,21 @@ public class EdiGenerator {
 	 */
 	private void writeParts() {
 
-		int numParts = randomInt(1, 9);
+		int numParts = randomInt(1, partCodes.length);
+		TreeSet<String> usedPartCodes = new TreeSet<String>();
 		for(int i = 0; i < numParts; i++) {
 
 			newLine();
 
+			String partCode = null;
+			do {
+				partCode = randomEntry(partCodes);
+			} while(usedPartCodes.contains(partCode));
+
+			usedPartCodes.add(partCode);
+
 			writeField("PRT");
-			writeField(randomEntry(partCodes));
+			writeField(partCode);
 			writeField(randomInt(1, 10));
 			writeField(Boolean.toString(random.nextBoolean()));
 

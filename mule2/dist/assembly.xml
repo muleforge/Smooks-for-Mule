@@ -64,50 +64,6 @@ Assembly descriptor for the full distribution.
 
 		<moduleSet>
 			<includes>
-				<include>org.mule.modules:mule2-module-smooks-examples-edi-to-java-transformation</include>
-			</includes>
-			<sources>
-				<outputDirectoryMapping>/examples/edi-to-java-transformation/</outputDirectoryMapping>
-				<fileSets>
-					<fileSet>
-						<includes>
-							<include>src/**</include>
-							<include>conf/**</include>
-							<include>data/**</include>
-							<include>run*</include>
-						</includes>
-					</fileSet>
-					<fileSet>
-						<directory>/dist</directory>
-						<includes>
-							<include>README*</include>
-							<include>build.xml</include>
-						</includes>
-					</fileSet>
-				</fileSets>
-
-			</sources>
-
-			<binaries>
-        		<outputDirectory>/examples/edi-to-java-transformation/lib/user/</outputDirectory>
-				<unpack>false</unpack>
-				<dependencySets>
-					<dependencySet>
-						<scope>runtime</scope>
-						<useTransitiveFiltering>true</useTransitiveFiltering>
-						<excludes>
-							<exclude>commons-lang</exclude>
-							<exclude>commons-logging</exclude>
-							<exclude>xmlbeans:xmlbeans-jsr173-api</exclude>
-							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
-						</excludes>
-					</dependencySet>
-				</dependencySets>
-			</binaries>
-		</moduleSet>
-
-		<moduleSet>
-			<includes>
 				<include>org.mule.modules:mule2-module-smooks-examples-basic-transformation</include>
 			</includes>
 			<sources>
@@ -185,6 +141,99 @@ Assembly descriptor for the full distribution.
 						<excludes>
 							<exclude>commons-lang</exclude>
 							<exclude>commons-logging</exclude>
+							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
+						</excludes>
+					</dependencySet>
+				</dependencySets>
+			</binaries>
+		</moduleSet>
+
+		<moduleSet>
+			<includes>
+				<include>org.mule.modules:mule2-module-smooks-examples-edi-to-java-transformation</include>
+			</includes>
+			<sources>
+				<outputDirectoryMapping>/examples/edi-to-java-transformation/</outputDirectoryMapping>
+				<fileSets>
+					<fileSet>
+						<includes>
+							<include>src/**</include>
+							<include>conf/**</include>
+							<include>data/**</include>
+							<include>run*</include>
+						</includes>
+					</fileSet>
+					<fileSet>
+						<directory>/dist</directory>
+						<includes>
+							<include>README*</include>
+							<include>build.xml</include>
+						</includes>
+					</fileSet>
+				</fileSets>
+
+			</sources>
+
+			<binaries>
+        		<outputDirectory>/examples/edi-to-java-transformation/lib/user/</outputDirectory>
+				<unpack>false</unpack>
+				<dependencySets>
+					<dependencySet>
+						<scope>runtime</scope>
+						<useTransitiveFiltering>true</useTransitiveFiltering>
+						<excludes>
+							<exclude>commons-lang</exclude>
+							<exclude>commons-logging</exclude>
+							<exclude>xmlbeans:xmlbeans-jsr173-api</exclude>
+
+							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
+						</excludes>
+					</dependencySet>
+				</dependencySets>
+			</binaries>
+		</moduleSet>
+
+		<moduleSet>
+			<includes>
+				<include>org.mule.modules:mule2-module-smooks-examples-huge-message-processing</include>
+			</includes>
+			<sources>
+				<outputDirectoryMapping>/examples/huge-message-processing/</outputDirectoryMapping>
+				<fileSets>
+					<fileSet>
+						<includes>
+							<include>src/**</include>
+							<include>conf/**</include>
+							<include>data/**</include>
+							<include>run*</include>
+						</includes>
+					</fileSet>
+					<fileSet>
+						<directory>/dist</directory>
+						<includes>
+							<include>README*</include>
+							<include>build.xml</include>
+						</includes>
+					</fileSet>
+				</fileSets>
+
+			</sources>
+
+			<binaries>
+        		<outputDirectory>/examples/huge-message-processing/lib/user/</outputDirectory>
+				<unpack>false</unpack>
+				<dependencySets>
+					<dependencySet>
+						<scope>runtime</scope>
+						<useTransitiveFiltering>true</useTransitiveFiltering>
+						<excludes>
+							<exclude>commons-lang</exclude>
+							<exclude>commons-logging</exclude>
+							<exclude>xmlbeans:xmlbeans-jsr173-api</exclude>
+							<exclude>antlr</exclude>
+							<exclude>jboss</exclude>
+							<exclude>com.mockrunner</exclude>
+							<exclude>cglib</exclude>
 							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
 						</excludes>
 					</dependencySet>

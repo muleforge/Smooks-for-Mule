@@ -47,6 +47,9 @@ public class AllProductsConsumer extends JMSConsumer {
 		super("ConnectionFactory", "AllProducts", new LoggingMessageListener());
 	}
 
+	public AllProductsConsumer(MessageListener messageListener) {
+		super("ConnectionFactory", "AllProducts", messageListener);
+	}
 
 	public static void main(String[] args) throws Exception {
 		logger.info("Starting the \"All products consumer\"");

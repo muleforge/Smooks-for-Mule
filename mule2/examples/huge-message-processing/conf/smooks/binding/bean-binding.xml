@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
 
+	<resource-config selector="$document">
+		<resource>org.milyn.javabean.BeanPopulator</resource>
+        <param name="beanId">product</param>
+        <param name="beanClass">example.model.Product</param>
+	</resource-config>
+
     <resource-config selector="product">
         <resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">product</param>

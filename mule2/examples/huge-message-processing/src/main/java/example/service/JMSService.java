@@ -40,7 +40,7 @@ public class JMSService implements Service {
 			}
 
 			//broker = BrokerFactory.createBroker(getClass().getClassLoader().getResource("activemq.xml").toURI());
-			BrokerService broker = new BrokerService();
+			broker = new BrokerService();
 			broker.setPersistent(false);
 			broker.addConnector("tcp://localhost:61616");
 			broker.setUseShutdownHook(false);
