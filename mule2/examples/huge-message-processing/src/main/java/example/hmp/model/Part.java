@@ -13,28 +13,64 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.util;
 
-import java.util.concurrent.CountDownLatch;
+package example.hmp.model;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
  *
  */
-public class LatchShutdownHook extends Thread {
+public class Part {
 
-	private final CountDownLatch waitForShutdown;
+	private Long id;
+
+	private int quantity;
+
+	private boolean buildIn;
+
 
 	/**
-	 * @param waitForShutdown
+	 * @return the id
 	 */
-	public LatchShutdownHook(CountDownLatch waitForShutdown) {
-		this.waitForShutdown = waitForShutdown;
+	public Long getId() {
+		return id;
 	}
 
-	@Override
-	public void run() {
-    	waitForShutdown.countDown();
-    }
-}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
+
+
+	/**
+	 * @return the quantity
+	 */
+	public int getQuantity() {
+		return quantity;
+	}
+
+	/**
+	 * @param quantity the quantity to set
+	 */
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	/**
+	 * @return the buildIn
+	 */
+	public boolean isBuildIn() {
+		return buildIn;
+	}
+
+	/**
+	 * @param buildIn the buildIn to set
+	 */
+	public void setBuildIn(boolean buildIn) {
+		this.buildIn = buildIn;
+	}
+
+}

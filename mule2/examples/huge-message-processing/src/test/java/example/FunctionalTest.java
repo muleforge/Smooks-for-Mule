@@ -24,10 +24,10 @@ import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.IOUtils;
 
-import example.consumer.AllProductsConsumer;
-import example.consumer.JMSConsumer;
-import example.consumer.PCsAndLaptopsProductsConsumer;
-import example.service.ServiceManager;
+import example.hmp.consumer.AllProductsConsumer;
+import example.hmp.consumer.JMSConsumer;
+import example.hmp.consumer.PCsAndLaptopsProductsConsumer;
+import example.hmp.service.ServiceManager;
 
 /**
  * Unit test for this example

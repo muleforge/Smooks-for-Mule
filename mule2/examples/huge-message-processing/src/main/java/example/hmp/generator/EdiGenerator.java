@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package example.generator;
+package example.hmp.generator;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -57,7 +57,7 @@ public class EdiGenerator {
 	public static void main(String[] args) {
 		System.out.println("Welcome to the product EDI file generator.");
 		System.out.println("This generator will create a file with random product data.");
-		System.out.print("Please enter the number of product to generate (default:100) : ");
+		System.out.println("Please enter the number of product to generate (default:100): ");
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 

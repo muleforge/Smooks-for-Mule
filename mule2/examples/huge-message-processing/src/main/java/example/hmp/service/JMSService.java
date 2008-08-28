@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package example.service;
+package example.hmp.service;
 
 import org.apache.activemq.broker.BrokerService;
 import org.slf4j.Logger;
@@ -46,7 +46,7 @@ public class JMSService implements Service {
 			broker.setUseShutdownHook(false);
 			broker.start();
 		} catch (Exception e) {
-			throw new RuntimeException("Could not start the BrokerService");
+			throw new RuntimeException("Could not start the BrokerService", e);
 		}
 	}
 

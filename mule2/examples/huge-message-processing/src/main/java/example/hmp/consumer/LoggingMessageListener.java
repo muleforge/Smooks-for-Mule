@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.consumer;
+package example.hmp.consumer;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;

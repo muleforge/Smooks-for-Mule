@@ -4,13 +4,13 @@
 	<resource-config selector="$document">
 		<resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">product</param>
-        <param name="beanClass">example.model.Product</param>
+        <param name="beanClass">example.hmp.model.Product</param>
 	</resource-config>
 
     <resource-config selector="product">
         <resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">product</param>
-        <param name="beanClass">example.model.Product</param>
+        <param name="beanClass">example.hmp.model.Product</param>
         <param name="bindings">
         	<binding property="id" type="Long" selector="product id" />
         	<binding property="name" selector="product name" />
@@ -37,7 +37,7 @@
 	<resource-config selector="product part">
         <resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">part</param>
-        <param name="beanClass">example.model.Part</param>
+        <param name="beanClass">example.hmp.model.Part</param>
         <param name="bindings">
         	<binding property="id" type="Long" selector="part id" />
         	<binding property="quantity" type="Integer" selector="product part quantity" />
@@ -58,7 +58,7 @@
     <resource-config selector="product spec">
         <resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">spec</param>
-        <param name="beanClass">example.model.Spec</param>
+        <param name="beanClass">example.hmp.model.Spec</param>
         <param name="bindings">
         	<binding property="name" selector="spec name" />
         	<binding property="value" selector="spec value" />

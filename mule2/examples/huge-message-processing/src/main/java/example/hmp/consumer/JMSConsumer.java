@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.consumer;
+package example.hmp.consumer;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -29,7 +29,7 @@ import javax.naming.NamingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import example.util.Application;
+import example.hmp.util.Application;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package example.service;
+package example.hmp.service;
 
 import java.util.concurrent.CountDownLatch;
 
-import example.util.Application;
-import example.util.LatchShutdownHook;
+import example.hmp.util.Application;
+import example.hmp.util.LatchShutdownHook;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>

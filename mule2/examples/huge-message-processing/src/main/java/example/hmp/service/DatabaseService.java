@@ -14,46 +14,40 @@
  * limitations under the License.
  */
 
-package example.model;
+package example.hmp.service;
+
+import org.milyn.util.HsqlServer;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
  *
  */
-public class Spec {
+public class DatabaseService implements Service{
 
-	private String name;
+	private HsqlServer hsqlServer;
 
-	private String value;
-
-	/**
-	 * @return the name
+	/* (non-Javadoc)
+	 * @see example.service.Service#start()
 	 */
-	public String getName() {
-		return name;
+	public void start() {
+		try {
+			hsqlServer = new HsqlServer(9992);
+			hsqlServer.execScript(getClass().getResourceAsStream("/init.sql"));
+		} catch (Exception e) {
+			throw new RuntimeException("Could not start HsqlServer", e);
+		}
+
 	}
 
-	/**
-	 * @param name the name to set
+	/* (non-Javadoc)
+	 * @see example.service.Service#stop()
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void stop() {
+		try {
+			hsqlServer.stop();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
-	/**
-	 * @return the value
-	 */
-	public String getValue() {
-		return value;
-	}
-
-	/**
-	 * @param value the value to set
-	 */
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-
 
 }

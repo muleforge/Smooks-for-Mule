@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package example.service;
+package example.hmp.service;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>

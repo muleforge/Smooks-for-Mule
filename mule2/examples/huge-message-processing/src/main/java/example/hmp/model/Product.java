@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package example.model;
+package example.hmp.model;
 
 import java.math.BigDecimal;
 import java.util.List;

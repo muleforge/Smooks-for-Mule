@@ -27,9 +27,34 @@
 
 	</target>
 
-	<target name="run-services">
+	<target name="generate">
 
-		<java classname="example.generator.EdiGenerator" />
+		<java classname="example.hmp.generator.EdiGenerator" fork="true">
+			<classpath>
+				<fileset dir="${basedir}/lib/user">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+
+	</target>
+
+	<target name="run-services" depends="check-mule-home">
+
+		<java classname="example.hmp.service.ServiceManager" fork="true">
+			<classpath>
+				<fileset dir="${basedir}/lib/user">
+					<include name="**/*.jar" />
+				</fileset>
+				<fileset dir="${basedir}/lib/opt">
+					<include name="**/*.jar" />
+				</fileset>
+				<fileset dir="../../lib/user">
+					<include name="**/*.jar" />
+				</fileset>
+				<fileset file="log4j.xml" />
+			</classpath>
+		</java>
 
 	</target>
 

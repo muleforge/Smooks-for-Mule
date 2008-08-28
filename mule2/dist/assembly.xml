@@ -205,14 +205,15 @@ Assembly descriptor for the full distribution.
 							<include>src/**</include>
 							<include>conf/**</include>
 							<include>data/**</include>
-							<include>run*</include>
+
 						</includes>
 					</fileSet>
 					<fileSet>
 						<directory>/dist</directory>
 						<includes>
 							<include>README*</include>
-							<include>build.xml</include>
+							<include>*.xml</include>
+							<include>run*</include>
 						</includes>
 					</fileSet>
 				</fileSets>
@@ -220,12 +221,13 @@ Assembly descriptor for the full distribution.
 			</sources>
 
 			<binaries>
-        		<outputDirectory>/examples/huge-message-processing/lib/user/</outputDirectory>
+				<outputDirectory>/examples/huge-message-processing/lib/user/</outputDirectory>
 				<unpack>false</unpack>
 				<dependencySets>
 					<dependencySet>
 						<scope>runtime</scope>
 						<useTransitiveFiltering>true</useTransitiveFiltering>
+						<outputDirectory>/examples/huge-message-processing/lib/user/</outputDirectory>
 						<excludes>
 							<exclude>commons-lang</exclude>
 							<exclude>commons-logging</exclude>
@@ -234,8 +236,21 @@ Assembly descriptor for the full distribution.
 							<exclude>jboss</exclude>
 							<exclude>com.mockrunner</exclude>
 							<exclude>cglib</exclude>
+							<exclude>easymock</exclude>
 							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
 						</excludes>
+					</dependencySet>
+					<dependencySet>
+						<scope>runtime</scope>
+						<useTransitiveFiltering>false</useTransitiveFiltering>
+						<includes>
+							<include>org.slf4j:slf4j-api</include>
+							<include>org.slf4j:slf4j-log4j12</include>
+							<include>log4j:log4j</include>
+							<include>commons-logging:commons-logging</include>
+						</includes>
+
+						<outputDirectory>/examples/huge-message-processing/lib/opt/</outputDirectory>
 					</dependencySet>
 				</dependencySets>
 			</binaries>

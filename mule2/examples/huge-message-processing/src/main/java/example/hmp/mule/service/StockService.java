@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package example.mule.service;
+package example.hmp.mule.service;
 
 import java.util.Random;
 
