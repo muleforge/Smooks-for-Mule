@@ -52,13 +52,13 @@
             </outbound-router>
         </mule-descriptor>
 
-        <mule-descriptor name="AService" implementation="example.AComponent">
+        <mule-descriptor name="AService" implementation="example.basic_routing.AComponent">
         	<inbound-router>
         		<endpoint address="vm://AComponent" />
         	</inbound-router>
         </mule-descriptor>
 
-        <mule-descriptor name="BService" implementation="example.BComponent">
+        <mule-descriptor name="BService" implementation="example.basic_routing.BComponent">
         	<inbound-router>
         		<endpoint address="vm://BComponent" />
         	</inbound-router>

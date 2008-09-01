@@ -60,7 +60,7 @@
                 <vm:inbound-endpoint path="AComponent" />
             </inbound>
 
-            <component class="example.AComponent"/>
+            <component class="example.basic_routing.AComponent"/>
 
         </service>
 
@@ -69,7 +69,7 @@
                 <vm:inbound-endpoint path="BComponent" />
             </inbound>
 
-            <component class="example.BComponent"/>
+            <component class="example.basic_routing.BComponent"/>
 
         </service>
     </model>

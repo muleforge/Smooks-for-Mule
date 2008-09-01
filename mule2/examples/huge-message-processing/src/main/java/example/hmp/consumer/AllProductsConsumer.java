@@ -15,22 +15,8 @@
  */
 package example.hmp.consumer;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import example.hmp.util.Application;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
@@ -38,13 +24,12 @@ import example.hmp.util.Application;
  */
 public class AllProductsConsumer extends JMSConsumer {
 
-	private static final Logger logger = LoggerFactory.getLogger(AllProductsConsumer.class.getName());
 
 	/**
 	 *
 	 */
 	public AllProductsConsumer() {
-		super("ConnectionFactory", "AllProducts", new LoggingMessageListener());
+		super("ConnectionFactory", "AllProducts", new SystemOutMessageListener());
 	}
 
 	public AllProductsConsumer(MessageListener messageListener) {
@@ -52,8 +37,8 @@ public class AllProductsConsumer extends JMSConsumer {
 	}
 
 	public static void main(String[] args) throws Exception {
-		logger.info("Starting the \"All products consumer\"");
-		logger.info("From command line, use [Ctrl]+[C] to stop the application");
+		System.out.println("Starting the \"All products consumer\"");
+		System.out.println("From command line, use [Ctrl]+[C] to stop the application");
 		new AllProductsConsumer().run();
 	}
 

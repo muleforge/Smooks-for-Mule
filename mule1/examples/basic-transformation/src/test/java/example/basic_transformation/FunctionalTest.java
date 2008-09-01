@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package example;
+package example.basic_transformation;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.util.Locale;
-import java.util.TimeZone;
 
-import org.mule.DefaultMuleMessage;
-import org.mule.module.client.MuleClient;
+import org.junit.Test;
+import org.milyn.io.StreamUtils;
+import org.mule.extras.client.MuleClient;
+import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.umo.UMOMessage;
 import org.mule.util.IOUtils;
-
 
 /**
  * Unit test for this example
  *
- * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
- *
- */
+ * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a> */
 public class FunctionalTest extends FunctionalTestCase
 {
 	@Override
@@ -41,12 +40,25 @@ public class FunctionalTest extends FunctionalTestCase
 		return "mule-config.xml";
 	}
 
-
+	@Test
 	public void testSmooks() throws Exception {
 		InputStream in = IOUtils.getResourceAsStream("test-message01.xml", this.getClass());
 
 		MuleClient client = new MuleClient();
-		client.send("vm://BasicRouting", new DefaultMuleMessage(in));
+		UMOMessage reply = client.send("vm://BasicProcessor",	new MuleMessage(in));
+
+		assertNotNull(reply);
+		assertNotNull(reply.getPayload());
+
+		Object payload = reply.getPayload();
+
+		assert payload instanceof String : "The message payload is not an instance of String";
+
+		String result = (String) payload;
+
+		byte[] expected = StreamUtils.readStream(IOUtils.getResourceAsStream("expected.xml", this.getClass()));
+
+		assertTrue(StreamUtils.compareCharStreams(new ByteArrayInputStream(expected), new ByteArrayInputStream(result.getBytes())));
 
 		assert getReportFile().exists() : "The report file wasn't created";
 	}
@@ -60,26 +72,22 @@ public class FunctionalTest extends FunctionalTestCase
 		getReportFile().delete();
 	}
 
-
 	/* (non-Javadoc)
-	 * @see org.mule.tck.AbstractMuleTestCase#doSetUp()
+	 * @see org.mule.tck.FunctionalTestCase#doPreFunctionalSetUp()
 	 */
 	@Override
-	protected void doSetUp() throws Exception {
-		super.doSetUp();
-
-		TimeZone.setDefault(TimeZone.getTimeZone("EST"));
-		Locale.setDefault(new Locale("en","IE"));
+	protected void doPreFunctionalSetUp() throws Exception {
 		deleteReportFile();
 	}
 
 	/* (non-Javadoc)
-	 * @see org.mule.tck.AbstractMuleTestCase#doTearDown()
+	 * @see org.mule.tck.FunctionalTestCase#doFunctionalTearDown()
 	 */
 	@Override
-	protected void doTearDown() throws Exception {
-		super.doTearDown();
+	protected void doFunctionalTearDown() throws Exception {
+		super.doFunctionalTearDown();
 
 		deleteReportFile();
 	}
+
 }

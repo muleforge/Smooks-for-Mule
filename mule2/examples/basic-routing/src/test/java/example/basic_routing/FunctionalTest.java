@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package example;
+package example.basic_routing;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Locale;
+import java.util.TimeZone;
 
-import org.junit.Test;
-import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.DefaultMuleMessage;
+import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.IOUtils;
+
 
 /**
  * Unit test for this example
@@ -39,12 +41,12 @@ public class FunctionalTest extends FunctionalTestCase
 		return "mule-config.xml";
 	}
 
-	@Test
+
 	public void testSmooks() throws Exception {
 		InputStream in = IOUtils.getResourceAsStream("test-message01.xml", this.getClass());
 
 		MuleClient client = new MuleClient();
-		client.send("vm://BasicRouting", new MuleMessage(in));
+		client.send("vm://BasicRouting", new DefaultMuleMessage(in));
 
 		assert getReportFile().exists() : "The report file wasn't created";
 	}
@@ -58,22 +60,26 @@ public class FunctionalTest extends FunctionalTestCase
 		getReportFile().delete();
 	}
 
+
 	/* (non-Javadoc)
-	 * @see org.mule.tck.FunctionalTestCase#doPreFunctionalSetUp()
+	 * @see org.mule.tck.AbstractMuleTestCase#doSetUp()
 	 */
 	@Override
-	protected void doPreFunctionalSetUp() throws Exception {
+	protected void doSetUp() throws Exception {
+		super.doSetUp();
+
+		TimeZone.setDefault(TimeZone.getTimeZone("EST"));
+		Locale.setDefault(new Locale("en","IE"));
 		deleteReportFile();
 	}
 
 	/* (non-Javadoc)
-	 * @see org.mule.tck.FunctionalTestCase#doFunctionalTearDown()
+	 * @see org.mule.tck.AbstractMuleTestCase#doTearDown()
 	 */
 	@Override
-	protected void doFunctionalTearDown() throws Exception {
-		super.doFunctionalTearDown();
+	protected void doTearDown() throws Exception {
+		super.doTearDown();
 
 		deleteReportFile();
 	}
-
 }

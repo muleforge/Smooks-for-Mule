@@ -21,7 +21,7 @@
     <resource-config selector="order">
         <resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">order</param>
-        <param name="beanClass">example.model.Order</param>
+        <param name="beanClass">example.edi_to_java_transformation.model.Order</param>
         <param name="bindings">
         	<binding property="header" selector="${header}" />
         	<binding property="orderItems" selector="${orderItems}" />
@@ -38,7 +38,7 @@
     -->
     <resource-config selector="order">
         <resource>org.milyn.javabean.BeanPopulator</resource>
-        <param name="beanClass">example.model.Header</param>
+        <param name="beanClass">example.edi_to_java_transformation.model.Header</param>
         <param name="bindings">
             <!-- Header bindings... -->
             <binding property="customer" selector="${customer}" />
@@ -59,7 +59,7 @@
     -->
     <resource-config selector="customer-details">
         <resource>org.milyn.javabean.BeanPopulator</resource>
-        <param name="beanClass">example.model.Customer</param>
+        <param name="beanClass">example.edi_to_java_transformation.model.Customer</param>
         <param name="bindings">
             <!-- Customer bindings... -->
             <binding property="userName" selector="customer-details/username" />
@@ -92,7 +92,7 @@
     -->
     <resource-config selector="order-item">
         <resource>org.milyn.javabean.BeanPopulator</resource>
-        <param name="beanClass">example.model.OrderItem</param>
+        <param name="beanClass">example.edi_to_java_transformation.model.OrderItem</param>
         <param name="bindings">
             <!-- OrderItem bindings... -->
             <binding property="quantity" type="Integer" selector="order-item/quantity" />

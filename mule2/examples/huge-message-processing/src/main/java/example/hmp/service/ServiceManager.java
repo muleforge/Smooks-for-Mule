@@ -16,10 +16,7 @@
 
 package example.hmp.service;
 
-import java.util.concurrent.CountDownLatch;
-
 import example.hmp.util.Application;
-import example.hmp.util.LatchShutdownHook;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>

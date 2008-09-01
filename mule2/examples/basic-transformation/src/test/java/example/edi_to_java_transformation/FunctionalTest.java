@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package example;
+package example.edi_to_java_transformation;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

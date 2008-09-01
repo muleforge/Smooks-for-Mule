@@ -59,7 +59,7 @@
 			<inbound>
 				<vm:inbound-endpoint path="StockService"  synchronous="true"/>
 			</inbound>
-			<component class="example.mule.service.StockService"/>
+			<component class="example.hmp.mule.service.StockService"/>
 		</service>
 
     </model>

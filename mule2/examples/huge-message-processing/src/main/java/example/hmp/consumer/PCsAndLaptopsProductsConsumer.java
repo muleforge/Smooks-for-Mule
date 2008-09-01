@@ -33,7 +33,7 @@ public class PCsAndLaptopsProductsConsumer extends JMSConsumer {
 	 *
 	 */
 	public PCsAndLaptopsProductsConsumer() {
-		super("ConnectionFactory", "PCsAndLaptops", new LoggingMessageListener());
+		super("ConnectionFactory", "PCsAndLaptops", new SystemOutMessageListener());
 	}
 
 	public PCsAndLaptopsProductsConsumer(MessageListener messageListener) {
@@ -42,6 +42,7 @@ public class PCsAndLaptopsProductsConsumer extends JMSConsumer {
 
 
 	public static void main(String[] args) throws Exception {
+
 		logger.info("Starting the \"PC's and Laptops consumer\"");
 		logger.info("From command line, use [Ctrl]+[C] to stop the application");
 		new PCsAndLaptopsProductsConsumer().run();

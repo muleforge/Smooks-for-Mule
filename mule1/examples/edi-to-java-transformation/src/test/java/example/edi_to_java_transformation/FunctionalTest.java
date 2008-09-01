@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package example;
+package example.edi_to_java_transformation;
 
 import java.io.File;
 import java.io.InputStream;
@@ -25,23 +25,21 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import org.junit.Test;
-import org.mule.DefaultMuleMessage;
-import org.mule.api.MuleMessage;
-import org.mule.module.client.MuleClient;
+import org.mule.extras.client.MuleClient;
+import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.umo.UMOMessage;
 import org.mule.util.IOUtils;
 
-import example.model.Customer;
-import example.model.Header;
-import example.model.Order;
-import example.model.OrderItem;
+import example.edi_to_java_transformation.model.Customer;
+import example.edi_to_java_transformation.model.Header;
+import example.edi_to_java_transformation.model.Order;
+import example.edi_to_java_transformation.model.OrderItem;
 
 /**
  * Unit test for this example
  *
- * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
- *
- */
+ * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a> */
 public class FunctionalTest extends FunctionalTestCase
 {
 	@Override
@@ -50,13 +48,12 @@ public class FunctionalTest extends FunctionalTestCase
 		return "mule-config.xml";
 	}
 
-
 	@Test
 	public void testSmooks() throws Exception {
 		InputStream in = IOUtils.getResourceAsStream("test-message01.edi", this.getClass());
 
 		MuleClient client = new MuleClient();
-		MuleMessage reply = client.send("vm://EDIOrderToJavaOrder",	new DefaultMuleMessage(in));
+		UMOMessage reply = client.send("vm://EDIOrderToJavaOrder",	new MuleMessage(in));
 
 		assertNotNull(reply);
 		assertNotNull(reply.getPayload());
@@ -74,7 +71,6 @@ public class FunctionalTest extends FunctionalTestCase
 
 		assertHeader(order.getHeader());
 		assertOrderItems(order.getOrderItems());
-
 	}
 
 
@@ -128,26 +124,24 @@ public class FunctionalTest extends FunctionalTestCase
 		getReportFile().delete();
 	}
 
-
 	/* (non-Javadoc)
-	 * @see org.mule.tck.AbstractMuleTestCase#doSetUp()
+	 * @see org.mule.tck.FunctionalTestCase#doPreFunctionalSetUp()
 	 */
 	@Override
-	protected void doSetUp() throws Exception {
-		super.doSetUp();
-
+	protected void doPreFunctionalSetUp() throws Exception {
 		TimeZone.setDefault(TimeZone.getTimeZone("EST"));
 		Locale.setDefault(new Locale("en","IE"));
 		deleteReportFile();
 	}
 
 	/* (non-Javadoc)
-	 * @see org.mule.tck.AbstractMuleTestCase#doTearDown()
+	 * @see org.mule.tck.FunctionalTestCase#doFunctionalTearDown()
 	 */
 	@Override
-	protected void doTearDown() throws Exception {
-		super.doTearDown();
+	protected void doFunctionalTearDown() throws Exception {
+		super.doFunctionalTearDown();
 
 		deleteReportFile();
 	}
+
 }

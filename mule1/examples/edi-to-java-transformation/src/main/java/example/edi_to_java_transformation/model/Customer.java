@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package example.model;
+package example.edi_to_java_transformation.model;
 
 /**
  *

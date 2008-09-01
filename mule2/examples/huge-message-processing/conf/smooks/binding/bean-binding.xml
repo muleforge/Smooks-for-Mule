@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 <smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
 
+	<!-- We create this empty Product object so that MVEL won't complain that the product variable isn't bound in the
+		 MVEL context when the routing conditions get fired on the visit before on the product element. Because no product
+		 exists the first time in the before visits.
+		 Smooks 1.1 has a fix for this Small problem.
+	 -->
 	<resource-config selector="$document">
 		<resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">product</param>

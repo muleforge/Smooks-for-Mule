@@ -40,9 +40,6 @@ public class RouterSmooksProfileFunctionalTest extends FunctionalTestCase {
 
 	private final File test3File = new File(routingTestDir, "file3.dat");
 
-
-	private final File testReplyFile = new File(routingTestDir, "fileReply.dat");
-
 	@Override
 	protected String getConfigResources() {
 		return "router-mule-config-profiled.xml";

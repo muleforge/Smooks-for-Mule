@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package example;
+package example.basic_routing;
 
 import java.util.Map;
 

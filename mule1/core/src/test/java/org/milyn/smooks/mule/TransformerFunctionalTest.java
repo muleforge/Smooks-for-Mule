@@ -18,14 +18,11 @@ package org.milyn.smooks.mule;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
-import org.mule.util.FileUtils;
 
 /**
  * Unit test for {@link Transformer} to see if it works

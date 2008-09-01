@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
  *
  */
-public class LoggingMessageListener implements MessageListener {
+public class SystemOutMessageListener implements MessageListener {
 
-	private static final Logger logger = LoggerFactory.getLogger(LoggingMessageListener.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(SystemOutMessageListener.class.getName());
 
 	public void onMessage(Message message) {
 		try {
@@ -46,7 +46,7 @@ public class LoggingMessageListener implements MessageListener {
 				text = message.toString();
 			}
 
-			logger.info("Received Message:\n" + text.trim());
+			System.out.println("Received Message:\n" + text.trim());
 
 		} catch (Throwable e) {
 			if (logger.isErrorEnabled()) {

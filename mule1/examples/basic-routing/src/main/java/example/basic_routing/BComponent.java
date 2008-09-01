@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package example;
+package example.basic_routing;
 
 import java.util.Map;
 
@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
  *
  */
-public class AComponent  implements Callable {
+public class BComponent  implements Callable {
 
-	private static final Logger log = LoggerFactory.getLogger(AComponent.class);
+	private static final Logger log = LoggerFactory.getLogger(BComponent.class);
 
 	/* (non-Javadoc)
 	 * @see org.mule.umo.lifecycle.Callable#onCall(org.mule.umo.UMOEventContext)
@@ -47,7 +47,7 @@ public class AComponent  implements Callable {
 		String value = payload.get("value");
 		String idValue = id + "=" + value;
 
-		log.info("Component A is called with the id and value: "+ idValue);
+		log.info("Component B is called with the id and value: "+ idValue);
 
 		return idValue;
 	}

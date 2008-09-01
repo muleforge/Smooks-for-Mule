@@ -122,12 +122,13 @@
             <version>1.8.0.7</version>
         </dependency>
 
-		<!-- Better testing of XML -->
+		<!-- testing of XML -->
 		<dependency>
 			<groupId>xmlunit</groupId>
 			<artifactId>xmlunit</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 
 	<profiles>

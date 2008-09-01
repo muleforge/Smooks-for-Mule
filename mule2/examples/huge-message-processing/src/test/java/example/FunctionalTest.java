@@ -16,16 +16,19 @@
 
 package example;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import javax.jms.TextMessage;
+
 import org.junit.Test;
+import org.milyn.io.StreamUtils;
 import org.mule.DefaultMuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.IOUtils;
 
 import example.hmp.consumer.AllProductsConsumer;
-import example.hmp.consumer.JMSConsumer;
 import example.hmp.consumer.PCsAndLaptopsProductsConsumer;
 import example.hmp.service.ServiceManager;
 
@@ -41,7 +44,11 @@ public class FunctionalTest extends FunctionalTestCase
 
 	private AllProductsConsumer allProductsConsumer;
 
+	private PersistingMessageListener allProductsConsumerListener;
+
 	private PCsAndLaptopsProductsConsumer pcsAndLaptopsProductsConsumer;
+
+	private PersistingMessageListener pcsAndLaptopsProductsConsumerListener;
 
 	@Override
 	protected String getConfigResources() {
@@ -56,6 +63,28 @@ public class FunctionalTest extends FunctionalTestCase
 		MuleClient client = new MuleClient();
 		client.send("vm://TestMessageIn",	new DefaultMuleMessage(in));
 
+		assertEquals("Didn't receive exactly two messages in the allProductsConsumerListener", 2, allProductsConsumerListener.getMessages().size());
+
+		assertTrue("First message in allProductsConsumerListener isn't a TextMessage", allProductsConsumerListener.getMessages().get(0) instanceof TextMessage);
+		assertTrue("Second message in allProductsConsumerListener isn't a TextMessage", allProductsConsumerListener.getMessages().get(1) instanceof TextMessage);
+
+		assertMessageContent("The message content of the first message isn't what is expected", "expected-allProductsConsumer-01.xml", (TextMessage) allProductsConsumerListener.getMessages().get(0));
+		assertMessageContent("The message content of the second message isn't what is expected", "expected-allProductsConsumer-02.xml", (TextMessage) allProductsConsumerListener.getMessages().get(1));
+
+
+		assertEquals("Didn't receive exactly one message in the pcsAndLaptopsProductsConsumerListener", 1, pcsAndLaptopsProductsConsumerListener.getMessages().size());
+
+		assertTrue("First message in allProductsConsumerListener isn't a TextMessage", pcsAndLaptopsProductsConsumerListener.getMessages().get(0) instanceof TextMessage);
+
+		assertMessageContent("The message content of the second message isn't what is expected", "expected-pcsAndLaptopsProductsConsumer.txt", (TextMessage) pcsAndLaptopsProductsConsumerListener.getMessages().get(0));
+	}
+
+	private void assertMessageContent(String description, String expectedFileName, TextMessage message) throws Exception {
+
+		byte[] expected = StreamUtils.readStream(IOUtils.getResourceAsStream(expectedFileName, this.getClass()));
+
+		assertTrue(description, StreamUtils.compareCharStreams(new ByteArrayInputStream(expected), new ByteArrayInputStream(message.getText().getBytes())));
+
 	}
 
 	@Override
@@ -63,10 +92,14 @@ public class FunctionalTest extends FunctionalTestCase
 		serviceManager = new ServiceManager();
 		serviceManager.start();
 
-		allProductsConsumer = new AllProductsConsumer();
+		allProductsConsumerListener = new PersistingMessageListener("allProductsConsumerListener");
+
+		allProductsConsumer = new AllProductsConsumer(allProductsConsumerListener);
 		allProductsConsumer.start();
 
-		pcsAndLaptopsProductsConsumer = new PCsAndLaptopsProductsConsumer();
+		pcsAndLaptopsProductsConsumerListener = new PersistingMessageListener("pcsAndLaptopsProductsConsumerListener");
+
+		pcsAndLaptopsProductsConsumer = new PCsAndLaptopsProductsConsumer(pcsAndLaptopsProductsConsumerListener);
 		pcsAndLaptopsProductsConsumer.start();
 
 		super.suitePreSetUp();
@@ -82,85 +115,4 @@ public class FunctionalTest extends FunctionalTestCase
 		serviceManager.stop();
 	}
 
-//
-//	private void assertOrder(Order order) {
-//
-//		assertHeader(order.getHeader());
-//		assertOrderItems(order.getOrderItems());
-//
-//	}
-//
-//
-//	private void assertHeader(Header header) {
-//		assert "1".equals(header.getOrderId());
-//		assert 0 == header.getOrderStatus();
-//		assert new BigDecimal("59.97").equals(header.getNetAmount());
-//		assert new BigDecimal("64.92").equals(header.getTotalAmount());
-//		assert new BigDecimal("4.95").equals(header.getTax());
-//		assert new GregorianCalendar(2006, 10, 15, 13, 45, 28).getTime().equals(header.getDate());
-//
-//		assertCustomer(header.getCustomer());
-//	}
-//
-//	private void assertCustomer(Customer customer) {
-//
-//		assert "user1".equals(customer.getUserName());
-//		assert "Harry".equals(customer.getFirstName());
-//		assert "Fletcher".equals(customer.getLastName());
-//		assert "SD".equals(customer.getState());
-//	}
-//
-//	/**
-//	 * @param orderItems
-//	 */
-//	private void assertOrderItems(List<OrderItem> orderItems) {
-//
-//		assert 2 == orderItems.size();
-//
-//		OrderItem orderItem = orderItems.get(0);
-//
-//		assert 1 == orderItem.getQuantity();
-//		assert "364".equals(orderItem.getProductId());
-//		assert "The 40-Year-Old Virgin".equals(orderItem.getTitle());
-//		assert new BigDecimal("29.98").equals(orderItem.getPrice());
-//
-//		orderItem = orderItems.get(1);
-//
-//		assert 1 == orderItem.getQuantity();
-//		assert "299".equals(orderItem.getProductId());
-//		assert "Pulp Fiction".equals(orderItem.getTitle());
-//		assert new BigDecimal("29.99").equals(orderItem.getPrice());
-//	}
-//
-//
-//	private File getReportFile() {
-//		return new File("target/smooks-report/report.html");
-//	}
-//
-//	private void deleteReportFile() {
-//		getReportFile().delete();
-//	}
-//
-//
-//	/* (non-Javadoc)
-//	 * @see org.mule.tck.AbstractMuleTestCase#doSetUp()
-//	 */
-//	@Override
-//	protected void doSetUp() throws Exception {
-//		super.doSetUp();
-//
-//		TimeZone.setDefault(TimeZone.getTimeZone("EST"));
-//		Locale.setDefault(new Locale("en","IE"));
-//		deleteReportFile();
-//	}
-//
-//	/* (non-Javadoc)
-//	 * @see org.mule.tck.AbstractMuleTestCase#doTearDown()
-//	 */
-//	@Override
-//	protected void doTearDown() throws Exception {
-//		super.doTearDown();
-//
-//		deleteReportFile();
-//	}
 }
