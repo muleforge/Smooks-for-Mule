@@ -15,6 +15,22 @@
 		<param name="resultSetName">productCount</param>
 	</resource-config>
 
+	<!--
+		This SQLExecutor resource configuration executes an INSERT statement with all the necessary
+		product data on the external database. The statement executes on the after visit phase of the
+		guarantee element. Maybe you wonder why we don't set it on the product element itself. This is
+		because the insert statement would be executed after the insert statements of the part
+		elements (those inserts are configured in the next resource-config block). That would cause
+		referential exceptions when a part gets inserted when the product insn't inserted yet. Because
+		we know that we got all the data on the after visit of guarantee element and because of the
+		nature of the EDI parser the guarantee element is always there, we can safely execute the
+		insert at that moment.
+
+		The resource config condition is used to make sure that we only get the products with a stock
+		over 20.  The productStock bean comes from a MuleDispatcher that calls the Stock Service, defined
+		in the conf/smooks/enrich/stock-service.xml file.
+		The other part of the statement prevents database flooding and is only there for this example.
+	 -->
 	<resource-config selector="product guarantee">
 		<resource>org.milyn.routing.db.SQLExecutor</resource>
 		<condition evaluator="org.milyn.javabean.expression.BeanMapExpressionEvaluator">
@@ -25,6 +41,13 @@
 		<param name="statement">insert into EXT_PRODUCT values(${product.id}, ${product.name}, ${product.brand}, ${product.category}, ${product.price}, ${product.tax}, now())</param>
 	</resource-config>
 
+	<!--
+		This SQLExecutor resource configuration executes an INSERT statement with all the necessary
+		part data on the external database. The statement executes on the after visit phase of the
+		part element.
+
+		We use the same resource config conditions as before for the same reasons.
+	-->
 	<resource-config selector="product part">
 		<resource>org.milyn.routing.db.SQLExecutor</resource>
 		<condition evaluator="org.milyn.javabean.expression.BeanMapExpressionEvaluator"><!--
