@@ -1,8 +1,12 @@
 <?xml version="1.0"?>
 <smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
 
-	<!-- In the real world we wouldn't do this count. It is only here for the example, to prevent flooding
-	     of the database with thousands of records -->
+	<!--
+		This SQLExecutor resource configuration executes a query that counts the number
+		of products in the external database. It is only here for the example.
+		Conditions later on  restrict writing to the database when 99 products are written.
+		We use it to prevent flooding of the database with thousands of product and part records.
+	-->
 	<resource-config selector="product">
 		<resource>org.milyn.routing.db.SQLExecutor</resource>
 		<param name="executeBefore">true</param>

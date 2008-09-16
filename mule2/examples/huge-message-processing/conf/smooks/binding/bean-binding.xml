@@ -1,10 +1,16 @@
 <?xml version="1.0"?>
 <smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
 
-	<!-- We create this empty Product object so that MVEL won't complain that the product variable isn't bound in the
-		 MVEL context when the routing conditions get fired on the visit before on the product element. Because no product
-		 exists the first time in the before visits.
-		 Smooks 1.1 has a fix for this Small problem.
+	<!--
+		 The following resource-configuration block creates an empty Product object once on the start of the document.
+		 This is needed for MVEL. MVEL is a scripting language we use in our resource configuration conditions.
+		 In this example we have conditions set in the routing configuration. In the 1.x version of MVEL it isn't
+		 possible to see if a variable is defined in it's context. The context contains the beans we create when binding the
+		 document data to the javabean objects. A condition is executed on several occasions. For example on the visit before
+		 action and visit after action. Because there are some conditions that get executed in the visit before action of the
+		 'product' element, that is before the product object is actually created, the first time that  the condition is executed
+		 the object isn't in the MVEL context yet. This would cause a MVEL exception. We create this empty object to workaround
+		 this problem. Smooks 1.1 has a fix for this small problem.
 	 -->
 	<resource-config selector="$document">
 		<resource>org.milyn.javabean.BeanPopulator</resource>
@@ -12,6 +18,11 @@
         <param name="beanClass">example.hmp.model.Product</param>
 	</resource-config>
 
+	<!--
+		This resource configuration defines the binding of the product data from the EDI document to the Product object. It
+		also binds the parts and specs ArrayList to there properties. These two get configured in the next
+		resource configurations.
+	 -->
     <resource-config selector="product">
         <resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">product</param>
@@ -30,6 +41,10 @@
         </param>
     </resource-config>
 
+	<!--
+		This resource configuration defines that a ArrayList is created for every product
+		and that it adds all the Part objects to the array.
+	-->
 	<resource-config selector="product">
         <resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">parts</param>
@@ -39,6 +54,9 @@
         </param>
 	</resource-config>
 
+	<!--
+		This resource configuration defines the binding of the part data from the EDI document to the Part object.
+	-->
 	<resource-config selector="product part">
         <resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">part</param>
@@ -50,6 +68,10 @@
         </param>
     </resource-config>
 
+	<!--
+		This resource configuration defines that a ArrayList is created for every product
+		and that it adds all the Spec objects to the array.
+	-->
 	<resource-config selector="product">
         <resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">specs</param>
@@ -60,6 +82,9 @@
         </param>
 	</resource-config>
 
+	<!--
+		This resource configuration defines the binding of the specs data from the EDI document to the Spec object.
+	-->
     <resource-config selector="product spec">
         <resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">spec</param>

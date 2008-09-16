@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 <smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+
     <!--
-    Configure the Datasource for the database
+    	Configure the Datasource for the 'internal' database.
+    	In this example we only read from this database to demonstrate
+    	the data enriching in Smooks.
     -->
     <resource-config selector="$document">
 	    <resource>org.milyn.db.DirectDataSource</resource>
@@ -14,7 +17,9 @@
 	</resource-config>
 
     <!--
-    Configure the Datasource for the database
+    	Configure the Datasource for the 'external' database.
+    	In this example we write to this database to demonstrate
+    	the database routing in Smooks.
     -->
     <resource-config selector="$document">
 	    <resource>org.milyn.db.DirectDataSource</resource>
@@ -27,9 +32,10 @@
 	</resource-config>
 
 
-
-	<!-- The following two resource configs are only there for this example. They empty the tables so
-		 that multiple messages don't cause any exceptions -->
+	<!--
+		The following two resource configs are only there for this example. They empty the tables so
+		that multiple messages don't cause any exceptions
+	-->
 	<resource-config selector="$document">
 		<resource>org.milyn.routing.db.SQLExecutor</resource>
 		<param name="executeBefore">true</param>

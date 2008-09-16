@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-	This is the Smooks EDI mapping file. For more information on this file look
-	at the xsd or in the Smooks documentation.
+	This is the Smooks EDI mapping file. It maps the EDI message to SAX stream events
+	that Smooks can process. Simply said it maps to a xml structure.
+	For more information on this file look at the xsd or in the Smooks documentation.
  -->
 <medi:edimap xmlns:medi="http://www.milyn.org/schema/edi-message-mapping-1.0.xsd">
 
