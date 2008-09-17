@@ -58,10 +58,11 @@ import org.xml.sax.SAXException;
  *
  * <h3>Description of configuration properties</h3>
  * <ul>
- * <li><i>configFile</i> - the Smooks configuration file. Can be a path on the file system or on the classpath.
- * <li><i>profile</i> - the Smooks profile to execute. If a profile name was found on the message then that one is used.
- * <li><i>profileMessagePropertyKey</i> - the message property to look for a possible profile name. If the property is set and the value is a string then
- *                                        that value is used as profile name. Default "MessageProfile".
+ * <li><i>configFile</i> - The Smooks configuration file. Can be a path on the file system or on the classpath.
+ * <li><i>profile</i> - The Smooks profile to execute. If a profile name was found on the message then that one is used.
+ * <li><i>profileMessagePropertyKey</i> - The name of the message property which could contain a possible profile name.
+ * 										  If the property is set and the value is a string then that value is used as profile name.
+ * 										  Default "MessageProfile".
  * <li><i>executionContextAsMessageProperty</i> - If set to "true" then the attributes map of the Smooks execution context is added to the message
  * 												  properties of every message that gets created by this router. The property key is defined with
  * 												  the executionContextMessagePropertyKey property. Default is "false"

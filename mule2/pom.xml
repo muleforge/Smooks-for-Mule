@@ -99,12 +99,6 @@
 				<artifactId>mule-transport-stdio</artifactId>
 				<version>${muleVersion}</version>
 			</dependency>
-			<!--
-			<dependency>
-				<groupId>org.mule.transports</groupId>
-				<artifactId>mule-transport-stream</artifactId>
-				<version>${muleVersion}</version>
-			</dependency> -->
 
 		</dependencies>
 

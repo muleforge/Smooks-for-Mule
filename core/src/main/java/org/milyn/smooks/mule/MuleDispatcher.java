@@ -83,8 +83,8 @@ import org.w3c.dom.NodeList;
  * <h3>Description of configuration parameters</h3>
  * <ul>
  * <li><i>endpointName</i> - The name of the endpoint which will be used when routing the message. If no endpoint can be found under that name then an exception is thrown.
- * <li><i>expression</i> - A MVEL Script. The result of the script is used as message Payload. This overrides the messageBeanId.
- * <li><i>beanId</i> - The bean id of the bean which will be used as the message payload.
+ * <li><i>expression</i> - A MVEL script. The result of the script is used as the message payload. This overrides the beanId property.
+ * <li><i>beanId</i> - The bean id of the bean which will be used as the message payload. The context of the MVEL script contains all the beans of the bean map.
  * <li><i>resultBeanId</i> - If the endpoint returns a result then the payload of that result is bounded to the resultBeanId.
  * 							 When the resultBeanId isn't set then the result is discarded. If the resultBeanId is set then the
  * 							 endpoint is forced to distpatch synchronous.
@@ -102,7 +102,7 @@ import org.w3c.dom.NodeList;
  *     &lt;param name="messageBeanId"&gt;test&lt;/param&gt;
  *     &lt;param name="messageProperties"&gt;
  *         &lt;property name="prop1" value="prop1Value" /&gt;
- *         &lt;property name="prop2"&gt;prop2Value&lt;/property&gt;
+ *         &lt;property name="prop2"&gt;"prop2Value"&lt;/property&gt;
  *         &lt;property name="intProp" value="10" type="Integer" /&gt;
  *         &lt;property name="dateProp" value="2008-07-11 12:30:56" type="DateTime" /&gt;
  *     &lt;/param&gt;
@@ -117,7 +117,7 @@ import org.w3c.dom.NodeList;
  * The following points explain the four properties:
  * <ol>
  * <li>The first property uses a attribute to set the value.
- * <li>The second property uses the property element content to set the value.
+ * <li>The second property takes the property element content and parses it as a MVEL expression.
  * <li>The third property uses the type attribute to define a Integer type. This will convert the value into an Integer. This uses the standard DataDecoder feature from Smooks.
  * <li>The fourth property uses the type attribute to define a custom configured Date type. This will convert the value into a Date. The configuration is set in the resource-config with the "decoder:DateTime" selector. This uses the standard DataDecoder feature from Smooks.
  * </ol>
@@ -129,6 +129,11 @@ import org.w3c.dom.NodeList;
  * <li><i>type</i> - The type of the property value. This uses the standard DataDecoder feature from Smooks. DataDecoders can be configured using
  * 					 a "decoder:decoderName" resource-config selector. The decoderName must be set as type then. (Default: String)
  * </ul>
+ *
+ * <h3>Description of the property element content</h3>
+ * The property element content is parsed as a MVEL expression. This gives
+ * great flexibility. The MVEL context contains all the beans from the bean map.
+ * The type and value attribute are ignored when the element content is set.
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  */

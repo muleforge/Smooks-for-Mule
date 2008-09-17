@@ -205,7 +205,7 @@ Assembly descriptor for the full distribution.
 							<include>src/**</include>
 							<include>conf/**</include>
 							<include>data/**</include>
-
+							<include>doc/**</include>
 						</includes>
 					</fileSet>
 					<fileSet>

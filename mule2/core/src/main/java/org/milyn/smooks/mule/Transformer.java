@@ -53,9 +53,9 @@ import org.xml.sax.SAXException;
  *
  * <h3>Description of configuration attributes/properties</h3>
  * <ul>
- * <li><i>configFile</i> - the Smooks configuration file. Can be a path on the file system or on the classpath.
- * <li><i>resultType</i> - type of result expected from Smooks ("STRING", "BYTES", "JAVA", "RESULT", "NORESULT"). Default is "STRING".
- * <li><i>javaResultBeanId</i> - specifies the Smooks bean context beanId to be mapped as the result when the resultType is "JAVA".  If not specified,
+ * <li><i>configFile</i> - The Smooks configuration file. Can be a path on the file system or on the classpath.
+ * <li><i>resultType</i> - Type of result expected from Smooks ("STRING", "BYTES", "JAVA", "RESULT", "NORESULT"). Default is "STRING".
+ * <li><i>javaResultBeanId</i> - Specifies the Smooks bean context beanId to be mapped as the result when the resultType is "JAVA".  If not specified,
  *                               the whole bean context bean Map is mapped as the result.
  * <li><i>resultClass</i> - When the resultType is set to "RESULT" then this attribute defines the Result Class which will be used.
  * 							The class must implement the {@link javax.xml.transform.Result} interface and must have an argumentless constructor.
@@ -63,13 +63,14 @@ import org.xml.sax.SAXException;
  * 								   to create the	Result Class. The class must implement the	{@link org.milyn.smooks.mule.ResultFactory} interface and
  * 								   must have an argumentless constructor.
  * <li><i>profile</i> - The Smooks profile to execute. If a profile name was found on the message then that one is used.
- * <li><i>profileMessagePropertyKey</i> - The message property to look for a possible profile name. If the property is set and the value is a string then
- *                                        that value is used as profile name. Default "MessageProfile".
+ * <li><i>profileMessagePropertyKey</i> - The name of the message property which could contain a possible profile name.
+ * 										  If the property is set and the value is a string then that value is used as profile name.
+ * 										  Default "MessageProfile".
  * <li><i>executionContextAsMessageProperty</i> - If set to "true" then the attributes map of the Smooks execution context is added to the message properties.
  * 												  The property key is defined with the executionContextMessagePropertyKey property. Default is "false"
  * <li><i>executionContextMessagePropertyKey</i> - The property key under which the execution context is put. Default is "SmooksExecutionContext"
- * <li><i>excludeNonSerializables</i> - if true, non serializable attributes from the Smooks ExecutionContext will no be included. Default is true.
- * <li><i>reportPath</i> - specifies the path and file name for generating a Smooks Execution Report.  This is a development tool.
+ * <li><i>excludeNonSerializables</i> - If true, non serializable attributes from the Smooks ExecutionContext will no be included. Default is true.
+ * <li><i>reportPath</i> - Specifies the path and file name for generating a Smooks Execution Report.  This is a development tool.
  * </ul>
  *
  * <h3>Accessing Smooks ExecutionContext attributes</h3>
