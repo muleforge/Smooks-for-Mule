@@ -11,7 +11,7 @@
 	<groupId>org.mule.modules</groupId>
 	<artifactId>mule2-module-smooks-examples-huge-message-processing</artifactId>
 	<name>Smooks for Mule 2.x - Huge message processing example</name>
-	<description>Is a extensive example how huge message can be splitted, transformed and routed with Smooks.</description>
+	<description>Is a extensive example how huge message can be splitted, enriched, transformed and routed with Smooks.</description>
 
 	<licenses>
 		<license>

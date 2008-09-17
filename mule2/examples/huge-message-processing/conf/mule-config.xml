@@ -19,16 +19,36 @@
 
 
     <description>
-
+		This example demonstrates how Smooks with Smooks for Mule
+		handles huge gigabyte large data files and split, enrich, transform and route the data to multiple endpoints.
     </description>
 
+	<!--
+		This file connector enables streaming. It is important to use a stream of data to prevent flooding of the memory
+	-->
 	<file:connector name="dataIn" streaming="true" />
 
+	<!--
+		This jms connector connects to the localhost jms service.
+	 -->
 	<jms:activemq-connector name="jmsConnector" brokerURL="tcp://localhost:61616" persistentDelivery="false" specification="1.1"  />
 
+
     <model name="OrderProcessorModel">
-        <service name="OrderProcessorService">
+
+
+        <!--
+        	This service contains takes the huge EDI file from the /data/in directory and uses the Smooks for Mule router and
+        	Smooks to split, enrich, transform and route the message to several endpoints. The endpoints consist of two
+        	JMS clients and a database. The sources where the messages are enriched from are a database and the synchronous StockService Mule
+        	Service.
+        -->
+        <service name="ProductProcessorService">
             <inbound>
+
+            	<!--
+            		The inbound endpoint streams the EDI files from the ./data/in directory.
+            	 -->
                 <file:inbound-endpoint
                 	connector-ref="dataIn"
                 	path="./data/in"
@@ -38,12 +58,24 @@
                 	<file:filename-wildcard-filter pattern="*.edi"/>
                 </file:inbound-endpoint>
 
-                <!-- For unit-test -->
+                <!-- This inbound-endpoint is only here for the unit-tests -->
                 <vm:inbound-endpoint path="TestMessageIn"  />
 
             </inbound>
+
             <outbound>
-            	<smooks:router configFile="/smooks/config.xml" reportPath="target/smooks-report.html" honorSynchronicity="true">
+
+            	<!--
+            		The following config element declares and configures the Smooks for Mule router.
+            		This router uses the /smooks/config.xml Smooks config file to process the EDI stream.
+ 					The declared endpoints are referenced from within the Smooks config file to route the message parts
+ 					to or to invoke the StockService with.
+
+            		Note: By declaring the config attribute 'reportPath' Smooks generates a report in which you can see
+            		how Smooks processes the EDI data. You should only enable it for small (1-10) data sets. Generating the
+            		report uses a lot of performance and with a big file it generates a huge report file.
+            	-->
+            	<smooks:router configFile="/smooks/config.xml" honorSynchronicity="true">
 
 					<vm:outbound-endpoint name="StockServiceEndpoint" path="StockService" synchronous="true"/>
 
@@ -52,9 +84,16 @@
 					<jms:outbound-endpoint name="ReceivePCsAndLaptopsEndpoint" queue="example.PCsAndLaptops" connector-ref="jmsConnector"/>
 
             	</smooks:router>
+
             </outbound>
+
         </service>
 
+		<!--
+			The Stock Service is used by the Product Processor Service to retrieve the stock of a product.
+			In theory this Stock Service should look into some warehouse system to get this information.
+			In this example however it only generates a random stock size and returns that as result.
+		 -->
 		<service name="StockService" >
 			<inbound>
 				<vm:inbound-endpoint path="StockService"  synchronous="true"/>

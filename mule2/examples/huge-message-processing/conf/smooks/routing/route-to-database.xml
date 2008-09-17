@@ -18,7 +18,9 @@
 	<!--
 		This SQLExecutor resource configuration executes an INSERT statement with all the necessary
 		product data on the external database. The statement executes on the after visit phase of the
-		guarantee element. Maybe you wonder why we don't set it on the product element itself. This is
+		guarantee element.
+
+		Maybe you wonder why we don't set it on the product element itself. This is
 		because the insert statement would be executed after the insert statements of the part
 		elements (those inserts are configured in the next resource-config block). That would cause
 		referential exceptions when a part gets inserted when the product insn't inserted yet. Because
