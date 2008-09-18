@@ -9,7 +9,7 @@
 	 <resource-config selector="product part">
         <resource>org.milyn.routing.db.SQLExecutor</resource>
         <param name="datasource">InternalPartsDatabase</param>
-        <param name="statement">select name, brand from int_parts where id = ${part.id}</param>
+        <param name="statement">select name, brand from int_part where id = ${part.id}</param>
         <param name="resultSetName">partDetails</param>
     </resource-config>
 
