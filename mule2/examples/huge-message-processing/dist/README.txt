@@ -9,17 +9,13 @@ In the 'doc' directory an install.html file is provided with
 a better explanation how this example works. This readme
 file only contains the bare minimum to install and run the example.
 
-+----------------------+
-| Building the example |
-+----------------------+
-Just run "mvn clean package" from this folder.
-
 +------------------------+
 | Installing the example |
 +------------------------+
-Make sure you have set the MULE_HOME environment variable.
+Make sure you have set the MULE_HOME environment variable
+and that you have installed the Smooks for Mule module itself
 
-Run "mvn -P install-in-mule install" from this folder.
+Run "ant install" from this folder.
 
 +---------------------+
 | Running the example |

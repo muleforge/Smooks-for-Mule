@@ -24,9 +24,10 @@
 			font-family: trebuchet ms,arial,verdana,lucida grande,sans-serif;
         }
 
-		a:link, a:visited, a:active, a:hover {
+		a:link, a:visited, a:active {
 			color:#003366;
 		}
+
 
     </style>
 </head>
@@ -46,22 +47,124 @@
 	<h2>Table of contents</h2>
 
 	<ul>
-		<li>Overview</li>
-		<li>Installation</li>
-		<li>Running the example</li>
-		<li>Demonstration</li>
-		<li>Explanation of how it works</li>
+		<li><a href="#overview">Overview</a></li>
+		<li><a href="#installation">Installation</a></li>
+		<li><a href="#runningTheExample">Running the example</a></li>
+		<li><a href="#demonstration">Demonstration</a></li>
+		<li><a href="#explanation">Explanation of how it works</a></li>
 	</ul>
 
+	<a name="overview" />
 	<h2>Overview</h2>
+	<p>
+		In many uses cases messages can contain data that is of interest to multiple parties.
+		Each party can have different requirements, for instance a different data format or a different
+		delivery method. A party could also require information which is related to the message
+		but isn't in the message itself. It becomes even more complex when the source message is a huge, GB size, file.
+		It the responsibility of the ESB to take care of these integration requirements.
+	</p>
+	<p>
+		Extracting, enriching and distributing information from a message to multiple parties is not a trivial process.
+		The information must first be extracted by splitting the huge message in it's parts.
+		Then some outside data source, for instance a database or some services, must be request for the information to
+		enrich the source information. The new set of information must then be reassembled in the required format for every party.
+	</p>
+	<p>
+		Smooks together with Smooks for Mule enables Mule to solve these issues in a powerfull, performant and declaritive manner.
+		Mule provides the transport layer for streaming in the huge message and to dispatch the splitted and enriched messages back
+		to it's consumers. Smooks provides the capabilities to split, enrich, transforms and routes the message. Smooks for Mule glues the two
+		together.
+	</p>
+	<p>
+		This example is based on the use case that the information of a set of products needs to be send to multiple parties.
+		The ESB receives the information from a EDI file stored on the file system. Each product contains it's base information
+		(product id, name, brand, price etc), as well as a list of parts and a list of technical specifications.
+	</p>
+	<p>
+		The following lists the consuming parties and there requirements:
 
+		<ol>
+			<li>The first party requires:
+				<ul>
+					<li>Must receive all the source product information</li>
+					<li>Must be in XML</li>
+					<li>Must be sent to a JMS queue</li>
+				</ul>
+			</li>
+			<li>The second party requires:
+				<ul>
+					<li>Must receive specific fields of the base product information and the id's of every part</li>
+					<li>Must be in JSON</li>
+					<li>The product must have the category 'Complete Systems' or 'Laptops'</li>
+					<li>Must be sent to a JMS queue</li>
+				</ul>
+			</li>
+			<li>The third party requires:
+				<ul>
+					<li>Must receive specific fields of the base product information</li>
+					<li>Must receive the parts id, name and brand <i>(note that the name and brand information is not available in the source message)</i></li>
+					<li>The product information and it parts must be inserted into the EXT_PRODUCT and EXT_PARTS tables of an external database</li>
+					<li>At least 20 products need to be in stock <i>(note that the stock information is not available in the source message)</i></li>
+				</ul>
+			</li>
+		</ol>
+	</p>
+
+	<p>
+		The main challenges are:
+
+		<ul>
+			<li>The second and third party only want parts of the source message. This means that we are not dealing with a simple
+			fragment extraction. We need to reconstruct the new messages from different parts of the source message.
+			<li>Every message party requires there message in a different format: XML, JSON and JDBC</li>
+			<li>The routed messages for the third party needs to be enriched.<br/>An internal database is used to retrieve the necessary data.</li>
+			<li>The second and third party only want to receive there messages conditionally.</li>
+			<li>The third message requires information for the condition that is not within the source message.<br />A Mule Service can provided this information for us.</li>
+		</ul>
+
+	</p>
+
+	<a name="installation" />
 	<h2>Installation</h2>
+	<p>
+		Make sure you have set the <b>MULE_HOME</b> environment variable
+		and that you have installed the Smooks for Mule module itself.<br />
+		<br />
+		Run <b>&quot;ant install&quot;</b> from the root folder of this example.
+	</p>
 
+	<a name="runningTheExample" />
 	<h2>Running the example</h2>
+	<p>
+		Make sure you have installed the example as describe in the previous section.
+		<ul>
+			<li>Open 5 command shell windows in the root folder of this example.</li>
+			<li>In the first window, execute "ant run-services" to start the HSQLDB Database and JSM Server</li>
+			<li>In the second window, execute 'run' shell script (Unix/Linux) or 'run.bat' batch file (Windows) to start Mule.<br>
+				Alternatively, if you have added Mule to your executable path as recommended in INSTALL.txt, you can run the example from the command line as follows:
+				<br />
+    			<b>Linux / Unix:</b> mule -config ./conf/mule-config.xml<br />
+				<b>Windows: </b> mule.bat -config .\conf\mule-config.xml<br />
+			</li>
 
+			<li>In the third window, execute "ant run-consumer-1" to start the JMS consumer of the first party</li>
+			<li>In the fourth window, execute "ant run-consumer-2" to start the JMS consumer of the second party</li>
+			<li>In the fifth window, execute "ant generate" to start the message creation tool.</li>
+		</ul>
+
+	</p>
+
+	<a name="demonstration" />
 	<h2>Demonstration</h2>
+	<p>
 
-	<h2>How it works</h2>
+	</p>
+
+	<a name="explanation" />
+	<h2>Explanation of how it works</h2>
+	<p>
+
+	</p>
 
 </body>
 </html>
