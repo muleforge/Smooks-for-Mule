@@ -26,7 +26,7 @@
 	<!--
 		This file connector enables streaming. It is important to use a stream of data to prevent flooding of the memory
 	-->
-	<file:connector name="dataIn" streaming="true" />
+	<file:connector name="dataIn" streaming="true"/>
 
 	<!--
 		This jms connector connects to the localhost jms service.
@@ -53,7 +53,8 @@
                 	connector-ref="dataIn"
                 	path="./data/in"
                 	pollingFrequency="1000"
-                	moveToDirectory="./data/out">
+                	moveToDirectory="./data/out"
+                	synchronous="true" >
 
                 	<file:filename-wildcard-filter pattern="*.edi"/>
                 </file:inbound-endpoint>
@@ -66,10 +67,10 @@
             <outbound>
 
             	<!--
-            		The following config element declares and configures the Smooks for Mule router.
+            		Declares and configures the Smooks for Mule router.
             		This router uses the /smooks/config.xml Smooks config file to process the EDI stream.
  					The declared endpoints are referenced from within the Smooks config file to route the message parts
- 					to or to invoke the StockService with.
+ 					too or to invoke the StockService with.
 
             		Note: By declaring the config attribute 'reportPath' Smooks generates a report in which you can see
             		how Smooks processes the EDI data. You should only enable it for small (1-10) data sets. Generating the

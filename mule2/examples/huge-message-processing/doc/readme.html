@@ -1,204 +1,419 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>Smooks for Mule: huge message processing example</title>
-	<style type="text/css">
-        body {
-            font-family:sans-serif;
-			font-size:0.9em;
-			line-height:1.5em;
-        }
-        pre {
-            margin-left: 20px;
-            background-color: #F0F0F0;
-            border: 1px black dashed;
-        }
-        .hl {
-            color: red;
-        }
-        .indent {
-            margin-left: 20px;
-        }
-        h1, h2, h3, h4 {
-			color: #FF761C;
-			font-family: trebuchet ms,arial,verdana,lucida grande,sans-serif;
-        }
+  <title>Smooks for Mule: huge message processing example</title>
 
-		a:link, a:visited, a:active {
-			color:#003366;
-		}
+  <link rel="stylesheet" title="Default" href="inc/highlight/styles/default.css">
+  <style type="text/css">
+	 body {
+		font-family:sans-serif;
+		font-size:0.9em;
+		line-height:1.5em;
 
-		a:hover {
-			color:#FF761C;
-		}
+		padding-left:20px;
+	 }
+	 pre code {
+	     margin-left: 10px;
+	     background-color: #F8F8F8;
+	     border: 1px black dashed;
+	     padding: 5px;
+	     line-height:1.3em;
+	 }
+	 pre span.c {
+	 	color: blue;
+	 }
+
+	 .hl {
+	     color: red;
+	 }
+	 .indent {
+	     margin-left: 10px;
+	 }
+
+	 h1, h2, h3, h4 {
+		color: #FF761C;
+		font-family: trebuchet ms,arial,verdana,lucida grande,sans-serif;
+	 }
+
+	  a:link, a:visited, a:active {
+	    color:#003366;
+	  }
+
+	  a:hover {
+	    color:#FF761C;
+	  }
+
+	  a img {
+	    border: 1px solid #003366;
+	  }
+
+	  a img:hover {
+	    border-color: #FF761C;
+	  }
 
 
-		a img {
-			border: 1px solid #003366;
-		}
+	  .caption {
+	    font-size: 0.8em;
+	    font-style: italic;
+	  }
 
-		a img:hover {
-			border-color: #FF761C;
-		}
+	  a.caption {
+	    text-decoration: none;
+	  }
 
+	  pre code[class]:after {
+	  	display:none;
+	  }
 
-		.caption {
-			font-size: 0.8em;
-			font-style: italic;
-		}
+	  .comment {
+		color: #666;
 
-		a.caption {
-			text-decoration: none;
-		}
-
+	  }
 
     </style>
+
+    <script src="inc/highlight/highlight.js"></script>
+    <script type="text/javascript">
+      hljs.initHighlightingOnLoad('xml', 'java');
+    </script>
 </head>
 
 <body>
 
-	<h1>Smooks for Mule: huge message processing example</h1>
+  <h1>Smooks for Mule: huge message processing example</h1>
 
-	<p>
-		This example demonstrates how Smooks together with Smooks for Mule can be used to <b>split, enrich,
-		transform and route</b> huge messages (GB size messages).<br />
-		<br />
-		Because of the complexity of this example, a detailed explanation of how it works. Next to the explanation
-		within this page, the Mule and Smooks configuration files are also thoroughly documented.
-	</p>
+  <p>
+    This example demonstrates how Smooks together with Smooks for Mule can be used to <b>split, enrich,
+    transform and route</b> huge messages (GB size messages).<br />
+    <br />
+    Because of the complexity of this example, a detailed explanation of how it works. Next to the explanation
+    within this page, the Mule and Smooks configuration files are also thoroughly documented.
+  </p>
 
-	<h2>Table of contents</h2>
+  <h2>Table of contents</h2>
 
-	<ul>
-		<li><a href="#installation">Installation</a></li>
-		<li><a href="#runningTheExample">Running the example</a></li>
-		<li><a href="#overview">Overview</a></li>
-		<li><a href="#process">Process</a></li>
-		<li><a href="#demonstration">Demonstration</a></li>
-		<li><a href="#explanation">Explanation of how it works</a></li>
-	</ul>
+  <ul>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#runningTheExample">Running the example</a></li>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#demonstration">Demonstration</a></li>
+    <li><a href="#howItWorks">How it works</a></li>
+  </ul>
 
-	<a name="overview" ></a>
-	<h2>Overview</h2>
-	<p>
-		In many uses cases messages can contain data that is of interest to multiple parties.
-		Each party can have different requirements, for instance a different data format or a different
-		delivery method. A party could also require information which is related to the message
-		but isn't in the message itself. It becomes even more complex when the source message is a huge, GB size, file.
-		It the responsibility of the ESB to take care of these integration requirements.
-	</p>
-	<p>
-		Extracting, enriching and distributing information from a message to multiple parties is not a trivial process.
-		The information must first be extracted by splitting the huge message in it's parts.
-		Then some outside data source, for instance a database or some services, must be request for the information to
-		enrich the source information. The new set of information must then be reassembled in the required format for every party.
-	</p>
-	<p>
-		Smooks together with Smooks for Mule enables Mule to solve these issues in a powerfull, performant and declaritive manner.
-		Mule provides the transport layer for streaming in the huge message and to dispatch the splitted and enriched messages back
-		to it's consumers. Smooks provides the capabilities to split, enrich, transforms and routes the message. Smooks for Mule glues the two
-		together.
-	</p>
-	<p>
-		This example is based on the use case that the information of a set of products needs to be send to multiple parties.
-		The ESB receives the information from a EDI file stored on the file system. Each product contains it's base information
-		(product id, name, brand, price etc), as well as a list of parts and a list of technical specifications.
-	</p>
-	<p>
-		The following lists the consuming parties and there requirements:
+  <a name="overview" ></a>
+  <h2>Overview</h2>
+  <p>
+    In many uses cases messages can contain data that is of interest to multiple parties.
+    Each party can have different requirements, for instance a different data format or a different
+    delivery method. A party could also require information which is related to the message
+    but isn't in the message itself. It becomes even more complex when the source message is a huge, GB size, file.
+    It the responsibility of the ESB to take care of these integration requirements.
+  </p>
+  <p>
+    Extracting, enriching and distributing information from a message to multiple parties is not a trivial process.
+    The information must first be extracted by splitting the huge message in it's parts.
+    Then some outside data source, for instance a database or some services, must be request for the information to
+    enrich the source information. The new set of information must then be reassembled in the required format for every party.
+  </p>
+  <p>
+    Smooks together with Smooks for Mule enables Mule to solve these issues in a powerfull, performant and declaritive manner.
+    Mule provides the transport layer for streaming in the huge message and to dispatch the splitted and enriched messages back
+    to it's consumers. Smooks provides the capabilities to split, enrich, transforms and routes the message. Smooks for Mule glues the two
+    together.
+  </p>
+  <p>
+    This example is based on the use case that the information of a set of products needs to be send to multiple parties.
+    The ESB receives the information from a EDI file stored on the file system. Each product contains it's base information
+    (product id, name, brand, price etc), as well as a list of parts and a list of technical specifications.
+  </p>
+  <p>
+    The following lists the consuming parties and there requirements:
 
-		<ol>
-			<li>The first party requires:
-				<ul>
-					<li>Must receive all the source product information</li>
-					<li>Must be in XML</li>
-					<li>Must be sent to a JMS queue</li>
-				</ul>
-			</li>
-			<li>The second party requires:
-				<ul>
-					<li>Must receive specific fields of the base product information and the id's of every part</li>
-					<li>Must be in JSON</li>
-					<li>The product must have the category 'Complete Systems' or 'Laptops'</li>
-					<li>Must be sent to a JMS queue</li>
-				</ul>
-			</li>
-			<li>The third party requires:
-				<ul>
-					<li>Must receive specific fields of the base product information</li>
-					<li>Must receive the parts id, name and brand <i>(note that the name and brand information is not available in the source message)</i></li>
-					<li>The product information and it parts must be inserted into the EXT_PRODUCT and EXT_PARTS tables of an external database</li>
-					<li>At least 20 products need to be in stock <i>(note that the stock information is not available in the source message)</i></li>
-				</ul>
-			</li>
-		</ol>
-	</p>
+    <ol>
+      <li>The first party requires:
+        <ul>
+          <li>Must receive all the source product information</li>
+          <li>Must be in XML</li>
+          <li>Must be sent to a JMS queue</li>
+        </ul>
+      </li>
+      <li>The second party requires:
+        <ul>
+          <li>Must receive specific fields of the base product information and the id's of every part</li>
+          <li>Must be in JSON</li>
+          <li>The product must have the category 'Complete Systems' or 'Laptops'</li>
+          <li>Must be sent to a JMS queue</li>
+        </ul>
+      </li>
+      <li>The third party requires:
+        <ul>
+          <li>Must receive specific fields of the base product information</li>
+          <li>Must receive the parts id, name and brand <i>(note that the name and brand information is not available in the source message)</i></li>
+          <li>The product information and it parts must be inserted into the EXT_PRODUCT and EXT_PARTS tables of an external database</li>
+          <li>At least 20 products need to be in stock <i>(note that the stock information is not available in the source message)</i></li>
+        </ul>
+      </li>
+    </ol>
+  </p>
 
-	<p>
-		The main challenges are:
+  <p>
+    The main challenges are:
 
-		<ul>
-			<li>The second and third party only want parts of the source message. This means that we are not dealing with a simple
-			fragment extraction. We need to reconstruct the new messages from different parts of the source message.
-			<li>Every message party requires there message in a different format: XML, JSON and JDBC</li>
-			<li>The routed messages for the third party needs to be enriched.<br/>An internal database is used to retrieve the necessary data.</li>
-			<li>The second and third party only want to receive there messages conditionally.</li>
-			<li>The third message requires information for the condition that is not within the source message.<br />A Mule Service can provided this information for us.</li>
-		</ul>
+    <ul>
+      <li>The second and third party only want parts of the source message. This means that we are not dealing with a simple
+      fragment extraction. We need to reconstruct the new messages from different parts of the source message.
+      <li>Every message party requires there message in a different format: XML, JSON and JDBC</li>
+      <li>The routed messages for the third party needs to be enriched.<br/>An internal database is used to retrieve the necessary data.</li>
+      <li>The second and third party only want to receive there messages conditionally.</li>
+      <li>The third message requires information for the condition that is not within the source message.<br />A Mule Service can provided this information for us.</li>
+    </ul>
 
-	</p>
+  </p>
 
-	<a name="installation"></a>
-	<h2>Installation</h2>
-	<p>
-		Make sure you have set the <b>MULE_HOME</b> environment variable
-		and that you have installed the Smooks for Mule module itself.<br />
-		<br />
-		Run <b>&quot;ant install&quot;</b> from the root folder of this example.
-	</p>
+  <a name="installation"></a>
+  <h2>Installation</h2>
+  <p>
+    Make sure you have set the <b>MULE_HOME</b> environment variable
+    and that you have installed the Smooks for Mule module itself.<br />
+    <br />
+    Run <b>&quot;ant install&quot;</b> from the root folder of this example.
+  </p>
 
-	<a name="runningTheExample"></a>
-	<h2>Running the example</h2>
-	<p>
-		Make sure you have installed the example as describe in the previous section.
-		<ul>
-			<li>Open 5 command shell windows in the root folder of this example.</li>
-			<li>In the first window, execute "ant run-services" to start the HSQLDB Database and JSM Server</li>
-			<li>In the second window, execute 'run' shell script (Unix/Linux) or 'run.bat' batch file (Windows) to start Mule.<br>
-				Alternatively, if you have added Mule to your executable path as recommended in INSTALL.txt, you can run the example from the command line as follows:
-				<br />
-    			<b>Linux / Unix:</b> mule -config ./conf/mule-config.xml<br />
-				<b>Windows: </b> mule.bat -config .\conf\mule-config.xml<br />
-			</li>
+  <a name="runningTheExample"></a>
+  <h2>Running the example</h2>
+  <p>
+    Make sure you have installed the example as describe in the previous section.
+    <ul>
+      <li>Open 5 command shell windows in the root folder of this example.</li>
+      <li>In the first window, execute "ant run-services" to start the HSQLDB Database and JSM Server</li>
+      <li>In the second window, execute 'run' shell script (Unix/Linux) or 'run.bat' batch file (Windows) to start Mule.<br>
+        Alternatively, if you have added Mule to your executable path as recommended in INSTALL.txt, you can run the example from the command line as follows:
+        <br />
+          <b>Linux / Unix:</b> mule -config ./conf/mule-config.xml<br />
+        <b>Windows: </b> mule.bat -config .\conf\mule-config.xml<br />
+      </li>
 
-			<li>In the third window, execute "ant run-consumer-1" to start the JMS consumer of the first party</li>
-			<li>In the fourth window, execute "ant run-consumer-2" to start the JMS consumer of the second party</li>
-			<li>In the fifth window, execute "ant generate" to start the message creation tool.</li>
-		</ul>
+      <li>In the third window, execute "ant run-consumer-1" to start the JMS consumer of the first party</li>
+      <li>In the fourth window, execute "ant run-consumer-2" to start the JMS consumer of the second party</li>
+      <li>In the fifth window, execute "ant generate" to start the message creation tool.</li>
+    </ul>
 
-	</p>
+  </p>
 
-	<a name="process" ></a>
-	<h2>Process</h2>
-	<p>
-		The process looks as follows:<br />
-		<a href="process.jpg"><img src="process_small.jpg"/></a><br />
-		<a href="process.jpg" class="caption">(Click for larger image)</a>
-	</p>
+  <a name="process" ></a>
+  <h2>Process</h2>
+  <p>
+    The process looks as follows:<br />
+    <a href="process.jpg"><img src="inc/process_small.jpg"/></a><br />
+    <a href="process.jpg" class="caption">(Click for larger image)</a>
+  </p>
 
-	<a name="demonstration" ></a>
-	<h2>Demonstration</h2>
-	<p>
+  <a name="demonstration" ></a>
+  <h2>Demonstration</h2>
+  <p>
 
-	</p>
+	http://dist.muleforge.org/smooks/demo/mule2/huge_message_processing_example_demo.html
+  </p>
 
+  <a name="howItWorks" ></a>
+  <h2>How it works</h2>
 
+  <p>
+  	In this section is explained how this example works. First we show how
+  	the input format looks like. Then we explain how Mule is configured. Finally
+  	we take a look at the most important part namely how Smooks is configured.<br>
 
-	<a name="explanation" ></a>
-	<h2>Explanation of how it works</h2>
-	<p>
+  	You don't need a lot of knowledge of Smooks to understand the explanation. It could
+  	however be a bit heavy if this is the first time that you see Smooks in action.
+  </p>
 
-	</p>
+  <h3>Import file</h3>
+  <p>
+  	The import format we will be processing looks like this:
+
+  	<pre><code class="no-highlight">PRD|1000001|Avia C44|XYZ-Blink|Complete Systems|981.29|19|1 years
+PRT|100003|9|true
+PRT|100002|1|true
+SPC|Height|6000mm
+SPC|Width|6000mm
+<i class="comment">... (more PRD, PRT and SPC segments. One PRD per product. One PRT segment per Product Part.
+     One SPC segment per  Specification)</i></code></pre>
+  </p>
+
+  <h3>Components overview</h3>
+  <p>
+    The Components used in this example are as follows:
+
+    <ul>
+      <li><b>Model:</b> OrderProcessorModel
+        <ul>
+          <li><b>Service:</b> ProductProcessorService
+            <ul>
+              <li><b>Inbound:</b> file endpoint</li>
+              <li><b>Outbound:</b> Smooks router
+                <ul>
+                  <li><b>Outbound endpoints:</b>
+                    <ul>
+                      <li>VM endpoint <i>(StockServiceEndpoint)</i></li>
+                      <li>JMS endpoints <i>(ReceiveAllProductsEndpoint & ReceivePCsAndLaptopsEndpoint)</i></li>
+                    </ul>
+                  </li>
+                  <li><b>Smooks resources</b>
+                    <ul>
+                      <li>SmooksEDIParser</li>
+                      <li>SQLExecutor</li>
+                      <li>BeanPopulator</li>
+                      <li>FreeMarker</li>
+                      <li>MuleDispatcher</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><b>Service:</b> StockService
+            <ul>
+              <li><b>Inbound:</b> VM endpoint</li>
+              <li><b>Component:</b> StockService</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>Mule configuration</h3>
+    As can be seen from the <a href="process.jpg">process illustration</a> above, this example revolves around
+    the "ProductProcessorService" Service deployment. This service defines the Smooks router, which does all the processing,
+    as follows:
+    <pre><code>&lt;service name=&quot;ProductProcessorService&quot;&gt;
+    &lt;inbound&gt;
+
+        &lt;!--
+          The inbound endpoint streams the EDI files from the ./data/in directory.
+        --&gt;
+        &lt;file:inbound-endpoint
+          connector-ref=&quot;dataIn&quot;
+          path=&quot;./data/in&quot;
+          pollingFrequency=&quot;1000&quot;
+          moveToDirectory=&quot;./data/out&quot;
+          synchronous=&quot;true&quot; &gt;
+
+          &lt;file:filename-wildcard-filter pattern=&quot;*.edi&quot;/&gt;
+        &lt;/file:inbound-endpoint&gt;
+    &lt;/inbound&gt;
+
+    &lt;outbound&gt;
+
+      &lt;!--
+        Declares and configures the Smooks for Mule router.
+        This router uses the /smooks/config.xml Smooks config file to process the EDI stream.
+        The declared endpoints are referenced from within the Smooks config file to route the message parts
+        too or to invoke the StockService with.
+
+        Note: By declaring the config attribute 'reportPath' Smooks generates a report in which you can see
+        how Smooks processes the EDI data. You should only enable it for small (1-10) data sets. Generating the
+        report uses a lot of performance and with a big file it generates a huge report file.
+      --&gt;
+      &lt;smooks:router configFile=&quot;/smooks/config.xml&quot; honorSynchronicity=&quot;true&quot;&gt;
+          &lt;vm:outbound-endpoint name=&quot;StockServiceEndpoint&quot; path=&quot;StockService&quot; synchronous=&quot;true&quot;/&gt;
+          &lt;jms:outbound-endpoint name=&quot;ReceiveAllProductsEndpoint&quot; queue=&quot;example.AllProducts&quot; connector-ref=&quot;jmsConnector&quot;/&gt;
+          &lt;jms:outbound-endpoint name=&quot;ReceivePCsAndLaptopsEndpoint&quot; queue=&quot;example.PCsAndLaptops&quot; connector-ref=&quot;jmsConnector&quot;/&gt;
+      &lt;/smooks:router&gt;
+
+    &lt;/outbound&gt;
+
+&lt;/service&gt;</code></pre>
+	In the requirements we need to route the products to two JMS clients and write some product records into the database.
+	The JMS communication is handled via the two JMS outbound endpoints. The database routing is completely handled within Smooks.
+	Later we will look in more detail at the Smooks configuration of this router .
+  </p>
+  <p>
+  	Another interresting service is the StockService. The Stock Service is used by the Product Processor Service to retrieve the stock of a product.
+	In theory this Stock Service should look into some warehouse system to get this information.
+	In this example however it only generates a random stock size and returns that as result.
+	<pre><code>&lt;service name=&quot;StockService&quot;&gt;
+  &lt;inbound&gt;
+    &lt;vm:inbound-endpoint path=&quot;StockService&quot;  synchronous=&quot;true&quot;/&gt;
+  &lt;/inbound&gt;
+  &lt;component class=&quot;example.hmp.mule.service.StockService&quot;/&gt;
+&lt;/service&gt;</code></pre>
+  </p>
+
+  <h3>Smooks configuration</h3>
+
+  <p>
+	The top level Smooks configuration is:
+
+	<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!--
+  This is the main Smooks configuration file. Here we set the general configuration
+  properties and import all the smooks configuration parts. The order in which
+  we import the several configuration files is very important. Smooks uses this order
+  to determine the order in which the resource (actually called visitors in this case)
+  actions are executed before and after the element.
+  Lets say that visitor A and visitor B are configured in A,B order on the same element.
+  The order of execution is then as follows:
+    - Visit before action of A
+    - Visit before action of B
+    - Visit after action of B
+    - Visit after action of A
+  A visitor can have an action defined on the visit before, visit element content and/or visit after. It
+  is important to know when a visitor executes it's action
+ --&gt;
+&lt;smooks-resource-list xmlns=&quot;http://www.milyn.org/xsd/smooks-1.0.xsd&quot;&gt;
+
+  &lt;!--
+    This part sets the global configuration parameters. In this
+      case we only set that we want to use the SAX stream filter instead of
+      the DOM stream filter. This is very important because the SAX filter is
+      faster then the DOM filter and only the SAX filter can handle huge messages.
+   --&gt;
+  &lt;resource-config selector=&quot;global-parameters&quot;&gt;
+        &lt;param name=&quot;stream.filter.type&quot;&gt;SAX&lt;/param&gt;
+    &lt;/resource-config&gt;
+
+  &lt;!--
+    Imports the EDI reader configuration
+   --&gt;
+  &lt;import file=&quot;read/edi-product-reader.xml&quot; /&gt;
+
+  &lt;!--
+    Imports the database datasource  configuration
+   --&gt;
+  &lt;import file=&quot;database/datasource.xml&quot; /&gt;
+
+  &lt;!--
+    The following three elements import the router configurations to several
+    end points.
+    Because these routers all do there thing on the visit after action they must
+    be defined before the javabean binding and enriching configuration
+    if these actions are to be executed after the javabean binding and enriching.
+   --&gt;
+  &lt;import file=&quot;routing/route-to-jms-all-receiver.xml&quot; /&gt;
+
+  &lt;import file=&quot;routing/route-to-jms-pc-and-laptop-receiver.xml&quot; /&gt;
+
+  &lt;import file=&quot;routing/route-to-database.xml&quot; /&gt;
+
+  &lt;!--
+    The following two elements import the configuration which enrich the data from
+    the EDI message.
+    It is important for the stock-service that it is defined before the javabean binding
+    because it uses the data from the beans and it execute the service in the after visit
+    action.
+   --&gt;
+  &lt;import file=&quot;enrich/stock-service.xml&quot; /&gt;
+  &lt;import file=&quot;enrich/part-data.xml&quot; /&gt;
+
+  &lt;!--
+    Imports the javabean binding configuration
+   --&gt;
+  &lt;import file=&quot;binding/bean-binding.xml&quot; /&gt;
+
+&lt;/smooks-resource-list&gt;</code></pre>
+  </p>
+
 
 </body>
 </html>

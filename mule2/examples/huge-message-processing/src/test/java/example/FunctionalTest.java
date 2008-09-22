@@ -63,6 +63,9 @@ public class FunctionalTest extends FunctionalTestCase
 		MuleClient client = new MuleClient();
 		client.send("vm://TestMessageIn",	new DefaultMuleMessage(in));
 
+		//Sleep a second in the hope that all messages are processed.
+		Thread.sleep(1000);
+
 		assertEquals("Didn't receive exactly two messages in the allProductsConsumerListener", 2, allProductsConsumerListener.getMessages().size());
 
 		assertTrue("First message in allProductsConsumerListener isn't a TextMessage", allProductsConsumerListener.getMessages().get(0) instanceof TextMessage);

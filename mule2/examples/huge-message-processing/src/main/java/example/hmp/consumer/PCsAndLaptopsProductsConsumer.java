@@ -43,8 +43,8 @@ public class PCsAndLaptopsProductsConsumer extends JMSConsumer {
 
 	public static void main(String[] args) throws Exception {
 
-		logger.info("Starting the \"PC's and Laptops consumer\"");
-		logger.info("From command line, use [Ctrl]+[C] to stop the application");
+		System.out.println("Starting the \"PC's and Laptops consumer\"");
+		System.out.println("From command line, use [Ctrl]+[C] to stop the application");
 		new PCsAndLaptopsProductsConsumer().run();
 	}
 

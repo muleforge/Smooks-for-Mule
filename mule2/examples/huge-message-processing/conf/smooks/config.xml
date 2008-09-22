@@ -4,15 +4,15 @@
 	properties and import all the smooks configuration parts. The order in which
 	we import the several configuration files is very important. Smooks uses this order
 	to determine the order in which the resource (actually called visitors in this case)
-	action are executed before and after the tag.
+	actions are executed before, during and after the element.
 	Lets say that visitor A and visitor B are configured in A,B order on the same element.
 	The order of execution is then as follows:
 	  - Visit before action of A
 	  - Visit before action of B
 	  - Visit after action of B
 	  - Visit after action of A
-	A visitor can have an action defined on the visit before and/or visit after. It
-	is important to know when a visitor does something.
+	A visitor can have an action defined on the visit before, visit element content and/or visit after. It
+	is important to know when a visitor executes it's action.
  -->
 <smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
 
@@ -32,7 +32,7 @@
 	<import file="read/edi-product-reader.xml" />
 
 	<!--
-		Imports the database datasource  configuration
+		Imports the database datasource configuration
 	 -->
 	<import file="database/datasource.xml" />
 
@@ -61,7 +61,7 @@
 	<import file="enrich/part-data.xml" />
 
 	<!--
-		Imports the javabaen  binding configuration
+		Imports the javabean binding configuration
 	 -->
 	<import file="binding/bean-binding.xml" />
 
