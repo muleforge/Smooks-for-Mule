@@ -14,6 +14,7 @@
 	 }
 	 pre code {
 	     margin-left: 10px;
+	     margin-right: 10px;
 	     background-color: #F8F8F8;
 	     border: 1px black dashed;
 	     padding: 5px;
@@ -45,6 +46,13 @@
 
 	  a img {
 	    border: 1px solid #003366;
+	  }
+
+	  img.screenshot {
+	  	border: 1px solid #888;
+	  	margin: 10px;
+	  	padding:3px;
+	  	width: 600px;
 	  }
 
 	  a img:hover {
@@ -228,7 +236,12 @@
   	we take a look at the most important part namely how Smooks is configured.<br>
 
   	You don't need a lot of knowledge of Smooks to understand the explanation. It could
-  	however be a bit heavy if this is the first time that you see Smooks in action.
+  	however be a bit heavy if this is the first time that you see Smooks in action. Take a
+  	look at the <a href="http://milyn.codehaus.org/smooks">Smooks website</a> for more information
+  	on how to use Smooks.
+
+  	Take a good look at the comments within the configuration files. They explain for the biggest part
+  	what each component does and how they work.
   </p>
 
   <h3>Import file</h3>
@@ -346,6 +359,19 @@ SPC|Width|6000mm
   <h3>Smooks configuration</h3>
 
   <p>
+  	With Smooks configuration you instruct Smooks how to process the incoming data.
+  	In this example the configuration is spread over several files. This keeps the configuration
+  	arranged and clean.
+  </p>
+  <p>
+  	In a complex use case it can be difficult to see what is going on in Smooks.
+  	For this reason Smooks provides a HtmlReportGenerator class. It generates a HTML execution report
+  	file of Smooks it's processes, to help you visualize them. The generator is the nearest thing to a debugging
+  	tool that Smooks currently has. Within mule you can activate it by providing the 'reportPath' parameter in the
+  	Smooks router with a file location. Do not use it in a production environment because the generator takes a lot of performance.
+  	For this example we already generated a report which you can find <a href="execution-report.html">here</a>.
+  </p>
+  <p>
 	The top level Smooks configuration is:
 
 	<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
@@ -415,8 +441,427 @@ SPC|Width|6000mm
   &lt;import file=&quot;binding/bean-binding.xml&quot; /&gt;
 
 &lt;/smooks-resource-list&gt;</code></pre>
+
+    In the following sections we explain each file that is imported in the main configuration file.
   </p>
 
+  <h4>read/edi-product-reader.xml</h4>
+
+  <p>
+  	This Smooks resource configuration file defines only the EDI Parser.
+
+  	<pre><code>&lt;!--
+  This resource configuration configures the EDI Parser to parse the
+  message stream into a stream of SAX events.
+
+  The &quot;mapping-model&quot; parameter defines the EDI to SAX Event mapping model configuration for the parser.
+--&gt;
+&lt;resource-config selector=&quot;org.xml.sax.driver&quot;&gt;
+  &lt;resource&gt;org.milyn.smooks.edi.SmooksEDIParser&lt;/resource&gt;
+  &lt;param name=&quot;mapping-model&quot;&gt;/smooks/read/edi-to-xml-product-mapping.xml&lt;/param&gt;
+&lt;/resource-config&gt;</code></pre>
+
+	After configuring this resource and turning on the Smooks Execution Report we can see the message
+	event stream as produced by the EDI Parser:<br/>
+
+	<img src="inc/ser-event-stream.png" class="screenshot">
+  </p>
+
+  <h4>database/datasource.xml</h4>
+
+  <p>
+  	This configuration prepares the database datasources for the internal and the external database. The internal
+  	database is used to retrieve information about the product parts which are not in the source data. In the external database
+  	we insert the product and part records as required by the requirements of the third party (see the <a href="#overview" >overview</a> section).
+
+  	<pre><code>&lt;!--
+  Configure the Datasource for the 'internal' database.
+  In this example we only read from this database to demonstrate
+  the data enriching in Smooks.
+--&gt;
+&lt;resource-config selector=&quot;$document&quot;&gt;
+  &lt;resource&gt;org.milyn.db.DirectDataSource&lt;/resource&gt;
+  &lt;param name=&quot;datasource&quot;&gt;InternalPartsDatabase&lt;/param&gt;
+  &lt;param name=&quot;driver&quot;&gt;org.hsqldb.jdbcDriver&lt;/param&gt;
+  &lt;param name=&quot;url&quot;&gt;jdbc:hsqldb:hsql://localhost:9992/milyn-hsql-9992&lt;/param&gt;
+  &lt;param name=&quot;username&quot;&gt;sa&lt;/param&gt;
+  &lt;param name=&quot;password&quot;&gt;&lt;/param&gt;
+  &lt;param name=&quot;autoCommit&quot;&gt;false&lt;/param&gt;
+&lt;/resource-config&gt;
+
+&lt;!--
+  Configure the Datasource for the 'external' database.
+  In this example we write to this database to demonstrate
+  the database routing in Smooks.
+--&gt;
+&lt;resource-config selector=&quot;$document&quot;&gt;
+  &lt;resource&gt;org.milyn.db.DirectDataSource&lt;/resource&gt;
+  &lt;param name=&quot;datasource&quot;&gt;ExternalDatabase&lt;/param&gt;
+  &lt;param name=&quot;driver&quot;&gt;org.hsqldb.jdbcDriver&lt;/param&gt;
+  &lt;param name=&quot;url&quot;&gt;jdbc:hsqldb:hsql://localhost:9992/milyn-hsql-9992&lt;/param&gt;
+  &lt;param name=&quot;username&quot;&gt;sa&lt;/param&gt;
+  &lt;param name=&quot;password&quot;&gt;&lt;/param&gt;
+  &lt;param name=&quot;autoCommit&quot;&gt;false&lt;/param&gt;
+&lt;/resource-config&gt;</code></pre>
+
+    These Datasources are bound to the Smooks ExecutionContext at the start of message processing
+    by setting the selector parameter on '$document' (selects the message root/document event as the lifecycle event).
+    Any JDBC Connection created for the ExecutionContext is committed/rolledback and cleaned up at the end of the
+    message processing. Note that it is also possible to use a container provided JNDI datasource by setting the 'datasource' parameter to 'JndiDataSource'.<br />
+    <br/>
+    In the execution report we can see that the datasources are bound on the 'visitBefore' event of the root 'product' element.<br/>
+
+    <img src="inc/ser-datasource-visitBefore.png" class="screenshot">
+
+    <br/>On the 'visitAfter' event we can see that the datasources are cleaned up:<br/>
+
+    <img src="inc/ser-datasource-visitAfter.png" class="screenshot">
+
+  </p>
+
+  <h4>enrich/stock-service.xml</h4>
+
+  <p>
+  	You probably expected the section about the "routing/route-to-jms-all-receiver.xml" configuration file instead of
+  	the "enrich/stock-service.xml" file. However we moved the sections about the routing configuration files to the end.
+  	It is probably easier for you to understand those sections if you first see where the data comes from that they route.
+  	Remember however that the order in which we defined the imports in the main configuration file is very important. As explained
+  	before, this is because the order in which the resources execute depends on the order in which they appear in the resource configuration,
+  	with the visitBefore events firing "first-to-last" and the visitAfter events firing "last-to-first".
+
+  	The "enrich/stock-service.xml" resource file contains a Mule Dispatcher resource for calling the StockService to retrieve the stock information.
+
+  	<pre><code>&lt;!--
+  This MuleDispatcher resource calls the Stock Service endpount synchronously on every product.
+  Specifically it executes on the 'visitAfter' event. The product id is set in the Product object by then.
+  The Stock Service endpoint uses the product id to see what it's current stock is (in this
+  example it generates a random number).
+  The result returned by the service is added to the bean map under the beanId 'productStock'.
+--&gt;
+&lt;resource-config selector=&quot;product id&quot;&gt;
+  &lt;resource&gt;org.milyn.smooks.mule.MuleDispatcher&lt;/resource&gt;
+  &lt;param name=&quot;endpointName&quot;&gt;StockServiceEndpoint&lt;/param&gt;
+  &lt;param name=&quot;expression&quot;&gt;product.id&lt;/param&gt;
+  &lt;param name=&quot;resultBeanId&quot;&gt;productStock&lt;/param&gt;
+&lt;/resource-config&gt;</code></pre>
+
+	The data returned by the above resources is bound into the bean context and so is available to other resources executing under the
+	same ExecutionContext e.g. templating resources, BeanPopulator resources etc.
+  </p>
+
+  <h4>enrich/part-data.xml</h4>
+
+  <p>
+  	This resource configuration file configures a resource for reading reference/enhancement data from the database.
+
+  	<pre><code>
+&lt;!--
+  This SQLExecute resource configuration executes for every product part. It
+  uses the product id from the Product object to execute a query on the internal database.
+  The result set is added to the bean map under the beanId 'partDetails'.
+--&gt;
+&lt;resource-config selector=&quot;product part&quot;&gt;
+  &lt;resource&gt;org.milyn.routing.db.SQLExecutor&lt;/resource&gt;
+  &lt;param name=&quot;datasource&quot;&gt;InternalPartsDatabase&lt;/param&gt;
+  &lt;param name=&quot;statement&quot;&gt;select name, brand from int_part where id = ${part.id}&lt;/param&gt;
+  &lt;param name=&quot;resultSetName&quot;&gt;partDetails&lt;/param&gt;
+&lt;/resource-config&gt;
+  	</code></pre>
+
+	The result set created by the resource above is a list of 'record' maps. Even if there was only one record in the result. you
+	must use the 'partDetails[0]' syntax (within the templates or scripts) to access that record.
+  </p>
+
+  <h4>binding/bean-binding.xml</h4>
+
+
+
+  <p>
+    At the core of nearly all Smooks based message processing, is the concept of "binding" data from the Source message event
+    stream into memory (into the bean context). Once the data is bound into memory in a Physical or Virtual Object Model, it can
+    be used by other Smooks resources such as the template resources, routing resources, bean populator resources, resource conditions
+    and of course custom Smooks visitor implementations. The populated Object Model may itself be the Result output by the Smooks.filter operation.
+    Basically, the data binding functionality provided by the Javabean Cartridge is a very fundamental part of practically all
+    Smooks based filtering operations. Without it, you are quite limited in what you can do.
+
+    The following configuration file configures the bindings:
+
+    <pre><code>&lt;!--
+  This resource configuration defines the binding of the product data from the EDI document to the Product object. It
+  also binds the parts and specs ArrayList to there properties. These two get configured in the next
+  resource configurations.
+ --&gt;
+&lt;resource-config selector=&quot;product&quot;&gt;
+  &lt;resource&gt;org.milyn.javabean.BeanPopulator&lt;/resource&gt;
+  &lt;param name=&quot;beanId&quot;&gt;product&lt;/param&gt;
+  &lt;param name=&quot;beanClass&quot;&gt;example.hmp.model.Product&lt;/param&gt;
+  &lt;param name=&quot;bindings&quot;&gt;
+    &lt;binding property=&quot;id&quot; type=&quot;Long&quot; selector=&quot;product id&quot; /&gt;
+    &lt;binding property=&quot;name&quot; selector=&quot;product name&quot; /&gt;
+    &lt;binding property=&quot;brand&quot; selector=&quot;product brand&quot; /&gt;
+    &lt;binding property=&quot;category&quot; selector=&quot;product category&quot; /&gt;
+    &lt;binding property=&quot;price&quot; type=&quot;BigDecimal&quot; selector=&quot;product price&quot; /&gt;
+    &lt;binding property=&quot;tax&quot; type=&quot;Integer&quot; selector=&quot;product tax&quot; /&gt;
+    &lt;binding property=&quot;guarantee&quot; selector=&quot;product guarantee&quot; /&gt;
+
+    &lt;binding property=&quot;parts&quot; selector=&quot;${parts}&quot; /&gt;
+    &lt;binding property=&quot;specs&quot; selector=&quot;${specs}&quot; /&gt;
+  &lt;/param&gt;
+&lt;/resource-config&gt;
+
+&lt;!--
+  This resource configuration defines that a ArrayList is created for every product
+  and that it adds all the Part objects to the array.
+--&gt;
+&lt;resource-config selector=&quot;product&quot;&gt;
+    &lt;resource&gt;org.milyn.javabean.BeanPopulator&lt;/resource&gt;
+    &lt;param name=&quot;beanId&quot;&gt;parts&lt;/param&gt;
+    &lt;param name=&quot;beanClass&quot;&gt;java.util.ArrayList&lt;/param&gt;
+    &lt;param name=&quot;bindings&quot;&gt;
+      &lt;binding selector=&quot;${part}&quot; /&gt;
+    &lt;/param&gt;
+&lt;/resource-config&gt;
+
+&lt;!--
+  This resource configuration defines the binding of the part data from the EDI document to the Part object.
+--&gt;
+&lt;resource-config selector=&quot;product part&quot;&gt;
+  &lt;resource&gt;org.milyn.javabean.BeanPopulator&lt;/resource&gt;
+  &lt;param name=&quot;beanId&quot;&gt;part&lt;/param&gt;
+  &lt;param name=&quot;beanClass&quot;&gt;example.hmp.model.Part&lt;/param&gt;
+  &lt;param name=&quot;bindings&quot;&gt;
+    &lt;binding property=&quot;id&quot; type=&quot;Long&quot; selector=&quot;part id&quot; /&gt;
+    &lt;binding property=&quot;quantity&quot; type=&quot;Integer&quot; selector=&quot;product part quantity&quot; /&gt;
+    &lt;binding property=&quot;buildIn&quot; type=&quot;Boolean&quot; selector=&quot;product part build-in&quot; /&gt;
+  &lt;/param&gt;
+&lt;/resource-config&gt;
+
+&lt;!--
+  This resource configuration defines that a ArrayList is created for every product
+  and that it adds all the Spec objects to the array.
+--&gt;
+&lt;resource-config selector=&quot;product&quot;&gt;
+    &lt;resource&gt;org.milyn.javabean.BeanPopulator&lt;/resource&gt;
+    &lt;param name=&quot;beanId&quot;&gt;specs&lt;/param&gt;
+    &lt;param name=&quot;beanClass&quot;&gt;java.util.ArrayList&lt;/param&gt;
+
+    &lt;param name=&quot;bindings&quot;&gt;
+      &lt;binding selector=&quot;${spec}&quot; /&gt;
+    &lt;/param&gt;
+&lt;/resource-config&gt;
+
+&lt;!--
+  This resource configuration defines the binding of the specs data from the EDI document to the Spec object.
+--&gt;
+&lt;resource-config selector=&quot;product spec&quot;&gt;
+  &lt;resource&gt;org.milyn.javabean.BeanPopulator&lt;/resource&gt;
+  &lt;param name=&quot;beanId&quot;&gt;spec&lt;/param&gt;
+  &lt;param name=&quot;beanClass&quot;&gt;example.hmp.model.Spec&lt;/param&gt;
+  &lt;param name=&quot;bindings&quot;&gt;
+    &lt;binding property=&quot;name&quot; selector=&quot;spec name&quot; /&gt;
+    &lt;binding property=&quot;value&quot; selector=&quot;spec value&quot; /&gt;
+  &lt;/param&gt;
+&lt;/resource-config&gt;</code></pre>
+
+	Once this data is bound into the bean context (under the beanIds of "product", "parts", "part", "specs" and "spec"),
+	it is available to all other resources executing under the same Smooks ExecutionContext. The key to
+	processing huge messages is the fact that we can keep the memory footprint associated with the ExecutionContext
+	to a minimum. We do this by only maintaining the current Product in memory at at any one time i.e. we don't
+	accumulate a list of the Products. This also means that we need to be able to use the Product data
+	(for splitting, routing etc) while we have it in memory and before we throw it away in place of the next Product
+	in the message event stream. In other words, we can't wait for the whole message to be processed before processing
+	the Product data; everything is done while we are processing the message event stream i.e. binding, templating/transforming, routing etc.
+	We do this by targeting these other resources at the same events in the message event stream i.e. the &lt;product&gt; events.
+
+  </p>
+
+
+  <h4>routing/route-to-jms-all-receiver.xml</h4>
+
+  <p>
+	This resource configuration file defines the routing resources for the "jms-all-receiver" client.
+
+
+	<pre><code>&lt;!--
+  This MuleDispatcher resource configuration executes at the end of every product.
+  It dispatches the product XML to the 'ReceiveAllProductsEndpoint' endpoint.
+  The XML is retrieved from the 'XML_ReceiveAllProducts' String from the bean Map.
+  This XML is generated by the next resource configuration.
+
+  For the same reasons as explained in the top of the config.xml file the dispatch
+  configurion must come for the XML generating configuration. Both execute in the
+  visit after action.
+--&gt;
+&lt;resource-config selector=&quot;product&quot;&gt;
+  &lt;resource&gt;org.milyn.smooks.mule.MuleDispatcher&lt;/resource&gt;
+  &lt;param name=&quot;endpointName&quot;&gt;ReceiveAllProductsEndpoint&lt;/param&gt;
+  &lt;param name=&quot;beanId&quot;&gt;XML_ReceiveAllProducts&lt;/param&gt;
+&lt;/resource-config&gt;
+
+&lt;!--
+  This FreeMarker template resource configuration generates the XML
+  at the end of every product. It binds the XML String in the bean map under
+  bean ID 'XML_ReceiveAllProducts'.
+--&gt;
+&lt;resource-config selector=&quot;product&quot;&gt;
+  &lt;resource type=&quot;ftl&quot;&gt;&lt;!--
+&lt;product number=&quot;${product.id?c}&quot;&gt;
+    &lt;name&gt;${product.name}&lt;/name&gt;
+    &lt;brand&gt;${product.brand}&lt;/brand&gt;
+    &lt;category&gt;${product.category}&lt;/category&gt;
+    &lt;price&gt;${product.price?c}&lt;/price&gt;
+    &lt;tax&gt;${product.tax?c}&lt;/tax&gt;
+    &lt;guarantee&gt;${product.guarantee}&lt;/guarantee&gt;
+    &lt;parts&gt;
+    &lt;#list product.parts as part&gt;
+       &lt;part number=&quot;${part.id?c}&quot;&gt;
+         &lt;quantity&gt;${part.quantity?c}&lt;/quantity&gt;
+         &lt;buildIn&gt;${part.buildIn?string}&lt;/buildIn&gt;
+       &lt;/part&gt;
+    &lt;/#list&gt;
+    &lt;/parts&gt;
+    &lt;specifications&gt;
+    &lt;#list product.specs as spec&gt;
+       &lt;#assign nodeName = spec.name?replace(' ', '-')?lower_case&gt;
+       &lt;${nodeName}&gt;${spec.value}&lt;/${nodeName}&gt;
+    &lt;/#list&gt;
+    &lt;/specifications&gt;
+&lt;/product&gt;--&gt;&lt;/resource&gt;
+  &lt;param name=&quot;action&quot;&gt;bindto&lt;/param&gt;
+  &lt;param name=&quot;bindId&quot;&gt;XML_ReceiveAllProducts&lt;/param&gt;
+&lt;/resource-config&gt;</code></pre>
+
+	The first resource listed simply dispatches the XML (generated by the second resource) to the "ReceiveAllProductsEndpoint" endpoint. The
+	second resource generates the XML message by applying a FreeMarker template. The FreeMarker template receives it's data from the beans
+	within the bean context. This is the most straight forward transformation. We don't do it conditionally or enrich it by using data
+	from other resources then the message itself.
+  </p>
+
+  <h4>routing/route-to-jms-pc-and-laptop-receiver.xml</h4>
+
+  <p>
+  	The following configuration looks much like the previous "routing/route-to-jms-all-receiver.xml" configuration. The biggest difference
+  	is that conditions are added so that the messages are only generated and dispatched to the client when the condition is met.
+
+  	<pre><code> &lt;!--
+  This MuleDispatcher resource configuration executes at the end of every product.
+  It dispatches the product JSON to the 'JSON_ReceivePCsAndLaptops' endpoint. Because
+  of the condition it only dispatches if the product category is
+  &quot;Complete Systems&quot; or &quot;Laptops&quot;.
+  The JSON is retrieved from the 'JSON_ReceivePCsAndLaptops' String from the bean Map.
+  This JSON is generated by the next resource configuration.
+
+  For the same reasons as explained in the top of the config.xml file the dispatch
+  configurion must come for the JSON generating configuration. Both execute in the
+  visit after action.
+--&gt;
+&lt;resource-config selector=&quot;product&quot;&gt;
+  &lt;resource&gt;org.milyn.smooks.mule.MuleDispatcher&lt;/resource&gt;
+  &lt;condition evaluator=&quot;org.milyn.javabean.expression.BeanMapExpressionEvaluator&quot;&gt;
+    &lt;!--  product.category == &quot;Complete Systems&quot; || product.category == &quot;Laptops&quot; --&gt;
+  &lt;/condition&gt;
+  &lt;param name=&quot;endpointName&quot;&gt;ReceivePCsAndLaptopsEndpoint&lt;/param&gt;
+  &lt;param name=&quot;beanId&quot;&gt;JSON_ReceivePCsAndLaptops&lt;/param&gt;
+&lt;/resource-config&gt;
+
+&lt;!--
+  This FreeMarker template resource configuration generates the JSON
+  at the end of every product. It binds the JSON String in the bean map under
+  bean ID 'JSON_ReceivePCsAndLaptops'.
+--&gt;
+&lt;resource-config selector=&quot;product&quot;&gt;
+  &lt;resource type=&quot;ftl&quot;&gt;&lt;!--
+    {
+      &quot;id&quot; : ${product.id?c},
+      &quot;name&quot; : &quot;${product.name}&quot;,
+      &quot;brand&quot; : &quot;${product.brand}&quot;,
+      &quot;category&quot; : &lt;#if product.category == &quot;Complete Systems&quot;&gt;1&lt;#else&gt;2&lt;/#if&gt;,
+      &quot;price&quot; : ${product.price?c},
+      &quot;tax&quot; : ${product.tax?c},
+      &quot;parts&quot; : [
+      &lt;#list product.parts as part&gt;
+            ${part.id?c}&lt;#if part_has_next&gt;,&lt;/#if&gt;
+          &lt;/#list&gt;
+      ]
+    }
+  --&gt;&lt;/resource&gt;
+  &lt;condition evaluator=&quot;org.milyn.javabean.expression.BeanMapExpressionEvaluator&quot;&gt;
+    &lt;!-- (product.category == &quot;Complete Systems&quot; || product.category == &quot;Laptops&quot;)  --&gt;
+  &lt;/condition&gt;
+  &lt;param name=&quot;action&quot;&gt;bindto&lt;/param&gt;
+  &lt;param name=&quot;bindId&quot;&gt;JSON_ReceivePCsAndLaptops&lt;/param&gt;
+&lt;/resource-config&gt;</code></pre>
+  </p>
+
+  <h4>routing/route-to-database.xml</h4>
+
+  <p>
+    This resource configuration defines routing the product data to the External Database.
+
+    <pre><code>&lt;!--
+  This SQLExecutor resource configuration executes a query that counts the number
+  of products in the external database. It is only here for the example.
+  Conditions later on  restrict writing to the database when 99 products are inserted.
+  We use it to prevent flooding of the database with thousands of product and part records.
+--&gt;
+&lt;resource-config selector=&quot;product&quot;&gt;
+  &lt;resource&gt;org.milyn.routing.db.SQLExecutor&lt;/resource&gt;
+  &lt;param name=&quot;executeBefore&quot;&gt;true&lt;/param&gt;
+  &lt;param name=&quot;datasource&quot;&gt;ExternalDatabase&lt;/param&gt;
+  &lt;param name=&quot;statement&quot;&gt;select count(*) as &quot;numberProducts&quot; from EXT_PRODUCT&lt;/param&gt;
+  &lt;param name=&quot;resultSetName&quot;&gt;productCount&lt;/param&gt;
+&lt;/resource-config&gt;
+
+&lt;!--
+  This SQLExecutor resource configuration executes an INSERT statement with all the necessary
+  product data on the external database. The statement executes on the after visit phase of the
+  guarantee element.
+
+  Maybe you wonder why we don't set it on the product element itself. This is
+  because the insert statement would be executed after the insert statements of the part
+  elements (those inserts are configured in the next resource-config block). That would cause
+  referential exceptions when a part gets inserted when the product insn't inserted yet. Because
+  we know that we got all the data on the after visit of guarantee element and because of the
+  nature of the EDI parser the guarantee element is always there, we can safely execute the
+  insert at that moment.
+
+  The resource config condition is used to make sure that we only get the products with a stock
+  over 20.  The productStock bean comes from a Mule6Dispatcher that calls the Stock Service, defined
+  in the conf/smooks/enrich/stock-service.xml file.
+  The other part of the statement prevents database flooding and is only there for this example.
+ --&gt;
+&lt;resource-config selector=&quot;product guarantee&quot;&gt;
+  &lt;resource&gt;org.milyn.routing.db.SQLExecutor&lt;/resource&gt;
+  &lt;condition evaluator=&quot;org.milyn.javabean.expression.BeanMapExpressionEvaluator&quot;&gt;
+    &lt;!-- productStock &gt; 100 &amp;&amp; productCount[0].numberProducts &lt; 100  --&gt;
+  &lt;/condition&gt;
+  &lt;param name=&quot;executeBefore&quot;&gt;false&lt;/param&gt;
+  &lt;param name=&quot;datasource&quot;&gt;ExternalDatabase&lt;/param&gt;
+  &lt;param name=&quot;statement&quot;&gt;insert into EXT_PRODUCT values(${product.id}, ${product.name}, ${product.brand}, ${product.category}, ${product.price}, ${product.tax}, now())&lt;/param&gt;
+&lt;/resource-config&gt;
+
+&lt;!--
+  This SQLExecutor resource configuration executes an INSERT statement with all the necessary
+  part data on the external database. The statement executes on the after visit phase of the
+  part element.
+
+  We use the same resource config conditions as before for the same reasons.
+--&gt;
+&lt;resource-config selector=&quot;product part&quot;&gt;
+  &lt;resource&gt;org.milyn.routing.db.SQLExecutor&lt;/resource&gt;
+  &lt;condition evaluator=&quot;org.milyn.javabean.expression.BeanMapExpressionEvaluator&quot;&gt;&lt;!--
+    productStock &gt; 100 &amp;&amp; productCount[0].numberProducts &lt; 100
+  --&gt;&lt;/condition&gt;
+  &lt;param name=&quot;executeBefore&quot;&gt;false&lt;/param&gt;
+  &lt;param name=&quot;datasource&quot;&gt;ExternalDatabase&lt;/param&gt;
+  &lt;param name=&quot;statement&quot;&gt;insert into EXT_PART values(${part.id}, ${product.id}, ${partDetails[0].NAME}, ${partDetails[0].BRAND})&lt;/param&gt;
+&lt;/resource-config&gt;
+    </code></pre>
+
+	You should note that in this case the conditions are based on the data retrieved from the Stock service.
+	The 'productStock' bean from the bean context contains the stock size retrieved by the Stock service. You can also see that we
+    use enriched data (the <b>${partDetails[0].NAME}</b> and <b>${partDetails[0].BRAND}</b> variables) in the insert query.
+  </p>
 
 </body>
 </html>

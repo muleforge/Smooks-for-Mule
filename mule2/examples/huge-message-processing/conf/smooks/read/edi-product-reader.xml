@@ -4,6 +4,8 @@
     <!--
     	This resource configuration configures the EDI Parser to parse the
     	message stream into a stream of SAX events.
+
+    	The "mapping-model" parameter defines the EDI to SAX Event mapping model configuration for the parser.
     -->
     <resource-config selector="org.xml.sax.driver">
 	    <resource>org.milyn.smooks.edi.SmooksEDIParser</resource>

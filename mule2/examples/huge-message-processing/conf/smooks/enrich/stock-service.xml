@@ -2,11 +2,11 @@
 <smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
 
 	<!--
-		This MuleDispatcher resource configuration calls the Stock Service endpount on every product.
-		Specifically it	does that as soon as the product id is set on the Product object.
+		This MuleDispatcher resource calls the Stock Service endpount synchronously on every product.
+		Specifically it executes on the 'visitAfter' event. The product id is set in the Product object by then.
 		The Stock Service endpoint uses the product id to see what it's current stock is (in this
 		example it generates a random number).
-		The result returend by the service is added to the bean map under the beanId 'productStock'.
+		The result returned by the service is added to the bean map under the beanId 'productStock'.
 	-->
 	<resource-config selector="product id">
 	    <resource>org.milyn.smooks.mule.MuleDispatcher</resource>

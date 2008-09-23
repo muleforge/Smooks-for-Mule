@@ -4,7 +4,7 @@
 	<!--
 		This SQLExecutor resource configuration executes a query that counts the number
 		of products in the external database. It is only here for the example.
-		Conditions later on  restrict writing to the database when 99 products are written.
+		Conditions later on  restrict writing to the database when 99 products are inserted.
 		We use it to prevent flooding of the database with thousands of product and part records.
 	-->
 	<resource-config selector="product">
