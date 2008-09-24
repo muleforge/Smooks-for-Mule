@@ -8,7 +8,7 @@
 		example it generates a random number).
 		The result returned by the service is added to the bean map under the beanId 'productStock'.
 	-->
-	<resource-config selector="product id">
+	<resource-config selector="product/id">
 	    <resource>org.milyn.smooks.mule.MuleDispatcher</resource>
 	    <param name="endpointName">StockServiceEndpoint</param>
 	    <param name="expression">product.id</param>

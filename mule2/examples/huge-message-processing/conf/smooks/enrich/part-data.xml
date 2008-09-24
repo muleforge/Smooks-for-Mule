@@ -6,7 +6,7 @@
 		uses the product id from the Product object to execute a query on the internal database.
 		The result set is added to the bean map under the beanId 'partDetails'.
 	 -->
-	 <resource-config selector="product part">
+	 <resource-config selector="product/part">
         <resource>org.milyn.routing.db.SQLExecutor</resource>
         <param name="datasource">InternalPartsDatabase</param>
         <param name="statement">select name, brand from int_part where id = ${part.id}</param>

@@ -28,13 +28,13 @@
         <param name="beanId">product</param>
         <param name="beanClass">example.hmp.model.Product</param>
         <param name="bindings">
-        	<binding property="id" type="Long" selector="product id" />
-        	<binding property="name" selector="product name" />
-        	<binding property="brand" selector="product brand" />
-        	<binding property="category" selector="product category" />
-        	<binding property="price" type="BigDecimal" selector="product price" />
-        	<binding property="tax" type="Integer" selector="product tax" />
-        	<binding property="guarantee" selector="product guarantee" />
+        	<binding property="id" type="Long" selector="product/id" />
+        	<binding property="name" selector="product/name" />
+        	<binding property="brand" selector="product/brand" />
+        	<binding property="category" selector="product/category" />
+        	<binding property="price" type="BigDecimal" selector="product/price" />
+        	<binding property="tax" type="Integer" selector="product/tax" />
+        	<binding property="guarantee" selector="product/guarantee" />
 
         	<binding property="parts" selector="${parts}" />
         	<binding property="specs" selector="${specs}" />
@@ -57,14 +57,14 @@
 	<!--
 		This resource configuration defines the binding of the part data from the EDI document to the Part object.
 	-->
-	<resource-config selector="product part">
+	<resource-config selector="product/part">
         <resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">part</param>
         <param name="beanClass">example.hmp.model.Part</param>
         <param name="bindings">
-        	<binding property="id" type="Long" selector="part id" />
-        	<binding property="quantity" type="Integer" selector="product part quantity" />
-        	<binding property="buildIn" type="Boolean" selector="product part build-in" />
+        	<binding property="id" type="Long" selector="part/id" />
+        	<binding property="quantity" type="Integer" selector="part/quantity" />
+        	<binding property="buildIn" type="Boolean" selector="part/build-in" />
         </param>
     </resource-config>
 
@@ -85,13 +85,13 @@
 	<!--
 		This resource configuration defines the binding of the specs data from the EDI document to the Spec object.
 	-->
-    <resource-config selector="product spec">
+    <resource-config selector="product/spec">
         <resource>org.milyn.javabean.BeanPopulator</resource>
         <param name="beanId">spec</param>
         <param name="beanClass">example.hmp.model.Spec</param>
         <param name="bindings">
-        	<binding property="name" selector="spec name" />
-        	<binding property="value" selector="spec value" />
+        	<binding property="name" selector="spec/name" />
+        	<binding property="value" selector="spec/value" />
         </param>
     </resource-config>
 

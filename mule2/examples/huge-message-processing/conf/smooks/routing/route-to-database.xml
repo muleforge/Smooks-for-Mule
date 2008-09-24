@@ -33,7 +33,7 @@
 		in the conf/smooks/enrich/stock-service.xml file.
 		The other part of the statement prevents database flooding and is only there for this example.
 	 -->
-	<resource-config selector="product guarantee">
+	<resource-config selector="product/guarantee">
 		<resource>org.milyn.routing.db.SQLExecutor</resource>
 		<condition evaluator="org.milyn.javabean.expression.BeanMapExpressionEvaluator">
 			<!-- productStock > 100 && productCount[0].numberProducts < 100  -->
@@ -50,7 +50,7 @@
 
 		We use the same resource config conditions as before for the same reasons.
 	-->
-	<resource-config selector="product part">
+	<resource-config selector="product/part">
 		<resource>org.milyn.routing.db.SQLExecutor</resource>
 		<condition evaluator="org.milyn.javabean.expression.BeanMapExpressionEvaluator"><!--
 			productStock > 100 && productCount[0].numberProducts < 100

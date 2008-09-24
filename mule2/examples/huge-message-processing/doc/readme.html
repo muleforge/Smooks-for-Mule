@@ -111,27 +111,27 @@
   <a name="overview" ></a>
   <h2>Overview</h2>
   <p>
-    In many uses cases messages can contain data that is of interest to multiple parties.
+    In many uses cases, messages can contain data that is of interest to multiple parties.
     Each party can have different requirements, for instance a different data format or a different
     delivery method. A party could also require information which is related to the message
-    but isn't in the message itself. It becomes even more complex when the source message is a huge, GB size, file.
+    but isn't in the message itself. It becomes even more complex when the source message is a huge (GB size) data stream.
     It the responsibility of the ESB to take care of these integration requirements.
   </p>
   <p>
     Extracting, enriching and distributing information from a message to multiple parties is not a trivial process.
     The information must first be extracted by splitting the huge message in it's parts.
-    Then some outside data source, for instance a database or some services, must be request for the information to
+    Then some outside data source, for instance a database or some services, must be queried for the information to
     enrich the source information. The new set of information must then be reassembled in the required format for every party.
   </p>
   <p>
     Smooks together with Smooks for Mule enables Mule to solve these issues in a powerful, performant and declaritive manner.
     Mule provides the transport layer for streaming in the huge message and to dispatch the splitted and enriched messages back
-    to it's consumers. Smooks provides the capabilities to split, enrich, transforms and routes the message. Smooks for Mule glues the two
-    together.
+    to it's consumers. Smooks provides the capabilities to split, enrich and transform/generate the split messages, as well as trigger
+    the routing of the split messages to their target endpoint. Smooks for Mule glues the two together.
   </p>
   <p>
-    This example is based on the use case that the information of a set of products needs to be send to multiple parties.
-    The ESB receives the information from a EDI file stored on the file system. Each product contains it's base information
+    This example is based on the use case that the information of a set of products needs to be sent to multiple parties.
+    The ESB receives the information from an EDI file stored on the file system. Each product contains it's base information
     (product id, name, brand, price etc), as well as a list of parts and a list of technical specifications.
   </p>
   <p>
@@ -168,11 +168,11 @@
     The main challenges are:
 
     <ul>
-      <li>The second and third party only want parts of the source message. This means that we are not dealing with a simple
+      <li>The second and third parties only want parts of the source message. This means that we are not dealing with a simple
       fragment extraction. We need to reconstruct the new messages from different parts of the source message.
       <li>Every message party requires there message in a different format: XML, JSON and JDBC</li>
-      <li>The routed messages for the third party needs to be enriched.<br/>An internal database is used to retrieve the necessary data.</li>
-      <li>The second and third party only want to receive there messages conditionally.</li>
+      <li>The routed messages for the third party need to be enriched.<br/>An internal database is used to retrieve the necessary data.</li>
+      <li>The second and third parties only receive there messages based on a condition.</li>
       <li>The third message requires information for the condition that is not within the source message.<br />A Mule Service can provided this information for us.</li>
     </ul>
 
@@ -349,7 +349,7 @@ SPC|Width|6000mm
 	In this example however it only generates a random stock size and returns that as result.
 	<pre><code>&lt;service name=&quot;StockService&quot;&gt;
   &lt;inbound&gt;
-    &lt;vm:inbound-endpoint path=&quot;StockService&quot;  synchronous=&quot;true&quot;/&gt;
+    &lt;vm:inbound-endpoint path=&quot;StockService&quot; synchronous=&quot;true&quot;/&gt;
   &lt;/inbound&gt;
   &lt;component class=&quot;example.hmp.mule.service.StockService&quot;/&gt;
 &lt;/service&gt;</code></pre>
@@ -537,7 +537,7 @@ SPC|Width|6000mm
   example it generates a random number).
   The result returned by the service is added to the bean map under the beanId 'productStock'.
 --&gt;
-&lt;resource-config selector=&quot;product id&quot;&gt;
+&lt;resource-config selector=&quot;product/id&quot;&gt;
   &lt;resource&gt;org.milyn.smooks.mule.MuleDispatcher&lt;/resource&gt;
   &lt;param name=&quot;endpointName&quot;&gt;StockServiceEndpoint&lt;/param&gt;
   &lt;param name=&quot;expression&quot;&gt;product.id&lt;/param&gt;
@@ -559,7 +559,7 @@ SPC|Width|6000mm
   uses the product id from the Product object to execute a query on the internal database.
   The result set is added to the bean map under the beanId 'partDetails'.
 --&gt;
-&lt;resource-config selector=&quot;product part&quot;&gt;
+&lt;resource-config selector=&quot;product/part&quot;&gt;
   &lt;resource&gt;org.milyn.routing.db.SQLExecutor&lt;/resource&gt;
   &lt;param name=&quot;datasource&quot;&gt;InternalPartsDatabase&lt;/param&gt;
   &lt;param name=&quot;statement&quot;&gt;select name, brand from int_part where id = ${part.id}&lt;/param&gt;
@@ -593,13 +593,13 @@ SPC|Width|6000mm
   &lt;param name=&quot;beanId&quot;&gt;product&lt;/param&gt;
   &lt;param name=&quot;beanClass&quot;&gt;example.hmp.model.Product&lt;/param&gt;
   &lt;param name=&quot;bindings&quot;&gt;
-    &lt;binding property=&quot;id&quot; type=&quot;Long&quot; selector=&quot;product id&quot; /&gt;
-    &lt;binding property=&quot;name&quot; selector=&quot;product name&quot; /&gt;
-    &lt;binding property=&quot;brand&quot; selector=&quot;product brand&quot; /&gt;
-    &lt;binding property=&quot;category&quot; selector=&quot;product category&quot; /&gt;
-    &lt;binding property=&quot;price&quot; type=&quot;BigDecimal&quot; selector=&quot;product price&quot; /&gt;
-    &lt;binding property=&quot;tax&quot; type=&quot;Integer&quot; selector=&quot;product tax&quot; /&gt;
-    &lt;binding property=&quot;guarantee&quot; selector=&quot;product guarantee&quot; /&gt;
+    &lt;binding property=&quot;id&quot; type=&quot;Long&quot; selector=&quot;product/id&quot; /&gt;
+    &lt;binding property=&quot;name&quot; selector=&quot;product/name&quot; /&gt;
+    &lt;binding property=&quot;brand&quot; selector=&quot;product/brand&quot; /&gt;
+    &lt;binding property=&quot;category&quot; selector=&quot;product/category&quot; /&gt;
+    &lt;binding property=&quot;price&quot; type=&quot;BigDecimal&quot; selector=&quot;product/price&quot; /&gt;
+    &lt;binding property=&quot;tax&quot; type=&quot;Integer&quot; selector=&quot;product/tax&quot; /&gt;
+    &lt;binding property=&quot;guarantee&quot; selector=&quot;product/guarantee&quot; /&gt;
 
     &lt;binding property=&quot;parts&quot; selector=&quot;${parts}&quot; /&gt;
     &lt;binding property=&quot;specs&quot; selector=&quot;${specs}&quot; /&gt;
@@ -622,14 +622,14 @@ SPC|Width|6000mm
 &lt;!--
   This resource configuration defines the binding of the part data from the EDI document to the Part object.
 --&gt;
-&lt;resource-config selector=&quot;product part&quot;&gt;
+&lt;resource-config selector=&quot;product/part&quot;&gt;
   &lt;resource&gt;org.milyn.javabean.BeanPopulator&lt;/resource&gt;
   &lt;param name=&quot;beanId&quot;&gt;part&lt;/param&gt;
   &lt;param name=&quot;beanClass&quot;&gt;example.hmp.model.Part&lt;/param&gt;
   &lt;param name=&quot;bindings&quot;&gt;
-    &lt;binding property=&quot;id&quot; type=&quot;Long&quot; selector=&quot;part id&quot; /&gt;
-    &lt;binding property=&quot;quantity&quot; type=&quot;Integer&quot; selector=&quot;product part quantity&quot; /&gt;
-    &lt;binding property=&quot;buildIn&quot; type=&quot;Boolean&quot; selector=&quot;product part build-in&quot; /&gt;
+    &lt;binding property=&quot;id&quot; type=&quot;Long&quot; selector=&quot;part/id&quot; /&gt;
+    &lt;binding property=&quot;quantity&quot; type=&quot;Integer&quot; selector=&quot;part/quantity&quot; /&gt;
+    &lt;binding property=&quot;buildIn&quot; type=&quot;Boolean&quot; selector=&quot;part/build-in&quot; /&gt;
   &lt;/param&gt;
 &lt;/resource-config&gt;
 
@@ -650,13 +650,13 @@ SPC|Width|6000mm
 &lt;!--
   This resource configuration defines the binding of the specs data from the EDI document to the Spec object.
 --&gt;
-&lt;resource-config selector=&quot;product spec&quot;&gt;
+&lt;resource-config selector=&quot;product/spec&quot;&gt;
   &lt;resource&gt;org.milyn.javabean.BeanPopulator&lt;/resource&gt;
   &lt;param name=&quot;beanId&quot;&gt;spec&lt;/param&gt;
   &lt;param name=&quot;beanClass&quot;&gt;example.hmp.model.Spec&lt;/param&gt;
   &lt;param name=&quot;bindings&quot;&gt;
-    &lt;binding property=&quot;name&quot; selector=&quot;spec name&quot; /&gt;
-    &lt;binding property=&quot;value&quot; selector=&quot;spec value&quot; /&gt;
+    &lt;binding property=&quot;name&quot; selector=&quot;spec/name&quot; /&gt;
+    &lt;binding property=&quot;value&quot; selector=&quot;spec/value&quot; /&gt;
   &lt;/param&gt;
 &lt;/resource-config&gt;</code></pre>
 
@@ -828,7 +828,7 @@ SPC|Width|6000mm
   in the conf/smooks/enrich/stock-service.xml file.
   The other part of the statement prevents database flooding and is only there for this example.
  --&gt;
-&lt;resource-config selector=&quot;product guarantee&quot;&gt;
+&lt;resource-config selector=&quot;product/guarantee&quot;&gt;
   &lt;resource&gt;org.milyn.routing.db.SQLExecutor&lt;/resource&gt;
   &lt;condition evaluator=&quot;org.milyn.javabean.expression.BeanMapExpressionEvaluator&quot;&gt;
     &lt;!-- productStock &gt; 100 &amp;&amp; productCount[0].numberProducts &lt; 100  --&gt;
@@ -845,7 +845,7 @@ SPC|Width|6000mm
 
   We use the same resource config conditions as before for the same reasons.
 --&gt;
-&lt;resource-config selector=&quot;product part&quot;&gt;
+&lt;resource-config selector=&quot;product/part&quot;&gt;
   &lt;resource&gt;org.milyn.routing.db.SQLExecutor&lt;/resource&gt;
   &lt;condition evaluator=&quot;org.milyn.javabean.expression.BeanMapExpressionEvaluator&quot;&gt;&lt;!--
     productStock &gt; 100 &amp;&amp; productCount[0].numberProducts &lt; 100

@@ -20,7 +20,7 @@
 
     <description>
 		This example demonstrates how Smooks with Smooks for Mule
-		handles huge gigabyte large data files and split, enrich, transform and route the data to multiple endpoints.
+		handles huge gigabyte large data files/streams and split, enrich, transform and route the data to multiple endpoints.
     </description>
 
 	<!--
@@ -31,7 +31,7 @@
 	<!--
 		This jms connector connects to the localhost jms service.
 	 -->
-	<jms:activemq-connector name="jmsConnector" brokerURL="tcp://localhost:61616" persistentDelivery="false" specification="1.1"  />
+	<jms:activemq-connector name="jmsConnector" brokerURL="tcp://localhost:61616" persistentDelivery="false" specification="1.1"/>
 
 
     <model name="OrderProcessorModel">
@@ -97,7 +97,7 @@
 		 -->
 		<service name="StockService" >
 			<inbound>
-				<vm:inbound-endpoint path="StockService"  synchronous="true"/>
+				<vm:inbound-endpoint path="StockService" synchronous="true"/>
 			</inbound>
 			<component class="example.hmp.mule.service.StockService"/>
 		</service>
