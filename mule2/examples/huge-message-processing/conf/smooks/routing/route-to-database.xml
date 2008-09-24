@@ -35,7 +35,7 @@
 	 -->
 	<resource-config selector="product/guarantee">
 		<resource>org.milyn.routing.db.SQLExecutor</resource>
-		<condition evaluator="org.milyn.javabean.expression.BeanMapExpressionEvaluator">
+		<condition>
 			<!-- productStock > 100 && productCount[0].numberProducts < 100  -->
 		</condition>
 		<param name="executeBefore">false</param>
@@ -52,7 +52,7 @@
 	-->
 	<resource-config selector="product/part">
 		<resource>org.milyn.routing.db.SQLExecutor</resource>
-		<condition evaluator="org.milyn.javabean.expression.BeanMapExpressionEvaluator"><!--
+		<condition><!--
 			productStock > 100 && productCount[0].numberProducts < 100
 		--></condition>
 		<param name="executeBefore">false</param>

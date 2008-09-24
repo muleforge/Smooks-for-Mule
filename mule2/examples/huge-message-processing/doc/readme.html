@@ -108,8 +108,8 @@
     This example demonstrates how Smooks together with Smooks for Mule can be used to <b>split, enrich,
     transform and route</b> huge messages (GB size messages).<br />
     <br />
-    Because of the complexity of this example, a detailed explanation of how it works. Next to the explanation
-    within this page, the Mule and Smooks configuration files are also thoroughly documented.
+    Because of the complexity of this example, a detailed explanation of how it works is provided within this page.
+    The Mule and Smooks configuration files are also thoroughly documented.
   </p>
 
   <h2>Table of contents</h2>
@@ -770,7 +770,7 @@ SPC|Width|6000mm
 --&gt;
 &lt;resource-config selector=&quot;product&quot;&gt;
   &lt;resource&gt;org.milyn.smooks.mule.MuleDispatcher&lt;/resource&gt;
-  &lt;condition evaluator=&quot;org.milyn.javabean.expression.BeanMapExpressionEvaluator&quot;&gt;
+  &lt;condition&gt;
     &lt;!--  product.category == &quot;Complete Systems&quot; || product.category == &quot;Laptops&quot; --&gt;
   &lt;/condition&gt;
   &lt;param name=&quot;endpointName&quot;&gt;ReceivePCsAndLaptopsEndpoint&lt;/param&gt;
@@ -798,7 +798,7 @@ SPC|Width|6000mm
       ]
     }
   --&gt;&lt;/resource&gt;
-  &lt;condition evaluator=&quot;org.milyn.javabean.expression.BeanMapExpressionEvaluator&quot;&gt;
+  &lt;condition&gt;
     &lt;!-- (product.category == &quot;Complete Systems&quot; || product.category == &quot;Laptops&quot;)  --&gt;
   &lt;/condition&gt;
   &lt;param name=&quot;action&quot;&gt;bindto&lt;/param&gt;
@@ -845,7 +845,7 @@ SPC|Width|6000mm
  --&gt;
 &lt;resource-config selector=&quot;product/guarantee&quot;&gt;
   &lt;resource&gt;org.milyn.routing.db.SQLExecutor&lt;/resource&gt;
-  &lt;condition evaluator=&quot;org.milyn.javabean.expression.BeanMapExpressionEvaluator&quot;&gt;
+  &lt;condition&gt;
     &lt;!-- productStock &gt; 100 &amp;&amp; productCount[0].numberProducts &lt; 100  --&gt;
   &lt;/condition&gt;
   &lt;param name=&quot;executeBefore&quot;&gt;false&lt;/param&gt;
@@ -862,7 +862,7 @@ SPC|Width|6000mm
 --&gt;
 &lt;resource-config selector=&quot;product/part&quot;&gt;
   &lt;resource&gt;org.milyn.routing.db.SQLExecutor&lt;/resource&gt;
-  &lt;condition evaluator=&quot;org.milyn.javabean.expression.BeanMapExpressionEvaluator&quot;&gt;&lt;!--
+  &lt;condition&gt;&lt;!--
     productStock &gt; 100 &amp;&amp; productCount[0].numberProducts &lt; 100
   --&gt;&lt;/condition&gt;
   &lt;param name=&quot;executeBefore&quot;&gt;false&lt;/param&gt;

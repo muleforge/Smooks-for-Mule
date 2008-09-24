@@ -17,17 +17,11 @@ package example.hmp.consumer;
 
 import javax.jms.MessageListener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
  *
  */
 public class PCsAndLaptopsProductsConsumer extends JMSConsumer {
-
-	private static final Logger logger = LoggerFactory.getLogger(PCsAndLaptopsProductsConsumer.class.getName());
 
 	/**
 	 *
