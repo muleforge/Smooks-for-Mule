@@ -49,7 +49,6 @@
 	  }
 
 	  img.screenshot {
-	  	border: 1px solid #888;
 	  	margin: 10px;
 	  	padding:3px;
 	  	width: 600px;
@@ -125,7 +124,7 @@
     enrich the source information. The new set of information must then be reassembled in the required format for every party.
   </p>
   <p>
-    Smooks together with Smooks for Mule enables Mule to solve these issues in a powerfull, performant and declaritive manner.
+    Smooks together with Smooks for Mule enables Mule to solve these issues in a powerful, performant and declaritive manner.
     Mule provides the transport layer for streaming in the huge message and to dispatch the splitted and enriched messages back
     to it's consumers. Smooks provides the capabilities to split, enrich, transforms and routes the message. Smooks for Mule glues the two
     together.
@@ -300,7 +299,7 @@ SPC|Width|6000mm
 
     <h3>Mule configuration</h3>
     As can be seen from the <a href="process.jpg">process illustration</a> above, this example revolves around
-    the "ProductProcessorService" Service deployment. This service defines the Smooks router, which does all the processing,
+    the "ProductProcessorService" Service deployment. This service defines the Smooks router, which executes Smooks to do all the processing,
     as follows:
     <pre><code>&lt;service name=&quot;ProductProcessorService&quot;&gt;
     &lt;inbound&gt;
@@ -359,16 +358,17 @@ SPC|Width|6000mm
   <h3>Smooks configuration</h3>
 
   <p>
-  	With Smooks configuration you instruct Smooks how to process the incoming data.
-  	In this example the configuration is spread over several files. This keeps the configuration
-  	arranged and clean.
+  	With the Smooks configuration you instruct Smooks how to process the incoming data.
+  	The configuration in this example is spread over several files. This keeps the configuration
+  	clear and clean.
   </p>
   <p>
   	In a complex use case it can be difficult to see what is going on in Smooks.
   	For this reason Smooks provides a HtmlReportGenerator class. It generates a HTML execution report
-  	file of Smooks it's processes, to help you visualize them. The generator is the nearest thing to a debugging
-  	tool that Smooks currently has. Within mule you can activate it by providing the 'reportPath' parameter in the
-  	Smooks router with a file location. Do not use it in a production environment because the generator takes a lot of performance.
+  	file of Smooks it's processes. This visualizes those processes and help you understand what is going on.
+  	The generator is the nearest thing to a debugging tool that Smooks currently has.
+  	Within mule you can activate it by providing the 'reportPath' parameter in the Smooks router with a file location.
+  	Do not use it in a production environment because the generator takes a lot of performance.
   	For this example we already generated a report which you can find <a href="execution-report.html">here</a>.
   </p>
   <p>
@@ -442,7 +442,12 @@ SPC|Width|6000mm
 
 &lt;/smooks-resource-list&gt;</code></pre>
 
-    In the following sections we explain each file that is imported in the main configuration file.
+    In the following sections we explain each imported file. The sections are in the order as defined in this file,
+    except for the routing configuration files which we will attend to at then end. It is easier to understand those sections
+    if you first know where the data, that they route, comes from.	Remember however that the order in which we defined the imports
+    in the main configuration file is very important. As explained before, this is because the order in which the resources execute
+    depends on the order in which they appear in the resource configuration, with the visitBefore events firing "first-to-last"
+    and the visitAfter events firing "last-to-first".
   </p>
 
   <h4>read/edi-product-reader.xml</h4>
@@ -470,9 +475,9 @@ SPC|Width|6000mm
   <h4>database/datasource.xml</h4>
 
   <p>
-  	This configuration prepares the database datasources for the internal and the external database. The internal
+  	This configuration prepares the database datasources for the internal and the external databases. The internal
   	database is used to retrieve information about the product parts which are not in the source data. In the external database
-  	we insert the product and part records as required by the requirements of the third party (see the <a href="#overview" >overview</a> section).
+  	we insert the product and part records, as required by the requirements of the third party (see the <a href="#overview" >overview</a> section).
 
   	<pre><code>&lt;!--
   Configure the Datasource for the 'internal' database.
@@ -505,7 +510,7 @@ SPC|Width|6000mm
 &lt;/resource-config&gt;</code></pre>
 
     These Datasources are bound to the Smooks ExecutionContext at the start of message processing
-    by setting the selector parameter on '$document' (selects the message root/document event as the lifecycle event).
+    via the selector parameter (the '$document' value selects the message root/document event).
     Any JDBC Connection created for the ExecutionContext is committed/rolledback and cleaned up at the end of the
     message processing. Note that it is also possible to use a container provided JNDI datasource by setting the 'datasource' parameter to 'JndiDataSource'.<br />
     <br/>
@@ -522,12 +527,6 @@ SPC|Width|6000mm
   <h4>enrich/stock-service.xml</h4>
 
   <p>
-  	You probably expected the section about the "routing/route-to-jms-all-receiver.xml" configuration file instead of
-  	the "enrich/stock-service.xml" file. However we moved the sections about the routing configuration files to the end.
-  	It is probably easier for you to understand those sections if you first see where the data comes from that they route.
-  	Remember however that the order in which we defined the imports in the main configuration file is very important. As explained
-  	before, this is because the order in which the resources execute depends on the order in which they appear in the resource configuration,
-  	with the visitBefore events firing "first-to-last" and the visitAfter events firing "last-to-first".
 
   	The "enrich/stock-service.xml" resource file contains a Mule Dispatcher resource for calling the StockService to retrieve the stock information.
 
@@ -545,7 +544,7 @@ SPC|Width|6000mm
   &lt;param name=&quot;resultBeanId&quot;&gt;productStock&lt;/param&gt;
 &lt;/resource-config&gt;</code></pre>
 
-	The data returned by the above resources is bound into the bean context and so is available to other resources executing under the
+	The data returned by StockService is bound into the bean context and so is available to other resources executing under the
 	same ExecutionContext e.g. templating resources, BeanPopulator resources etc.
   </p>
 
@@ -568,13 +567,11 @@ SPC|Width|6000mm
 &lt;/resource-config&gt;
   	</code></pre>
 
-	The result set created by the resource above is a list of 'record' maps. Even if there was only one record in the result. you
-	must use the 'partDetails[0]' syntax (within the templates or scripts) to access that record.
+	The result set created by the resource above is a list of 'record' maps. Even if there was only one record in the result, you
+	must use the 'partDetails[0]' syntax (within the templates or scripts) to access that one record.
   </p>
 
   <h4>binding/bean-binding.xml</h4>
-
-
 
   <p>
     At the core of nearly all Smooks based message processing, is the concept of "binding" data from the Source message event
@@ -733,15 +730,16 @@ SPC|Width|6000mm
 
 	The first resource listed simply dispatches the XML (generated by the second resource) to the "ReceiveAllProductsEndpoint" endpoint. The
 	second resource generates the XML message by applying a FreeMarker template. The FreeMarker template receives it's data from the beans
-	within the bean context. This is the most straight forward transformation. We don't do it conditionally or enrich it by using data
-	from other resources then the message itself.
+	within the bean context. This is the most straight forward transformation. We don't use any conditionals or enrich the new message by using data
+	from other resources then the source message itself.
   </p>
 
   <h4>routing/route-to-jms-pc-and-laptop-receiver.xml</h4>
 
   <p>
   	The following configuration looks much like the previous "routing/route-to-jms-all-receiver.xml" configuration. The biggest difference
-  	is that conditions are added so that the messages are only generated and dispatched to the client when the condition is met.
+  	are the resource conditions. These conditions are used so that the messages are
+  	only generated and dispatched to the client when the condition is met.
 
   	<pre><code> &lt;!--
   This MuleDispatcher resource configuration executes at the end of every product.
@@ -796,7 +794,7 @@ SPC|Width|6000mm
   <h4>routing/route-to-database.xml</h4>
 
   <p>
-    This resource configuration defines routing the product data to the External Database.
+    This resource configuration defines the routing of the product data to the External Database.
 
     <pre><code>&lt;!--
   This SQLExecutor resource configuration executes a query that counts the number
@@ -859,8 +857,8 @@ SPC|Width|6000mm
     </code></pre>
 
 	You should note that in this case the conditions are based on the data retrieved from the Stock service.
-	The 'productStock' bean from the bean context contains the stock size retrieved by the Stock service. You can also see that we
-    use enriched data (the <b>${partDetails[0].NAME}</b> and <b>${partDetails[0].BRAND}</b> variables) in the insert query.
+	The 'productStock' bean from the bean context contains the stock size. You can also see that we
+    use the enriched Part data (the variables <b>${partDetails[0].NAME}</b> and <b>${partDetails[0].BRAND}</b>) in the insert query.
   </p>
 
 </body>
