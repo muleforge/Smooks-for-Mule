@@ -55,6 +55,10 @@ Assembly descriptor for the full distribution.
 							<exclude>hsqldb:hsqldb</exclude>
 							<exclude>log4j:log4j</exclude>
 							<exclude>slf4j</exclude>
+							<exclude>cglib</exclude>
+							<exclude>org.easymock</exclude>
+							<exclude>xpp3</exclude>
+							<exclude>xstream</exclude>
 						</excludes>
 					</dependencySet>
 				</dependencySets>
@@ -99,6 +103,8 @@ Assembly descriptor for the full distribution.
 							<exclude>commons-lang</exclude>
 							<exclude>commons-logging</exclude>
 							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
+							<exclude>ognl</exclude>
+							<exclude>antlr</exclude>
 						</excludes>
 					</dependencySet>
 				</dependencySets>
@@ -142,6 +148,8 @@ Assembly descriptor for the full distribution.
 							<exclude>commons-lang</exclude>
 							<exclude>commons-logging</exclude>
 							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
+							<exclude>ognl</exclude>
+							<exclude>antlr</exclude>
 						</excludes>
 					</dependencySet>
 				</dependencySets>
@@ -238,6 +246,9 @@ Assembly descriptor for the full distribution.
 							<exclude>cglib</exclude>
 							<exclude>easymock</exclude>
 							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
+							<exclude>xmlunit</exclude>
+							<exclude>ognl</exclude>
+							<exclude>mockejb</exclude>
 						</excludes>
 					</dependencySet>
 					<dependencySet>

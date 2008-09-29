@@ -7,7 +7,7 @@
 	<artifactId>mule-module-smooks</artifactId>
 	<name>Smooks for Mule</name>
 	<packaging>pom</packaging>
-	<version>1.0-BETA</version>
+	<version>1.0</version>
 
 	<modules>
 	    <module>core</module>

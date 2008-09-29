@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>mule2-module-smooks-examples</artifactId>
 		<groupId>org.mule.modules</groupId>
-		<version>1.0-BETA</version>
+		<version>1.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
@@ -87,7 +87,7 @@
 		<!-- The Smooks dependencies -->
 		<dependency>
 			<groupId>milyn</groupId>
-			<artifactId>milyn-smooks-templating</artifactId>
+			<artifactId>milyn-smooks-javabean</artifactId>
 		</dependency>
 
 		<!-- Better testing of XML -->

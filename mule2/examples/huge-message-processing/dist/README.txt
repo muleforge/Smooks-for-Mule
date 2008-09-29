@@ -22,4 +22,12 @@ Run "ant install" from this folder.
 +---------------------+
 Make sure you have installed the example as describe in the previous section.
 
-.... UNDER CONSTRUCTION ....
+  * Open 5 command shell windows in the root folder of this example.
+  * In the first window, execute "ant run-services" to start the HSQLDB Database and JSM Server
+  * In the second window, execute 'run' shell script (Unix/Linux) or 'run.bat' batch file (Windows) to start Mule.
+    Alternatively, if you have added Mule to your executable path as recommended in INSTALL.txt, you can run the example from the command line as follows:
+    Linux / Unix: mule -config ./conf/mule-config.xml
+    Windows: mule.bat -config .\conf\mule-config.xml
+  * In the third window, execute "ant run-consumer-1" to start the JMS consumer of the first party
+  * In the fourth window, execute "ant run-consumer-2" to start the JMS consumer of the second party
+  * In the fifth window, execute "ant generate" to start the message creation tool.

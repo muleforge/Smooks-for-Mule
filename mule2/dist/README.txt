@@ -78,6 +78,11 @@
     A basic routing example showing how Smooks can rout
     transformed message parts to multiple endpoints.
 
+  * Huge Message Processing
+    An example that demonstrates how Smooks with Smooks for Mule
+    handles huge gigabyte large data files and split, enrich, transform and
+    route the data to multiple endpoints.
+
 +------------------------+
 | Smooks                 |
 +------------------------+
