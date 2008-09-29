@@ -230,21 +230,15 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 					</tags>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!--<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
-			</plugin>
+			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
 					<links>
-						<link>
-							http://java.sun.com/j2ee/1.4/docs/api
-						</link>
-						<link>
-							http://java.sun.com/j2se/1.4.2/docs/api
-						</link>
 						<link>
 							http://java.sun.com/j2se/1.5.0/docs/api
 						</link>
@@ -261,25 +255,25 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 					</configLocation>
 				</configuration>
 			</plugin>-->
-			<plugin>
+			<!--<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<configuration>
 					<targetJdk>1.5</targetJdk>
 				</configuration>
 			</plugin>
-			<plugin>
+			 <plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jdepend-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<!-- configuration>
+				<!- - configuration>
 					<threshold>Low</threshold>
 					<effort>Max</effort>
-					</configuration -->
-			</plugin>
+					</configuration - ->
+			</plugin> -->
 
 
 		</plugins>
