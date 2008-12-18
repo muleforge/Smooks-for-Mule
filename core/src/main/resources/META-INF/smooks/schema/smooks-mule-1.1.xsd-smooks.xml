@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd" default-selector-namespace="http://dist.muleforge.org/smooks/schema/smooks-mule-1.1.xsd">
+
+	<!-- PERSISTER -->
+
+    <resource-config selector="dispatcher">
+        <resource>org.milyn.cdr.extension.NewResourceConfig</resource>
+        <param name="resource">org.milyn.smooks.mule.MuleDispatcher</param>
+    </resource-config>
+
+    <resource-config selector="dispatcher">
+        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
+        <param name="attribute">dispatchOnElement</param>
+        <param name="mapTo">selector</param>
+    </resource-config>
+
+    <resource-config selector="dispatcher">
+        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
+        <param name="attribute">dispatchOnElementNS</param>
+        <param name="mapTo">selector-namespace</param>
+    </resource-config>
+
+    <resource-config selector="dispatcher">
+        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
+        <param name="attribute">endpointName</param>
+    </resource-config>
+
+    <resource-config selector="dispatcher">
+        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
+        <param name="attribute">resultBeanId</param>
+    </resource-config>
+
+    <resource-config selector="dispatcher">
+        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
+        <param name="attribute">dispatchBefore</param>
+    </resource-config>
+
+    <resource-config selector="dispatcher/messagePayload">
+        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
+        <param name="attribute">beanId</param>
+    </resource-config>
+
+    <resource-config selector="dispatcher/messagePayload/expression">
+        <resource>org.milyn.cdr.extension.MapToResourceConfigFromText</resource>
+        <param name="mapTo">expression</param>
+    </resource-config>
+
+	<resource-config selector="dispatcher/messageProperties">
+        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
+        <param name="attribute">beanId</param>
+        <param name="mapTo">messagePropertiesBeanId</param>
+    </resource-config>
+
+    <resource-config selector="dispatcher/messageProperties">
+        <resource>org.milyn.cdr.extension.MapToResourceConfigFromText</resource>
+        <param name="mapTo">messageProperties</param>
+    </resource-config>
+
+    <resource-config selector="dispatcher">
+        <resource>org.milyn.smooks.mule.ext.DecodeParamResolver</resource>
+    </resource-config>
+
+</smooks-resource-list>

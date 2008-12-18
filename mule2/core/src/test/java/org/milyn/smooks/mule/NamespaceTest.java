@@ -63,7 +63,6 @@ public class NamespaceTest extends FunctionalTestCase {
         assert "smooks.executionContext".equals(r.getExecutionContextMessagePropertyKey());
         assert true == r.isExecutionContextAsMessageProperty();
         assert false == r.isExcludeNonSerializables();
-        assert true == r.isHonorSynchronicity();
         assert "/router-smooks-config.xml".equals(r.getConfigFile());
 	}
 

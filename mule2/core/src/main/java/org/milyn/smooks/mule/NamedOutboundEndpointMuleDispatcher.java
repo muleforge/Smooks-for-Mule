@@ -38,10 +38,6 @@ public class NamedOutboundEndpointMuleDispatcher implements NamedEndpointMuleDis
 
 	private final Map<String, OutboundEndpoint> endpointMap;
 
-	private boolean synchronous;
-
-	private boolean honorSynchronicity;
-
 	private boolean executionContextAsMessageProperty;
 
 	private String executionContextMessagePropertyKey;
@@ -60,8 +56,7 @@ public class NamedOutboundEndpointMuleDispatcher implements NamedEndpointMuleDis
 			ExecutionContext executionContext,
 			boolean executionContextAsMessageProperty,
 			String executionContextMessagePropertyKey,
-			boolean excludeNonSerializables, boolean honorSynchronicity,
-			boolean synchronous) {
+			boolean excludeNonSerializables) {
 
 		this.endpointMap = endpointMap;
 		this.router = router;
@@ -70,24 +65,6 @@ public class NamedOutboundEndpointMuleDispatcher implements NamedEndpointMuleDis
 		this.executionContextAsMessageProperty = executionContextAsMessageProperty;
 		this.executionContextMessagePropertyKey = executionContextMessagePropertyKey;
 		this.excludeNonSerializables = excludeNonSerializables;
-		this.honorSynchronicity = honorSynchronicity;
-		this.synchronous = synchronous;
-	}
-
-	public boolean isSynchronous() {
-		return synchronous;
-	}
-
-	public void setSynchronous(boolean synchronous) {
-		this.synchronous = synchronous;
-	}
-
-	public boolean isHonorSynchronicity() {
-		return honorSynchronicity;
-	}
-
-	public void setHonorSynchronicity(boolean honorSynchronicity) {
-		this.honorSynchronicity = honorSynchronicity;
 	}
 
 	public boolean isExecutionContextAsMessageProperty() {
@@ -168,11 +145,7 @@ public class NamedOutboundEndpointMuleDispatcher implements NamedEndpointMuleDis
 	}
 
 	public MuleMessage dispatch(OutboundEndpoint endpoint, MuleMessage message, boolean forceSynchronous) {
-		boolean synchr = synchronous || forceSynchronous;
-		if (!forceSynchronous && honorSynchronicity)
-        {
-			synchr = endpoint.isSynchronous();
-        }
+		boolean synchr = endpoint.isSynchronous() || forceSynchronous;
 
 		if(executionContextAsMessageProperty) {
         	// Set the Smooks Excecution properties on the Mule Message object
@@ -181,7 +154,7 @@ public class NamedOutboundEndpointMuleDispatcher implements NamedEndpointMuleDis
 
 		try {
 
-			if (!forceSynchronous && honorSynchronicity)
+			if (!forceSynchronous)
             {
                 message.setBooleanProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, endpoint.isRemoteSync());
             }

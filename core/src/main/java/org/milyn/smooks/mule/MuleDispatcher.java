@@ -28,10 +28,13 @@ import org.milyn.cdr.Parameter;
 import org.milyn.cdr.SmooksConfigurationException;
 import org.milyn.cdr.SmooksResourceConfiguration;
 import org.milyn.cdr.annotation.AnnotationConstants;
+import org.milyn.cdr.annotation.AppContext;
 import org.milyn.cdr.annotation.Config;
 import org.milyn.cdr.annotation.ConfigParam;
 import org.milyn.cdr.annotation.ConfigParam.Use;
+import org.milyn.container.ApplicationContext;
 import org.milyn.container.ExecutionContext;
+import org.milyn.delivery.annotation.Initialize;
 import org.milyn.delivery.annotation.VisitAfterIf;
 import org.milyn.delivery.annotation.VisitBeforeIf;
 import org.milyn.delivery.dom.DOMElementVisitor;
@@ -44,6 +47,10 @@ import org.milyn.expression.MVELExpressionEvaluator;
 import org.milyn.javabean.BeanAccessor;
 import org.milyn.javabean.DataDecodeException;
 import org.milyn.javabean.DataDecoder;
+import org.milyn.javabean.repository.BeanId;
+import org.milyn.javabean.repository.BeanIdRegister;
+import org.milyn.javabean.repository.BeanRepository;
+import org.milyn.javabean.repository.BeanRepositoryManager;
 import org.milyn.smooks.mule.message.MVELEvaluatingMessagePropertyValue;
 import org.milyn.smooks.mule.message.MessageProperty;
 import org.milyn.smooks.mule.message.MessagePropertyValue;
@@ -88,9 +95,9 @@ import org.w3c.dom.NodeList;
  * <li><i>resultBeanId</i> - If the endpoint returns a result then the payload of that result is bounded to the resultBeanId.
  * 							 When the resultBeanId isn't set then the result is discarded. If the resultBeanId is set then the
  * 							 endpoint is forced to distpatch synchronous.
- * <li><i>messagePropertiesBeanId</i> - Properties that will be set on the message before dispatching.
- * 										The MuleDispatcher messageProperties attribute section explains how to set the message properties
- * <li><i>messageProperties</i> - if true, non serializable attributes from the Smooks ExecutionContext will no be included. Default is true.
+ * <li><i>messagePropertiesBeanId</i> -
+ * <li><i>messageProperties</i> - Properties that will be set on the message before dispatching.
+ * 								  The MuleDispatcher messageProperties attribute section explains how to set the message properties
  * </ul>
  *
  * <h3>MuleDispatcher messageProperties attribute</h3>
@@ -125,7 +132,7 @@ import org.w3c.dom.NodeList;
  * <h3>Description of property attributes</h3>
  * <ul>
  * <li><i>name</i> - The message property name (required)
- * <li><i>value</i> - 	 The value of the property. The property element content can also be set. If both are set then the value attribute is used.
+ * <li><i>value</i> - The value of the property. The property element content can also be set. If both are set then the value attribute is used.
  * <li><i>type</i> - The type of the property value. This uses the standard DataDecoder feature from Smooks. DataDecoders can be configured using
  * 					 a "decoder:decoderName" resource-config selector. The decoderName must be set as type then. (Default: String)
  * </ul>
@@ -147,25 +154,35 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 
 	private static final String MESSAGE_PROPERTIES_PARAMETER_VALUE = "value";
 
+	private static final String MESSAGE_PROPERTIES_PARAMETER_DECODER = "decoder";
+
 	private static final String MESSAGE_PROPERTIES_ATTRIBUTE_NAME = "name";
 
 	private static final String MESSAGE_PROPERTIES_NODE_NAME = "property";
 
-	private static final String PARAMETER_MESSAGE_PROPERTIES = "messageProperties";
+	private static final String MESSAGE_EXPRESSION_NODE_NAME = "expression";
+
+	public static final String PARAMETER_MESSAGE_PROPERTIES = "messageProperties";
 
 	private static final Logger log = LoggerFactory.getLogger(MuleDispatcher.class);
 
 	@ConfigParam(use=Use.REQUIRED)
 	private String endpointName;
 
-	@ConfigParam(use=Use.OPTIONAL)
-	private String beanId;
+	@ConfigParam(name="beanId", use=Use.OPTIONAL)
+	private String beanIdName;
 
-	@ConfigParam(use=Use.OPTIONAL)
-	private String resultBeanId;
+	private BeanId beanId;
 
-	@ConfigParam(use=Use.OPTIONAL)
-	private String messagePropertiesBeanId;
+	@ConfigParam(name="resultBeanId", use=Use.OPTIONAL)
+	private String resultBeanIdName;
+
+	private BeanId resultBeanId;
+
+	@ConfigParam(name="messagePropertiesBeanId", use=Use.OPTIONAL)
+	private String messagePropertiesBeanIdName;
+
+	private BeanId messagePropertiesBeanId;
 
 	@ConfigParam(defaultVal = AnnotationConstants.NULL_STRING)
     private MVELExpressionEvaluator expression;
@@ -174,6 +191,26 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 
 	@Config
     private SmooksResourceConfiguration config;
+
+	@AppContext
+	private ApplicationContext appContext;
+
+	@Initialize
+	public void initialize() {
+		BeanRepositoryManager beanRepositoryManager = BeanRepositoryManager.getInstance(appContext);
+		BeanIdRegister beanIdRegister = beanRepositoryManager.getBeanIdRegister();
+
+		if(beanIdName != null) {
+			beanId = beanIdRegister.register(beanIdName);
+		}
+		if(resultBeanIdName != null) {
+			resultBeanId = beanIdRegister.register(resultBeanIdName);
+		}
+		if(messagePropertiesBeanIdName != null) {
+			messagePropertiesBeanId = beanIdRegister.register(messagePropertiesBeanIdName);
+		}
+
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -212,13 +249,15 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 	private void dispatch(ExecutionContext executionContext) {
 		Object payload = null;
 
+		BeanRepository beanRepository = BeanRepository.getInstance(executionContext);
+
 		if(expression != null) {
-			Map<?, ?> beanMap = BeanAccessor.getBeanMap(executionContext);
+			Map<?, ?> beanMap = beanRepository.getBeanMap();
 			payload = expression.getValue(beanMap);
 
-		} else if(beanId != null) {
+		} else if(beanIdName != null) {
 
-			payload = BeanAccessor.getBean(executionContext, beanId);
+			payload = beanRepository.getBean(beanId);
 
 		}
 
@@ -232,7 +271,7 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 				if(expression != null) {
 					payloadMsg += " from an expression";
 				} else {
-					payloadMsg += " from beanId '" + beanId + "'";
+					payloadMsg += " from beanId '" + beanIdName + "'";
 				}
 			}
 			log.info("Dispatching Mule message to endpoint '" + endpointName + "'" + payloadMsg );
@@ -251,10 +290,10 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 
 		if(result != null && resultBeanId != null) {
 			if(log.isInfoEnabled()) {
-				log.info("Received result from endpoint '" + endpointName + "'. Adding it to the bean map under beanId '" + resultBeanId + "'");
+				log.info("Received result from endpoint '" + endpointName + "'. Adding it to the bean map under beanId '" + resultBeanId.getName()+ "'");
 			}
 
-			BeanAccessor.addBean(executionContext, resultBeanId, result);
+			beanRepository.addBean(resultBeanId, result);
 		}
 	}
 
@@ -272,10 +311,12 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 
 		if(messagePropertiesBeanId != null) {
 
-			Map bProperties = (Map<String, Object>) BeanAccessor.getBean(executionContext, messagePropertiesBeanId);
+			BeanRepository beanRepository = BeanRepository.getInstance(executionContext);
+
+			Map bProperties = (Map<String, Object>) beanRepository.getBean(messagePropertiesBeanId);
 
 			if(bProperties == null) {
-				throw new SmooksConfigurationException("No properties map could be found under the beanId '" + messagePropertiesBeanId + "'");
+				throw new SmooksConfigurationException("No properties map could be found under the beanId '" + messagePropertiesBeanId.getName() + "'");
 			}
 
 			props.putAll(bProperties);
@@ -311,53 +352,17 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 			Parameter messagePropertiesParam = config.getParameter(PARAMETER_MESSAGE_PROPERTIES);
 
 	        if (messagePropertiesParam != null) {
+
 	            Element messagePropertiesParamElement = messagePropertiesParam.getXml();
 
 	            if(messagePropertiesParamElement != null) {
-	                NodeList properties = messagePropertiesParamElement.getElementsByTagName(MESSAGE_PROPERTIES_NODE_NAME);
+	            	boolean extendedConfig = messagePropertiesParamElement.getNamespaceURI().equals(Constants.MULE_SMOOKS_NAMESPACE);
 
-                    for (int i = 0; properties != null && i < properties.getLength(); i++) {
-
-                    	Element node = (Element)properties.item(i);
-
-                    	String name = DomUtils.getAttributeValue(node, MESSAGE_PROPERTIES_ATTRIBUTE_NAME);
-
-                    	if(StringUtils.isBlank(name)) {
-                    		throw new SmooksConfigurationException("The 'name' attribute isn't a defined or empty for the message property: " + node);
-                    	}
-                    	name = name.trim();
-
-                    	MessagePropertyValue messageValue = null;
-                    	String rawValue = DomUtils.getAttributeValue(node, MESSAGE_PROPERTIES_PARAMETER_VALUE);
-                    	if(rawValue == null) {
-                    		String expression = DomUtils.getAllText(node, true);
-                    		if(StringUtils.isNotBlank(expression)) {
-                    			MVELExpressionEvaluator evaluator = new MVELExpressionEvaluator();
-                    			try {
-                    				evaluator.setExpression(expression);
-                    	        } catch (RuntimeException e) {
-                    				throw new RuntimeException("Exception while setting the expression on the MVELExpressionEvaluator", e);
-                    			}
-
-                    			messageValue = new MVELEvaluatingMessagePropertyValue(evaluator);
-                    		}
-                    	} else {
-	                    	rawValue = rawValue.trim();
-
-	                    	Object value = null;
-	                    	String type = DomUtils.getAttributeValue(node, MESSAGE_PROPERTIES_PARAMETER_TYPE);
-	                    	if(type != null) {
-	                    		type = type.trim();
-
-	                    		value = getDecoder(executionContext, type).decode(rawValue);
-	                    	} else {
-	                    		value = rawValue;
-	                    	}
-	                    	messageValue = new StaticMessagePropertyValue(value);
-                    	}
-
-                    	lMessageProperties.add(new MessageProperty(name, messageValue));
-                    }
+	            	if(extendedConfig) {
+	            		resolvePropertiesExtendedConfig(executionContext, lMessageProperties, messagePropertiesParamElement);
+	            	} else {
+	            		resolvePropertiesNormalConfig(executionContext, lMessageProperties, messagePropertiesParamElement);
+	            	}
 
 	            } else {
 	            	log.error("Sorry, the Javabean populator bindings must be available as XML DOM.  Please configure using XML.");
@@ -366,6 +371,111 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 	        staticMessageProperties = lMessageProperties;
 		}
 		return staticMessageProperties;
+	}
+
+	/**
+	 * @param executionContext
+	 * @param lMessageProperties
+	 * @param messagePropertiesParamElement
+	 */
+	private void resolvePropertiesNormalConfig(ExecutionContext executionContext, List<MessageProperty> lMessageProperties, Element messagePropertiesParamElement) {
+		NodeList properties = messagePropertiesParamElement.getElementsByTagName(MESSAGE_PROPERTIES_NODE_NAME);
+
+		for (int i = 0; properties != null && i < properties.getLength(); i++) {
+
+			Element node = (Element)properties.item(i);
+
+			String name = DomUtils.getAttributeValue(node, MESSAGE_PROPERTIES_ATTRIBUTE_NAME);
+
+			if(StringUtils.isBlank(name)) {
+				throw new SmooksConfigurationException("The 'name' attribute isn't a defined or empty for the message property: " + node);
+			}
+			name = name.trim();
+
+			MessagePropertyValue messageValue = null;
+			String rawValue = DomUtils.getAttributeValue(node, MESSAGE_PROPERTIES_PARAMETER_VALUE);
+			if(rawValue == null) {
+				String expression = DomUtils.getAllText(node, true);
+				if(StringUtils.isNotBlank(expression)) {
+					MVELExpressionEvaluator evaluator = new MVELExpressionEvaluator();
+					try {
+						evaluator.setExpression(expression);
+			        } catch (RuntimeException e) {
+						throw new RuntimeException("Exception while setting the expression on the MVELExpressionEvaluator", e);
+					}
+
+					messageValue = new MVELEvaluatingMessagePropertyValue(evaluator);
+				}
+			} else {
+		    	rawValue = rawValue.trim();
+
+		    	Object value = null;
+		    	String type = DomUtils.getAttributeValue(node, MESSAGE_PROPERTIES_PARAMETER_TYPE);
+		    	if(type != null) {
+		    		type = type.trim();
+
+		    		value = getDecoder(executionContext, type).decode(rawValue);
+		    	} else {
+		    		value = rawValue;
+		    	}
+		    	messageValue = new StaticMessagePropertyValue(value);
+			}
+
+			lMessageProperties.add(new MessageProperty(name, messageValue));
+		}
+	}
+
+	/**
+	 * @param executionContext
+	 * @param lMessageProperties
+	 * @param messagePropertiesParamElement
+	 */
+	private void resolvePropertiesExtendedConfig(ExecutionContext executionContext, List<MessageProperty> lMessageProperties, Element messagePropertiesParamElement) {
+		NodeList properties = messagePropertiesParamElement.getElementsByTagNameNS(Constants.MULE_SMOOKS_NAMESPACE, MESSAGE_PROPERTIES_NODE_NAME);
+
+		for (int i = 0; properties != null && i < properties.getLength(); i++) {
+
+			Element node = (Element)properties.item(i);
+
+			String name = DomUtils.getAttributeValue(node, MESSAGE_PROPERTIES_ATTRIBUTE_NAME);
+
+			if(StringUtils.isBlank(name)) {
+				throw new SmooksConfigurationException("The 'name' attribute isn't a defined or empty for the message property: " + node);
+			}
+			name = name.trim();
+
+			MessagePropertyValue messageValue = null;
+			String rawValue = DomUtils.getAttributeValue(node, MESSAGE_PROPERTIES_PARAMETER_VALUE);
+			if(rawValue == null) {
+				Element expressionElement = (Element) DomUtils.getElement(node, MESSAGE_EXPRESSION_NODE_NAME, 1, Constants.MULE_SMOOKS_NAMESPACE);
+				String expression = DomUtils.getAllText(expressionElement, true);
+				if(StringUtils.isNotBlank(expression)) {
+					MVELExpressionEvaluator evaluator = new MVELExpressionEvaluator();
+					try {
+						evaluator.setExpression(expression);
+			        } catch (RuntimeException e) {
+						throw new RuntimeException("Exception while setting the expression on the MVELExpressionEvaluator", e);
+					}
+
+					messageValue = new MVELEvaluatingMessagePropertyValue(evaluator);
+				}
+			} else {
+		    	rawValue = rawValue.trim();
+
+		    	Object value = null;
+		    	String decoder = DomUtils.getAttributeValue(node, MESSAGE_PROPERTIES_PARAMETER_DECODER);
+		    	if(decoder != null) {
+		    		decoder = decoder.trim();
+
+		    		value = getDecoder(executionContext, decoder).decode(rawValue);
+		    	} else {
+		    		value = rawValue;
+		    	}
+		    	messageValue = new StaticMessagePropertyValue(value);
+			}
+
+			lMessageProperties.add(new MessageProperty(name, messageValue));
+		}
 	}
 
 	/**

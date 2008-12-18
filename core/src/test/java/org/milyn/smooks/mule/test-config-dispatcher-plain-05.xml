@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd">
+
+	<resource-config selector="root">
+		<resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+		<param name="endpointName">endpoint</param>
+		<param name="messagePropertiesBeanId">messageProperties</param>
+		<param name="messageProperties">
+			 <property name="prop1" value="prop1Value" />
+	         <property name="prop2">"prop2Value"</property>
+	         <property name="intProp" value="10" type="Integer" />
+	         <property name="dateProp" value="2008-07-11 12:30:56" type="DateTime" />
+		</param>
+	</resource-config>
+
+	<resource-config selector="decoder:DateTime">
+		<resource>org.milyn.javabean.decoders.DateDecoder</resource>
+		<param name="format">yyyy-MM-dd HH:mm:ss</param>
+	</resource-config>
+
+</smooks-resource-list>

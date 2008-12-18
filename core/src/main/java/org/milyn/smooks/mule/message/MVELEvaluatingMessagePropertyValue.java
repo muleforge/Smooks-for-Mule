@@ -21,6 +21,7 @@ import java.util.Map;
 import org.milyn.container.ExecutionContext;
 import org.milyn.expression.MVELExpressionEvaluator;
 import org.milyn.javabean.BeanAccessor;
+import org.milyn.javabean.repository.BeanRepository;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
@@ -41,7 +42,7 @@ public class MVELEvaluatingMessagePropertyValue implements MessagePropertyValue 
 	 * @see org.milyn.smooks.mule.MessagePropertyValue#getValue()
 	 */
 	public Object getValue(ExecutionContext executionContext) {
-		Map<?, ?> beanMap = BeanAccessor.getBeanMap(executionContext);
+		Map<?, ?> beanMap = BeanRepository.getInstance(executionContext).getBeanMap();
 		return evaluator.getValue(beanMap);
 	}
 

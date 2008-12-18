@@ -17,18 +17,18 @@
 
 -->
 
-<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.1"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:spring="http://www.springframework.org/schema/beans"
-       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
-       xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
-       xmlns:smooks="http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.1"
+       xmlns:file="http://www.mulesource.org/schema/mule/file/2.1"
+       xmlns:smooks="http://www.muleforge.org/smooks/schema/mule-module-smooks/1.1"
     xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
-       http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd
-       http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
-       http://www.muleforge.org/smooks/schema/mule-module-smooks/1.0 http://dist.muleforge.org/smooks/schema/mule-module-smooks/1.0/mule-module-smooks.xsd
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd
+       http://www.mulesource.org/schema/mule/vm/2.1 http://www.mulesource.org/schema/mule/vm/2.1/mule-vm.xsd
+       http://www.mulesource.org/schema/mule/file/2.1 http://www.mulesource.org/schema/mule/file/2.1/mule-file.xsd
+       http://www.muleforge.org/smooks/schema/mule-module-smooks/1.1 http://dist.muleforge.org/smooks/schema/mule-module-smooks/1.1/mule-module-smooks.xsd
        ">
 
     <description>
@@ -47,11 +47,10 @@
 					reportPath="target/smooks-report/report.html"
 					executionContextAsMessageProperty="true"
 					executionContextMessagePropertyKey="smooks.executionContext"
-					excludeNonSerializables="false"
-					honorSynchronicity="true">
+					excludeNonSerializables="false">
 
 					<file:outbound-endpoint name="file1" path="target/routing-test" outputPattern="file1.dat"/>
-            		<file:outbound-endpoint name="file2" path="target/routing-test" outputPattern="file2-${COUNT}.dat"/>
+            		<file:outbound-endpoint name="file2" path="target/routing-test" outputPattern="file2-#[COUNT].dat"/>
 
             		<vm:outbound-endpoint name="reply" path="replyingEndpoint" synchronous="true"/>
             		<file:outbound-endpoint name="fileReply" path="target/routing-test" outputPattern="fileReply.dat"/>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd" xmlns:mule="http://dist.muleforge.org/smooks/schema/smooks-mule-1.1.xsd">
+
+	<mule:dispatcher endpointName="endpoint" dispatchOnElement="root" >
+		<mule:messageProperties beanId="messageProperties">
+			<mule:property name="prop1" value="prop1Value" />
+	        <mule:property name="prop2">
+	        	<mule:expression>"prop2Value"</mule:expression>
+	        </mule:property>
+	        <mule:property name="intProp" value="10" decoder="Integer" />
+	        <mule:property name="dateProp" value="2008-07-11 12:30:56" decoder="Date" >
+	        	<mule:decodeParam name="format">yyyy-MM-dd HH:mm:ss</mule:decodeParam>
+	        </mule:property>
+		</mule:messageProperties>
+	</mule:dispatcher>
+
+</smooks-resource-list>

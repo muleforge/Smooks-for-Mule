@@ -158,10 +158,6 @@ public class Router extends FilteringOutboundRouter {
 	 */
 	private String reportPath;
 
-    // flag which, if true, makes the splitter honour settings such as remoteSync and
-    // synchronous on the endpoint
-	private boolean honorSynchronicity = false;
-
 	private final Map<String, OutboundEndpoint> endpointMap = new HashMap<String, OutboundEndpoint>();
 
 	@Override
@@ -258,26 +254,10 @@ public class Router extends FilteringOutboundRouter {
 		return reportPath;
 	}
 
-	/**
-	 * @return the honorSynchronicity
-	 */
-	public boolean isHonorSynchronicity() {
-		return honorSynchronicity;
-	}
-
 
 	public void setConfigFile( final String configFile )
 	{
 		this.configFile = configFile;
-	}
-
-	/**
-     * Sets the flag indicating whether the splitter honurs endpoint settings
-     *
-     * @param honorSynchronicity flag setting
-     */
-	public void setHonorSynchronicity(boolean honorSynchronicity) {
-		this.honorSynchronicity = honorSynchronicity;
 	}
 
     /**
@@ -321,7 +301,7 @@ public class Router extends FilteringOutboundRouter {
 
 
 	@Override
-	public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous) throws RoutingException {
+	public MuleMessage route(MuleMessage message, MuleSession session) throws RoutingException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Routing message '" + message.toString() + "'");
 		}
@@ -348,7 +328,7 @@ public class Router extends FilteringOutboundRouter {
 		}
 
 		// Create the dispatcher which handles the dispatching of messages
-		NamedOutboundEndpointMuleDispatcher dispatcher = createDispatcher(executionContext, session, synchronous);
+		NamedOutboundEndpointMuleDispatcher dispatcher = createDispatcher(executionContext, session);
 
 		// make the dispatcher available for Smooks
 		executionContext.setAttribute(NamedEndpointMuleDispatcher.SMOOKS_CONTEXT, dispatcher);
@@ -408,8 +388,8 @@ public class Router extends FilteringOutboundRouter {
 	/**
 	 *	Create the dispatcher which will dispatch the messages provided by Smooks
 	 */
-	private NamedOutboundEndpointMuleDispatcher createDispatcher(final ExecutionContext executionContext, final MuleSession muleSession, final  boolean synchronous) {
-		return new NamedOutboundEndpointMuleDispatcher(endpointMap, this, muleSession, executionContext, executionContextAsMessageProperty, executionContextMessagePropertyKey, excludeNonSerializables, honorSynchronicity, synchronous);
+	private NamedOutboundEndpointMuleDispatcher createDispatcher(final ExecutionContext executionContext, final MuleSession muleSession) {
+		return new NamedOutboundEndpointMuleDispatcher(endpointMap, this, muleSession, executionContext, executionContextAsMessageProperty, executionContextMessagePropertyKey, excludeNonSerializables);
 	}
 
 	private void addReportingSupport(final MuleMessage message, final ExecutionContext executionContext ) throws RoutingException

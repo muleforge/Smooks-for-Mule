@@ -42,7 +42,7 @@
 | Installation           |
 +------------------------+
 
- For both Mule 1.x and Mule 2.x there are installation packages.
+ For both Mule 1.x and Mule 2.1.x there are installation packages.
  Take a look at the parent Maven module for instructions.
 
 +------------------------+
