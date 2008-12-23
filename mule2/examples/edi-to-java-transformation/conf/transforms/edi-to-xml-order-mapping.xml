@@ -4,7 +4,7 @@
 	This is the Smooks EDI mapping file. For more information on this file look
 	at the xsd or in the Smooks documentation.
  -->
-<medi:edimap xmlns:medi="http://www.milyn.org/schema/edi-message-mapping-1.0.xsd">
+<medi:edimap xmlns:medi="http://www.milyn.org/schema/edi-message-mapping-1.1.xsd">
 
 	<medi:description name="DVD Order" version="1.0" />
 

@@ -101,9 +101,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>milyn</groupId>
+			<groupId>org.milyn</groupId>
 			<artifactId>milyn-smooks-routing</artifactId>
-			<version>1.0.1</version>
 		</dependency>
 
 		<!-- JMS dependencies -->

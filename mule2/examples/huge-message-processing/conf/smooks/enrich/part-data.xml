@@ -1,17 +1,15 @@
 <?xml version="1.0"?>
-<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
+	xmlns:db="http://www.milyn.org/xsd/smooks/db-routing-1.1.xsd">
 
-	 <!--
+	<!--
 		This SQLExecute resource configuration executes for every product part. It
 		uses the product id from the Product object to execute a query on the internal database.
 		The result set is added to the bean map under the beanId 'partDetails'.
-	 -->
-	 <resource-config selector="product/part">
-        <resource>org.milyn.routing.db.SQLExecutor</resource>
-        <param name="datasource">InternalPartsDatabase</param>
-        <param name="statement">select name, brand from int_part where id = ${part.id}</param>
-        <param name="resultSetName">partDetails</param>
-    </resource-config>
-
+	-->
+	<db:executor executeOnElement="product/part" datasource="InternalPartsDatabase">
+        <db:statement>select name, brand from int_part where id = ${part.id}</db:statement>
+        <db:resultSet name="partDetails"/>
+    </db:executor>
 
 </smooks-resource-list>

@@ -1,98 +1,57 @@
 <?xml version="1.0"?>
-<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
+	xmlns:jb="http://www.milyn.org/xsd/smooks/javabean-1.1.xsd">
 
 	<!--
-		 The following resource-configuration block creates an empty Product object once on the start of the document.
-		 This is needed for MVEL. MVEL is a scripting language we use in our resource configuration conditions.
-		 In this example we have conditions set in the routing configuration. In the 1.x version of MVEL it isn't
-		 possible to see if a variable is defined in it's context. The context contains the beans we create when binding the
-		 document data to the javabean objects. A condition is executed on several occasions. For example on the visit before
-		 action and visit after action. Because there are some conditions that get executed in the visit before action of the
-		 'product' element, that is before the product object is actually created, the first time that  the condition is executed
-		 the object isn't in the MVEL context yet. This would cause a MVEL exception. We create this empty object to workaround
-		 this problem. Smooks 1.1 has a fix for this small problem.
-	 -->
-	<resource-config selector="$document">
-		<resource>org.milyn.javabean.BeanPopulator</resource>
-        <param name="beanId">product</param>
-        <param name="beanClass">example.hmp.model.Product</param>
-	</resource-config>
-
-	<!--
-		This resource configuration defines the binding of the product data from the EDI document to the Product object. It
+		This defines the binding of the product data from the EDI document to the Product object. It
 		also binds the parts and specs ArrayList to there properties. These two get configured in the next
 		resource configurations.
-	 -->
-    <resource-config selector="product">
-        <resource>org.milyn.javabean.BeanPopulator</resource>
-        <param name="beanId">product</param>
-        <param name="beanClass">example.hmp.model.Product</param>
-        <param name="bindings">
-        	<binding property="id" type="Long" selector="product/id" />
-        	<binding property="name" selector="product/name" />
-        	<binding property="brand" selector="product/brand" />
-        	<binding property="category" selector="product/category" />
-        	<binding property="price" type="BigDecimal" selector="product/price" />
-        	<binding property="tax" type="Integer" selector="product/tax" />
-        	<binding property="guarantee" selector="product/guarantee" />
+	-->
+	<jb:bindings beanId="product" createOnElement="product" class="example.hmp.model.Product" >
+		<jb:value property="id" data="product/id" decoder="Long"/>
+		<jb:value property="name" data="product/name"/>
+		<jb:value property="brand" data="product/brand"/>
+		<jb:value property="category" data="product/category"/>
+		<jb:value property="price" data="product/price" decoder="BigDecimal"/>
+		<jb:value property="tax" data="product/tax" decoder="Integer"/>
+		<jb:value property="guarantee" data="product/guarantee"/>
 
-        	<binding property="parts" selector="${parts}" />
-        	<binding property="specs" selector="${specs}" />
-        </param>
-    </resource-config>
+		<jb:wiring property="parts" beanIdRef="parts"/>
+		<jb:wiring property="specs" beanIdRef="specs"/>
+	</jb:bindings>
+
 
 	<!--
-		This resource configuration defines that a ArrayList is created for every product
+		This defines that a ArrayList is created for every product
 		and that it adds all the Part objects to the array.
 	-->
-	<resource-config selector="product">
-        <resource>org.milyn.javabean.BeanPopulator</resource>
-        <param name="beanId">parts</param>
-        <param name="beanClass">java.util.ArrayList</param>
-        <param name="bindings">
-        	<binding selector="${part}" />
-        </param>
-	</resource-config>
+	<jb:bindings beanId="parts" createOnElement="product" class="java.util.ArrayList" >
+		<jb:wiring beanIdRef="part"/>
+	</jb:bindings>
 
 	<!--
-		This resource configuration defines the binding of the part data from the EDI document to the Part object.
+		This defines the binding of the part data from the EDI document to the Part object.
 	-->
-	<resource-config selector="product/part">
-        <resource>org.milyn.javabean.BeanPopulator</resource>
-        <param name="beanId">part</param>
-        <param name="beanClass">example.hmp.model.Part</param>
-        <param name="bindings">
-        	<binding property="id" type="Long" selector="part/id" />
-        	<binding property="quantity" type="Integer" selector="part/quantity" />
-        	<binding property="buildIn" type="Boolean" selector="part/build-in" />
-        </param>
-    </resource-config>
+	<jb:bindings beanId="part" createOnElement="product/part" class="example.hmp.model.Part" >
+		<jb:value property="id" data="part/id" decoder="Long" />
+		<jb:value property="quantity" data="part/quantity" decoder="Integer" />
+		<jb:value property="buildIn" data="part/build-in" decoder="Boolean" />
+	</jb:bindings>
 
 	<!--
-		This resource configuration defines that a ArrayList is created for every product
+		This defines that a ArrayList is created for every product
 		and that it adds all the Spec objects to the array.
 	-->
-	<resource-config selector="product">
-        <resource>org.milyn.javabean.BeanPopulator</resource>
-        <param name="beanId">specs</param>
-        <param name="beanClass">java.util.ArrayList</param>
-
-        <param name="bindings">
-        	<binding selector="${spec}" />
-        </param>
-	</resource-config>
+	<jb:bindings beanId="specs" createOnElement="product" class="java.util.ArrayList" >
+		<jb:wiring beanIdRef="spec"/>
+	</jb:bindings>
 
 	<!--
-		This resource configuration defines the binding of the specs data from the EDI document to the Spec object.
+		This defines the binding of the specs data from the EDI document to the Spec object.
 	-->
-    <resource-config selector="product/spec">
-        <resource>org.milyn.javabean.BeanPopulator</resource>
-        <param name="beanId">spec</param>
-        <param name="beanClass">example.hmp.model.Spec</param>
-        <param name="bindings">
-        	<binding property="name" selector="spec/name" />
-        	<binding property="value" selector="spec/value" />
-        </param>
-    </resource-config>
+	<jb:bindings beanId="spec" createOnElement="product/spec" class="example.hmp.model.Spec" >
+		<jb:value property="name" data="spec/name" />
+		<jb:value property="value" data="spec/value" />
+	</jb:bindings>
 
 </smooks-resource-list>

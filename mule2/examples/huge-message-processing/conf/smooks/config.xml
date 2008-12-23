@@ -14,7 +14,7 @@
 	A visitor can have an action defined on the visit before, visit element content and/or visit after. It
 	is important to know when a visitor executes it's action.
  -->
-<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd">
 
 	<!--
 		This part sets the global configuration parameters. In this
@@ -22,9 +22,9 @@
 	    the DOM stream filter. This is very important because the SAX filter is
 	    faster then the DOM filter and only the SAX filter can handle huge messages.
 	 -->
-	<resource-config selector="global-parameters">
-        <param name="stream.filter.type">SAX</param>
-    </resource-config>
+	<params>
+		<param name="stream.filter.type">SAX</param>
+	</params>
 
 	<!--
 		Imports the EDI reader configuration
@@ -43,11 +43,13 @@
 		be defined before the javabean binding and enriching configuration
 		if these actions are to be executed after the javabean binding and enriching.
 	 -->
+	<import file="routing/route-to-database.xml" />
+
 	<import file="routing/route-to-jms-all-receiver.xml" />
 
 	<import file="routing/route-to-jms-pc-and-laptop-receiver.xml" />
 
-	<import file="routing/route-to-database.xml" />
+
 
 	<!--
 		The following two elements import the configuration which enrich the data from

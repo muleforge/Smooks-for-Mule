@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
-<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
+	xmlns:mule="http://dist.muleforge.org/smooks/schema/smooks-mule-1.1.xsd"
+	xmlns:jb="http://www.milyn.org/xsd/smooks/javabean-1.1.xsd">
 
 	<!--
 	    At the end of every "a" element, route the HashMap under beanId "a" to the
-	    "endpointA" Endpoint. This must be configured before the BeanPopulator
-	    of beanId "a" to be executed after the BeanPopulater set all the entries on the
-	    Map. This is because the MuleDispatcher by default executes after the element
-	    is visited (so called visitAfter event). The visitAfter on visitors, like the MuleDispather,
+	    "endpointA" Endpoint. This must be configured before the binding
+	    of bean "a" if it is to be executed after all the entries are set on the
+	    Map. This is because the Mule dispatcher, by default, executes after the element
+	    is visited (so called visitAfter event). The visitAfter on visitors, like the Mule dispather,
 	    are executed in the reverse order as they are declared. Take a look in the Smooks report
 	    file to see it illustrated.
 	-->
-    <resource-config selector="a">
-	    <resource>org.milyn.smooks.mule.MuleDispatcher</resource>
-	    <param name="endpointName">endpointA</param>
-	    <param name="beanId">a</param>
-    </resource-config>
+	<mule:dispatcher endpointName="endpointA" dispatchOnElement="a">
+		<mule:messagePayload beanId="a" />
+	</mule:dispatcher>
 
 	<!--
 		At the beginning of every "a" element a HashMap is created and binded
@@ -22,33 +22,21 @@
 		is the "id" attribute value. The second with the name "value" and the value is
 		contents of the "a" element.
 	-->
-	<resource-config selector="a">
-	    <resource>org.milyn.javabean.BeanPopulator</resource>
-	    <param name="beanClass">java.util.HashMap</param>
-	    <param name="beanId">a</param>
-	    <param name="bindings">
-	    	<binding property="id" selector="a @id" />
-	    	<binding property="value" selector="a"/>
-	    </param>
-    </resource-config>
+	<jb:bindings beanId="a" class="java.util.HashMap" createOnElement="a" >
+		<jb:value property="id" data="a/@id" />
+		<jb:value property="value" data="a" />
+	</jb:bindings>
 
 	<!-- Same as with the "a" element but then for the "b" element -->
-    <resource-config selector="b">
-	    <resource>org.milyn.smooks.mule.MuleDispatcher</resource>
-	    <param name="endpointName">endpointB</param>
-	    <param name="beanId">b</param>
-    </resource-config>
+	<mule:dispatcher endpointName="endpointB" dispatchOnElement="b">
+		<mule:messagePayload beanId="b" />
+	</mule:dispatcher>
 
 	<!-- Same as with the "a" element but then for the "b" element -->
-	<resource-config selector="b">
-	    <resource>org.milyn.javabean.BeanPopulator</resource>
-	    <param name="beanClass">java.util.HashMap</param>
-	    <param name="beanId">b</param>
-	    <param name="bindings">
-	    	<binding property="id" selector="b @id" />
-	    	<binding property="value" selector="b" />
-	    </param>
-    </resource-config>
+	<jb:bindings beanId="b" class="java.util.HashMap" createOnElement="b" >
+		<jb:value property="id" data="b/@id" />
+		<jb:value property="value" data="b" />
+	</jb:bindings>
 
 
 </smooks-resource-list>

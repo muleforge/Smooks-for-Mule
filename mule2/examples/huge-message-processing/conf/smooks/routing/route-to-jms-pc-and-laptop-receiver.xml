@@ -1,5 +1,17 @@
 <?xml version="1.0"?>
-<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
+	xmlns:mule="http://dist.muleforge.org/smooks/schema/smooks-mule-1.1.xsd"
+	xmlns:ftl="http://www.milyn.org/xsd/smooks/freemarker-1.1.xsd">
+
+
+	<conditions>
+		<!--
+			This condition checks that a product is defined and that it is in the correct category.
+		 -->
+		<condition id="productInCertainCategories">
+			<!-- VARS.isdef("product") && product != null && (product.category == "Complete Systems" || product.category == "Laptops") -->
+		</condition>
+	</conditions>
 
 	<!--
    		This MuleDispatcher resource configuration executes at the end of every product.
@@ -13,22 +25,19 @@
    		configurion must come for the JSON generating configuration. Both execute in the
    		visit after action.
 	-->
-	<resource-config selector="product">
-		<resource>org.milyn.smooks.mule.MuleDispatcher</resource>
-		<condition>
-			 <!--  product.category == "Complete Systems" || product.category == "Laptops" -->
-		</condition>
-		<param name="endpointName">ReceivePCsAndLaptopsEndpoint</param>
-		<param name="beanId">JSON_ReceivePCsAndLaptops</param>
-	</resource-config>
+	<mule:dispatcher endpointName="ReceivePCsAndLaptopsEndpoint" dispatchOnElement="product">
+		<condition idRef="productInCertainCategories" />
+		<mule:messagePayload beanId="JSON_ReceivePCsAndLaptops" />
+	</mule:dispatcher>
 
 	<!--
    		This FreeMarker template resource configuration generates the JSON
    		at the end of every product. It binds the JSON String in the bean map under
    		bean ID 'JSON_ReceivePCsAndLaptops'.
 	-->
-	<resource-config selector="product">
-		<resource type="ftl"><!--
+	<ftl:freemarker applyOnElement="product">
+		<condition idRef="productInCertainCategories" />
+		<ftl:template><!--
 			{
 				"id" : ${product.id?c},
 				"name" : "${product.name}",
@@ -42,12 +51,8 @@
 		        </#list>
 				]
 			}
-   		--></resource>
-   		<condition>
-			<!-- (product.category == "Complete Systems" || product.category == "Laptops")  -->
-		</condition>
-		<param name="action">bindto</param>
-		<param name="bindId">JSON_ReceivePCsAndLaptops</param>
-	</resource-config>
-
+   		-->
+   		</ftl:template>
+    	<ftl:use><ftl:bindTo id="JSON_ReceivePCsAndLaptops"/></ftl:use>
+    </ftl:freemarker>
 </smooks-resource-list>

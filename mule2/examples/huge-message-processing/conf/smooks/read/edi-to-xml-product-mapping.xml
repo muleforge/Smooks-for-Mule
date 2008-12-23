@@ -5,7 +5,7 @@
 	that Smooks can process. Simply said it maps to a xml structure.
 	For more information on this file look at the xsd or in the Smooks documentation.
  -->
-<medi:edimap xmlns:medi="http://www.milyn.org/schema/edi-message-mapping-1.0.xsd">
+<medi:edimap xmlns:medi="http://www.milyn.org/schema/edi-message-mapping-1.1.xsd">
 
 	<medi:description name="Products" version="1.0" />
 

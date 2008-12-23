@@ -1,22 +1,35 @@
 <?xml version="1.0"?>
-<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
+	xmlns:db="http://www.milyn.org/xsd/smooks/db-routing-1.1.xsd">
 
 	<!--
-		This SQLExecutor resource configuration executes a query that counts the number
-		of products in the external database. It is only here for the example.
-		Conditions later on  restrict writing to the database when 99 products are inserted.
-		We use it to prevent flooding of the database with thousands of product and part records.
+		Here we define a global condition. Resource later refer to this condition by it's id.
+
+		This condition is a two parter. The first part is the business rule which defines
+		that only products with a stock higher then 100 are added to the database. The productStock
+		bean comes from a Mule dispatcher that calls the Stock Service, defined in the
+		conf/smooks/enrich/stock-service.xml file.
+		The second part is 	only there because this is an example. We use it to prevent flooding of
+		the database with thousands of product and part records. The productCount bean is set
+		in the next db:executor resource.
 	-->
-	<resource-config selector="product">
-		<resource>org.milyn.routing.db.SQLExecutor</resource>
-		<param name="executeBefore">true</param>
-		<param name="datasource">ExternalDatabase</param>
-		<param name="statement">select count(*) as "numberProducts" from EXT_PRODUCT</param>
-		<param name="resultSetName">productCount</param>
-	</resource-config>
+	<conditions>
+		<condition id="minProductStock"><!-- productStock > 100 && productCount[0].numberProducts < 100  --></condition>
+	</conditions>
 
 	<!--
-		This SQLExecutor resource configuration executes an INSERT statement with all the necessary
+		This SQL executor configuration executes a query that counts the number
+		of products in the external database. It is only here for the example.
+		The global condition 'minProductStock' uses it to stop the inserting into
+		the database when 99 products are inserted.
+	-->
+	<db:executor executeOnElement="product" datasource="ExternalDatabase" executeBefore="true">
+        <db:statement>select count(*) as "numberProducts" from EXT_PRODUCT</db:statement>
+        <db:resultSet name="productCount"/>
+    </db:executor>
+
+	<!--
+		This SQL executor resource configuration executes an INSERT statement with all the necessary
 		product data on the external database. The statement executes on the after visit phase of the
 		guarantee element.
 
@@ -24,40 +37,27 @@
 		because the insert statement would be executed after the insert statements of the part
 		elements (those inserts are configured in the next resource-config block). That would cause
 		referential exceptions when a part gets inserted when the product insn't inserted yet. Because
-		we know that we got all the data on the after visit of guarantee element and because of the
-		nature of the EDI parser the guarantee element is always there, we can safely execute the
+		we know that we got all the data on the after visit of the 'guarantee' element and because of the
+		nature of the EDI parser the 'guarantee' element is always there, we can safely execute the
 		insert at that moment.
 
-		The resource config condition is used to make sure that we only get the products with a stock
-		over 20.  The productStock bean comes from a Mule6Dispatcher that calls the Stock Service, defined
-		in the conf/smooks/enrich/stock-service.xml file.
-		The other part of the statement prevents database flooding and is only there for this example.
-	 -->
-	<resource-config selector="product/guarantee">
-		<resource>org.milyn.routing.db.SQLExecutor</resource>
-		<condition>
-			<!-- productStock > 100 && productCount[0].numberProducts < 100  -->
-		</condition>
-		<param name="executeBefore">false</param>
-		<param name="datasource">ExternalDatabase</param>
-		<param name="statement">insert into EXT_PRODUCT values(${product.id}, ${product.name}, ${product.brand}, ${product.category}, ${product.price}, ${product.tax}, now())</param>
-	</resource-config>
+		The condition elements refers to the global 'minProductStock' condition.
+	-->
+	<db:executor executeOnElement="product/guarantee" datasource="ExternalDatabase">
+        <condition idRef="minProductStock"/>
+        <db:statement>insert into EXT_PRODUCT values(${product.id}, ${product.name}, ${product.brand}, ${product.category}, ${product.price}, ${product.tax}, now())</db:statement>
+    </db:executor>
 
 	<!--
 		This SQLExecutor resource configuration executes an INSERT statement with all the necessary
 		part data on the external database. The statement executes on the after visit phase of the
 		part element.
 
-		We use the same resource config conditions as before for the same reasons.
+		We use the same resource condition as the previous sql executor for the same reasons.
 	-->
-	<resource-config selector="product/part">
-		<resource>org.milyn.routing.db.SQLExecutor</resource>
-		<condition><!--
-			productStock > 100 && productCount[0].numberProducts < 100
-		--></condition>
-		<param name="executeBefore">false</param>
-		<param name="datasource">ExternalDatabase</param>
-		<param name="statement">insert into EXT_PART values(${part.id}, ${product.id}, ${partDetails[0].NAME}, ${partDetails[0].BRAND})</param>
-	</resource-config>
+	<db:executor executeOnElement="product/part" datasource="ExternalDatabase">
+        <condition idRef="minProductStock"/>
+        <db:statement>insert into EXT_PART values(${part.id}, ${product.id}, ${partDetails[0].NAME}, ${partDetails[0].BRAND})</db:statement>
+    </db:executor>
 
 </smooks-resource-list>

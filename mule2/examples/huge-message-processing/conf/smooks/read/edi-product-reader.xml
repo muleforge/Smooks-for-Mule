@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
+	xmlns:edi="http://www.milyn.org/xsd/smooks/edi-1.1.xsd">
 
     <!--
     	This resource configuration configures the EDI Parser to parse the
@@ -7,9 +8,6 @@
 
     	The "mapping-model" parameter defines the EDI to SAX Event mapping model configuration for the parser.
     -->
-    <resource-config selector="org.xml.sax.driver">
-	    <resource>org.milyn.smooks.edi.SmooksEDIParser</resource>
-		<param name="mapping-model">/smooks/read/edi-to-xml-product-mapping.xml</param>
-	</resource-config>
+    <edi:reader mappingModel="/smooks/read/edi-to-xml-product-mapping.xml" />
 
 </smooks-resource-list>
