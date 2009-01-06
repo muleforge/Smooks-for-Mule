@@ -50,15 +50,16 @@ Assembly descriptor for the full distribution.
 						<scope>runtime</scope>
 						<useTransitiveFiltering>true</useTransitiveFiltering>
 						<excludes>
+							<exclude>commons-lang</exclude>
 							<exclude>org.mule:mule-core</exclude>
 							<exclude>org.mule.modules:mule-module-spring-config</exclude>
-							<exclude>hsqldb:hsqldb</exclude>
 							<exclude>log4j:log4j</exclude>
 							<exclude>slf4j</exclude>
 							<exclude>cglib</exclude>
 							<exclude>org.easymock</exclude>
 							<exclude>xpp3</exclude>
 							<exclude>xstream</exclude>
+							<exclude>xerces</exclude>
 						</excludes>
 					</dependencySet>
 				</dependencySets>
@@ -103,8 +104,6 @@ Assembly descriptor for the full distribution.
 							<exclude>commons-lang</exclude>
 							<exclude>commons-logging</exclude>
 							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
-							<exclude>ognl</exclude>
-							<exclude>antlr</exclude>
 						</excludes>
 					</dependencySet>
 				</dependencySets>
@@ -148,8 +147,6 @@ Assembly descriptor for the full distribution.
 							<exclude>commons-lang</exclude>
 							<exclude>commons-logging</exclude>
 							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
-							<exclude>ognl</exclude>
-							<exclude>antlr</exclude>
 						</excludes>
 					</dependencySet>
 				</dependencySets>
@@ -192,7 +189,6 @@ Assembly descriptor for the full distribution.
 						<excludes>
 							<exclude>commons-lang</exclude>
 							<exclude>commons-logging</exclude>
-							<exclude>xmlbeans:xmlbeans-jsr173-api</exclude>
 
 							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
 						</excludes>
@@ -239,16 +235,20 @@ Assembly descriptor for the full distribution.
 						<excludes>
 							<exclude>commons-lang</exclude>
 							<exclude>commons-logging</exclude>
-							<exclude>xmlbeans:xmlbeans-jsr173-api</exclude>
-							<exclude>antlr</exclude>
+							<exclude>commons-httpclient</exclude>
+							<exclude>commons-net</exclude>
+							<exclude>stringtemplate</exclude>
 							<exclude>jboss</exclude>
 							<exclude>com.mockrunner</exclude>
 							<exclude>cglib</exclude>
 							<exclude>easymock</exclude>
 							<exclude>org.mule.modules:mule2-module-smooks:jar</exclude>
+							<exclude>backport-util-concurrent</exclude>
 							<exclude>xmlunit</exclude>
 							<exclude>ognl</exclude>
 							<exclude>mockejb</exclude>
+							<exclude>xalan</exclude>
+							<exclude>antlr</exclude>
 						</excludes>
 					</dependencySet>
 					<dependencySet>
@@ -257,6 +257,7 @@ Assembly descriptor for the full distribution.
 						<includes>
 							<include>org.slf4j:slf4j-api</include>
 							<include>org.slf4j:slf4j-log4j12</include>
+							<include>backport-util-concurrent:backport-util-concurrent</include>
 							<include>log4j:log4j</include>
 							<include>commons-logging:commons-logging</include>
 						</includes>

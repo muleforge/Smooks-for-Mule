@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>mule-module-smooks</artifactId>
 		<groupId>org.mule.modules</groupId>
-		<version>1.1-SNAPSHOT</version>
+		<version>1.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules</groupId>
@@ -28,7 +28,7 @@
 	</modules>
 
 	<properties>
-		<muleVersion>[1.4,1.5)</muleVersion>
+		<muleVersion>1.4.4</muleVersion>
 	</properties>
 
 	<build>

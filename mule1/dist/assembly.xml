@@ -52,13 +52,13 @@ Assembly descriptor for the full distribution.
 						<useTransitiveFiltering>true</useTransitiveFiltering>
 						<excludes>
 							<exclude>org.mule:mule-core</exclude>
-							<exclude>hsqldb:hsqldb</exclude>
 							<exclude>log4j:log4j</exclude>
 							<exclude>slf4j</exclude>
 							<exclude>cglib</exclude>
 							<exclude>org.easymock</exclude>
 							<exclude>xpp3</exclude>
 							<exclude>xstream</exclude>
+							<exclude>xerces</exclude>
 						</excludes>
 					</dependencySet>
 				</dependencySets>
@@ -100,7 +100,6 @@ Assembly descriptor for the full distribution.
 						<excludes>
 							<exclude>commons-lang</exclude>
 							<exclude>commons-logging</exclude>
-							<exclude>xmlbeans:xmlbeans-jsr173-api</exclude>
 							<exclude>org.mule.modules:mule1-module-smooks:jar</exclude>
 						</excludes>
 					</dependencySet>
