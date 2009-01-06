@@ -28,7 +28,7 @@
 	</modules>
 
 	<properties>
-		<muleVersion>1.4.4</muleVersion>
+		<muleVersion>[1.4,1.5)</muleVersion>
 	</properties>
 
 	<build>
