@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
+	xmlns:ds="http://www.milyn.org/xsd/smooks/datasource-1.1.xsd"
+	xmlns:db="http://www.milyn.org/xsd/smooks/db-routing-1.1.xsd">
+
+    <!--
+    	Configure the Datasource for the 'internal' database.
+    	In this example we only read from this database to demonstrate
+    	the data enriching in Smooks.
+    -->
+    <ds:direct bindOnElement="$document"
+                   datasource="InternalPartsDatabase"
+                   driver="org.hsqldb.jdbcDriver"
+                   url="jdbc:hsqldb:hsql://localhost:9992/milyn-hsql-9992"
+                   username="sa"
+                   password=""
+                   autoCommit="false" />
+
+    <!--
+    	Configure the Datasource for the 'external' database.
+    	In this example we write to this database to demonstrate
+    	the database routing in Smooks.
+    -->
+    <ds:direct bindOnElement="$document"
+                   datasource="ExternalDatabase"
+                   driver="org.hsqldb.jdbcDriver"
+                   url="jdbc:hsqldb:hsql://localhost:9992/milyn-hsql-9992"
+                   username="sa"
+                   password=""
+                   autoCommit="false" />
+
+
+	<!--
+		The following two resource configs are only there for this example. They empty the tables so
+		that multiple messages don't cause any exceptions
+	-->
+    <db:executor executeOnElement="$document" datasource="ExternalDatabase" executeBefore="true">
+        <db:statement>delete from EXT_PRODUCT</db:statement>
+    </db:executor>
+
+    <db:executor executeOnElement="$document" datasource="ExternalDatabase" executeBefore="true">
+        <db:statement>delete from EXT_PART</db:statement>
+    </db:executor>
+
+</smooks-resource-list>

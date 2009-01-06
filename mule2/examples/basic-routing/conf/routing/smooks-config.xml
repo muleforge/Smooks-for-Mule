@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
+	xmlns:mule="http://dist.muleforge.org/smooks/schema/smooks-mule-1.1.xsd"
+	xmlns:jb="http://www.milyn.org/xsd/smooks/javabean-1.1.xsd">
+
+	<!--
+	    At the end of every "a" element, route the HashMap under beanId "a" to the
+	    "endpointA" Endpoint. This must be configured before the binding
+	    of bean "a" if it is to be executed after all the entries are set on the
+	    Map. This is because the Mule dispatcher, by default, executes after the element
+	    is visited (so called visitAfter event). The visitAfter on visitors, like the Mule dispather,
+	    are executed in the reverse order as they are declared. Take a look in the Smooks report
+	    file to see it illustrated.
+	-->
+	<mule:dispatcher endpointName="endpointA" dispatchOnElement="a">
+		<mule:messagePayload beanId="a" />
+	</mule:dispatcher>
+
+	<!--
+		At the beginning of every "a" element a HashMap is created and binded
+		to the "a" bindId. It gets two entries. The first with the name "id" and the value
+		is the "id" attribute value. The second with the name "value" and the value is
+		contents of the "a" element.
+	-->
+	<jb:bindings beanId="a" class="java.util.HashMap" createOnElement="a" >
+		<jb:value property="id" data="a/@id" />
+		<jb:value property="value" data="a" />
+	</jb:bindings>
+
+	<!-- Same as with the "a" element but then for the "b" element -->
+	<mule:dispatcher endpointName="endpointB" dispatchOnElement="b">
+		<mule:messagePayload beanId="b" />
+	</mule:dispatcher>
+
+	<!-- Same as with the "a" element but then for the "b" element -->
+	<jb:bindings beanId="b" class="java.util.HashMap" createOnElement="b" >
+		<jb:value property="id" data="b/@id" />
+		<jb:value property="value" data="b" />
+	</jb:bindings>
+
+
+</smooks-resource-list>

@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!--
+
+    Copyright (C) 2008 Maurice Zeijen <maurice@zeijen.net>
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+
+	<resource-config selector="properties">
+	    <resource>org.milyn.javabean.BeanPopulator</resource>
+	    <param name="beanId">messageProperties</param>
+	    <param name="beanClass">java.util.HashMap</param>
+	    <param name="bindings">
+	      <binding property="@name" selector="properties property" />
+	   </param>
+	</resource-config>
+
+	<resource-config selector="a">
+		<resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+		<param name="endpointName">file1</param>
+		<param name="beanId">a</param>
+	</resource-config>
+
+	<resource-config selector="a">
+		<resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+		<param name="endpointName">reply</param>
+		<param name="beanId">a</param>
+		<param name="resultBeanId">reply</param>
+		<param name="messagePropertiesBeanId">messageProperties</param>
+		<param name="messageProperties">
+			<property name="test" value="testValue" />
+			<property name="test2">"test2Value"</property>
+			<property name="testInt" value="10" type="Integer" />
+			<property name="testDate" value="2008-07-11 12:30:56" type="DateTime" />
+			<property name="testOverwritten" value="12345" />
+		</param>
+	</resource-config>
+
+	<resource-config selector="a">
+		<resource>org.milyn.javabean.BeanPopulator</resource>
+		<param name="beanClass">java.util.HashMap</param>
+		<param name="beanId">a</param>
+		<param name="bindings">
+			<binding property="value" selector="a @value" />
+		</param>
+	</resource-config>
+
+	<resource-config selector="b c">
+		<resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+		<param name="endpointName">file2</param>
+		<param name="beanId">c</param>
+	</resource-config>
+
+	<resource-config selector="b c">
+		<resource>org.milyn.javabean.BeanPopulator</resource>
+		<param name="beanClass">java.util.HashMap</param>
+		<param name="beanId">c</param>
+		<param name="bindings">
+			<binding property="value" selector="c" />
+		</param>
+	</resource-config>
+
+	<resource-config selector="$document">
+		<resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+		<param name="endpointName">fileReply</param>
+		<param name="beanId">reply</param>
+	</resource-config>
+
+	<resource-config selector="decoder:DateTime">
+        <resource>org.milyn.javabean.decoders.DateDecoder</resource>
+        <param name="format">yyyy-MM-dd HH:mm:ss</param>
+    </resource-config>
+
+</smooks-resource-list>

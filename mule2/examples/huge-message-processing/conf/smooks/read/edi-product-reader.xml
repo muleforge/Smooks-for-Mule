@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
+	xmlns:edi="http://www.milyn.org/xsd/smooks/edi-1.1.xsd">
+
+    <!--
+    	This resource configuration configures the EDI Parser to parse the
+    	message stream into a stream of SAX events.
+
+    	The "mapping-model" parameter defines the EDI to SAX Event mapping model configuration for the parser.
+    -->
+    <edi:reader mappingModel="/smooks/read/edi-to-xml-product-mapping.xml" />
+
+</smooks-resource-list>

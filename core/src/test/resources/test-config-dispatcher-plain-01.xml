@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd">
+
+	<resource-config selector="root">
+		<resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+		<param name="endpointName">endpoint</param>
+	</resource-config>
+
+</smooks-resource-list>

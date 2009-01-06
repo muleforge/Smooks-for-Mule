@@ -1,0 +1,845 @@
+<!--
+  Copyright (C) 2008 Maurice Zeijen <maurice@zeijen.net>
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Smooks for Mule: huge message processing example</title>
+
+  <link rel="stylesheet" title="Default" href="inc/highlight/styles/default.css">
+  <style type="text/css">
+   body {
+    font-family:sans-serif;
+    font-size:0.9em;
+    line-height:1.5em;
+
+    padding-left:20px;
+   }
+   pre code {
+       margin-left: 10px;
+       margin-right: 10px;
+       background-color: #F8F8F8;
+       border: 1px black dashed;
+       padding: 5px;
+       line-height:1.3em;
+   }
+   pre span.c {
+     color: blue;
+   }
+
+   .hl {
+       color: red;
+   }
+   .indent {
+       margin-left: 10px;
+   }
+
+   h1, h2, h3, h4 {
+    color: #FF761C;
+    font-family: trebuchet ms,arial,verdana,lucida grande,sans-serif;
+   }
+
+    a:link, a:visited, a:active {
+      color:#003366;
+    }
+
+    a:hover {
+      color:#FF761C;
+    }
+
+    a img {
+      border: 1px solid #003366;
+    }
+
+    img.screenshot {
+      margin: 10px;
+      padding:3px;
+      width: 600px;
+    }
+
+    a img:hover {
+      border-color: #FF761C;
+    }
+
+
+    .caption {
+      font-size: 0.8em;
+      font-style: italic;
+    }
+
+    a.caption {
+      text-decoration: none;
+    }
+
+    pre code[class]:after {
+      display:none;
+    }
+
+    .comment {
+    color: #666;
+
+    }
+
+    </style>
+
+    <script src="inc/highlight/highlight.js"></script>
+    <script type="text/javascript">
+      hljs.initHighlightingOnLoad('xml', 'java');
+    </script>
+</head>
+
+<body>
+
+  <h1>Smooks for Mule: huge message processing example</h1>
+
+  <p>
+    This example demonstrates how Smooks together with Smooks for Mule can be used to <b>split, enrich,
+    transform and route</b> huge messages (GB size messages).<br />
+    <br />
+    Because of the complexity of this example, a detailed explanation of how it works is provided within this page.
+    The Mule and Smooks configuration files are also thoroughly documented.
+  </p>
+
+  <h2>Table of contents</h2>
+
+  <ul>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#runningTheExample">Running the example</a></li>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#demonstration">Demonstration</a></li>
+    <li><a href="#howItWorks">How it works</a></li>
+  </ul>
+
+  <a name="overview" ></a>
+  <h2>Overview</h2>
+  <p>
+    In many uses cases, messages can contain data that is of interest to multiple parties.
+    Each party can have different requirements, for instance a different data format or a different
+    delivery method. A party could also require information which is related to the message
+    but isn't in the message itself. It becomes even more complex when the source message is a huge (GB size) data stream.
+    It the responsibility of the ESB to take care of these integration requirements.
+  </p>
+  <p>
+    Extracting, enriching and distributing information from a message to multiple parties is not a trivial process.
+    The information must first be extracted by splitting the huge message in it's parts.
+    Then some outside data source, for instance a database or some services, must be queried for the information to
+    enrich the source information. The new set of information must then be reassembled in the required format for every party.
+  </p>
+  <p>
+    Smooks together with Smooks for Mule enables Mule to solve these issues in a powerful, performant and declaritive manner.
+    Mule provides the transport layer for streaming in the huge message and to dispatch the splitted and enriched messages back
+    to it's consumers. Smooks provides the capabilities to split, enrich and transform/generate the split messages, as well as trigger
+    the routing of the split messages to their target endpoint. Smooks for Mule glues the two together.
+  </p>
+  <p>
+    This example is based on the use case that the information of a set of products needs to be sent to multiple parties.
+    The ESB receives the information from an EDI file stored on the file system. Each product contains it's base information
+    (product id, name, brand, price etc), as well as a list of parts and a list of technical specifications.
+  </p>
+  <p>
+    The following lists the consuming parties and there requirements:
+
+    <ol>
+      <li>The first party requires:
+        <ul>
+          <li>Must receive all the source product information</li>
+          <li>Must be in XML</li>
+          <li>Must be sent to a JMS queue</li>
+        </ul>
+      </li>
+      <li>The second party requires:
+        <ul>
+          <li>Must receive specific fields of the base product information and the id's of every part</li>
+          <li>Must be in JSON</li>
+          <li>The product must have the category 'Complete Systems' or 'Laptops'</li>
+          <li>Must be sent to a JMS queue</li>
+        </ul>
+      </li>
+      <li>The third party requires:
+        <ul>
+          <li>Must receive specific fields of the base product information</li>
+          <li>Must receive the parts id, name and brand <i>(note that the name and brand information is not available in the source message)</i></li>
+          <li>The product information and it parts must be inserted into the EXT_PRODUCT and EXT_PARTS tables of an external database</li>
+          <li>At least 20 products need to be in stock <i>(note that the stock information is not available in the source message)</i></li>
+        </ul>
+      </li>
+    </ol>
+  </p>
+
+  <p>
+    The main challenges are:
+
+    <ul>
+      <li>The second and third parties only want parts of the source message. This means that we are not dealing with a simple
+      fragment extraction. We need to reconstruct the new messages from different parts of the source message.
+      <li>Every message party requires there message in a different format: XML, JSON and JDBC</li>
+      <li>The routed messages for the third party need to be enriched.<br/>An internal database is used to retrieve the necessary data.</li>
+      <li>The second and third parties only receive there messages based on a condition.</li>
+      <li>The third message requires information for the condition that is not within the source message.<br />A Mule Service can provided this information for us.</li>
+    </ul>
+
+  </p>
+
+  <a name="installation"></a>
+  <h2>Installation</h2>
+  <p>
+    Make sure you have set the <b>MULE_HOME</b> environment variable
+    and that you have installed the Smooks for Mule module itself.<br />
+    <br />
+    Run <b>&quot;ant install&quot;</b> from the root folder of this example.
+  </p>
+
+  <a name="runningTheExample"></a>
+  <h2>Running the example</h2>
+  <p>
+    Make sure you have installed the example as describe in the previous section.
+    <ul>
+      <li>Open 5 command shell windows in the root folder of this example.</li>
+      <li>In the first window, execute "ant run-services" to start the HSQLDB Database and JSM Server</li>
+      <li>In the second window, execute 'run' shell script (Unix/Linux) or 'run.bat' batch file (Windows) to start Mule.<br>
+        Alternatively, if you have added Mule to your executable path as recommended in INSTALL.txt, you can run the example from the command line as follows:
+        <br />
+          <b>Linux / Unix:</b> mule -config ./conf/mule-config.xml<br />
+        <b>Windows: </b> mule.bat -config .\conf\mule-config.xml<br />
+      </li>
+
+      <li>In the third window, execute "ant run-consumer-1" to start the JMS consumer of the first party</li>
+      <li>In the fourth window, execute "ant run-consumer-2" to start the JMS consumer of the second party</li>
+      <li>In the fifth window, execute "ant generate" to start the message creation tool.</li>
+    </ul>
+
+  </p>
+
+  <a name="process" ></a>
+  <h2>Process</h2>
+  <p>
+    The process looks as follows:<br />
+    <a href="process.jpg"><img src="inc/process_small.jpg"/></a><br />
+    <a href="process.jpg" class="caption">(Click for larger image)</a>
+  </p>
+
+  <a name="demonstration" ></a>
+  <h2>Demonstration</h2>
+  <p>
+    For convenience I created a demonstration video that shows you how to run this example and what the example
+    does when you run it.<br />
+  <br />
+  See the <a href="http://dist.muleforge.org/smooks/mule2/demo/version-1.1/huge_message_processing_example_demo.html">Demonstration video here</a>.
+
+  </p>
+
+  <a name="howItWorks" ></a>
+  <h2>How it works</h2>
+
+  <p>
+    In this section is explained how this example works. First we show how
+    the input format looks like. Then we explain how Mule is configured. Finally
+    we take a look at the most important part namely how Smooks is configured.<br>
+
+    You don't need a lot of knowledge of Smooks to understand the explanation. It could
+    however be a bit heavy if this is the first time that you see Smooks in action. Take a
+    look at the <a href="http://milyn.codehaus.org/smooks">Smooks website</a> for more information
+    on how to use Smooks.
+
+    Take a good look at the comments within the configuration files. They explain for the biggest part
+    what each component does and how they work.
+  </p>
+
+  <h3>Import file</h3>
+  <p>
+    The import format we will be processing looks like this:
+
+    <pre><code class="no-highlight">PRD|1000001|Avia C44|XYZ-Blink|Complete Systems|981.29|19|1 years
+PRT|100003|9|true
+PRT|100002|1|true
+SPC|Height|6000mm
+SPC|Width|6000mm
+<i class="comment">... (more PRD, PRT and SPC segments. One PRD per product. One PRT segment per Product Part.
+     One SPC segment per  Specification)</i></code></pre>
+  </p>
+
+  <h3>Components overview</h3>
+  <p>
+    The Components used in this example are as follows:
+
+    <ul>
+      <li><b>Model:</b> OrderProcessorModel
+        <ul>
+          <li><b>Service:</b> ProductProcessorService
+            <ul>
+              <li><b>Inbound:</b> file endpoint</li>
+              <li><b>Outbound:</b> Smooks router
+                <ul>
+                  <li><b>Outbound endpoints:</b>
+                    <ul>
+                      <li>VM endpoint <i>(StockServiceEndpoint)</i></li>
+                      <li>JMS endpoints <i>(ReceiveAllProductsEndpoint & ReceivePCsAndLaptopsEndpoint)</i></li>
+                    </ul>
+                  </li>
+                  <li><b>Smooks resources</b>
+                    <ul>
+                      <li>SmooksEDIParser</li>
+                      <li>SQLExecutor</li>
+                      <li>BeanPopulator</li>
+                      <li>FreeMarker</li>
+                      <li>MuleDispatcher</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><b>Service:</b> StockService
+            <ul>
+              <li><b>Inbound:</b> VM endpoint</li>
+              <li><b>Component:</b> StockService</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>Mule configuration</h3>
+    As can be seen from the <a href="process.jpg">process illustration</a> above, this example revolves around
+    the "ProductProcessorService" Service deployment. This service defines the Smooks router, which executes Smooks to do all the processing,
+    as follows:
+    <pre><code>&lt;service name=&quot;ProductProcessorService&quot;&gt;
+    &lt;inbound&gt;
+
+        &lt;!--
+          The inbound endpoint streams the EDI files from the ./data/in directory.
+        --&gt;
+        &lt;file:inbound-endpoint
+          connector-ref=&quot;dataIn&quot;
+          path=&quot;./data/in&quot;
+          pollingFrequency=&quot;1000&quot;
+          moveToDirectory=&quot;./data/out&quot;
+          synchronous=&quot;true&quot; &gt;
+
+          &lt;file:filename-wildcard-filter pattern=&quot;*.edi&quot;/&gt;
+        &lt;/file:inbound-endpoint&gt;
+    &lt;/inbound&gt;
+
+    &lt;outbound&gt;
+
+      &lt;!--
+        Declares and configures the Smooks for Mule router.
+        This router uses the /smooks/config.xml Smooks config file to process the EDI stream.
+        The declared endpoints are referenced from within the Smooks config file to route the message parts
+        too or to invoke the StockService with.
+
+        Note: By declaring the config attribute 'reportPath' Smooks generates a report in which you can see
+        how Smooks processes the EDI data. You should only enable it for small (1-10) data sets. Generating the
+        report uses a lot of performance and with a big file it generates a huge report file.
+      --&gt;
+      &lt;smooks:router configFile=&quot;/smooks/config.xml&quot; honorSynchronicity=&quot;true&quot;&gt;
+          &lt;vm:outbound-endpoint name=&quot;StockServiceEndpoint&quot; path=&quot;StockService&quot; synchronous=&quot;true&quot;/&gt;
+          &lt;jms:outbound-endpoint name=&quot;ReceiveAllProductsEndpoint&quot; queue=&quot;example.AllProducts&quot; connector-ref=&quot;jmsConnector&quot;/&gt;
+          &lt;jms:outbound-endpoint name=&quot;ReceivePCsAndLaptopsEndpoint&quot; queue=&quot;example.PCsAndLaptops&quot; connector-ref=&quot;jmsConnector&quot;/&gt;
+      &lt;/smooks:router&gt;
+
+    &lt;/outbound&gt;
+
+&lt;/service&gt;</code></pre>
+  In the requirements we need to route the products to two JMS clients and write some product records into the database.
+  The JMS communication is handled via the two JMS outbound endpoints. The database routing is completely handled within Smooks.
+  Later we will look in more detail at the Smooks configuration of this router .
+  </p>
+  <p>
+    Another interresting service is the StockService. The Stock Service is used by the Product Processor Service to retrieve the stock of a product.
+  In theory this Stock Service should look into some warehouse system to get this information.
+  In this example however it only generates a random stock size and returns that as result.
+  <pre><code>&lt;service name=&quot;StockService&quot;&gt;
+  &lt;inbound&gt;
+    &lt;vm:inbound-endpoint path=&quot;StockService&quot; synchronous=&quot;true&quot;/&gt;
+  &lt;/inbound&gt;
+  &lt;component class=&quot;example.hmp.mule.service.StockService&quot;/&gt;
+&lt;/service&gt;</code></pre>
+  </p>
+
+  <h3>Smooks configuration</h3>
+
+  <p>
+    With the Smooks configuration you instruct Smooks how to process the incoming data.
+    The configuration in this example is spread over several files. This keeps the configuration
+    clear and clean.
+  </p>
+  <p>
+    In a complex use case it can be difficult to see what is going on in Smooks.
+    For this reason Smooks provides a HtmlReportGenerator class. It generates a HTML execution report
+    file of Smooks it's processes. This visualizes those processes and help you understand what is going on.
+    The generator is the nearest thing to a debugging tool that Smooks currently has.
+    Within mule you can activate it by providing the 'reportPath' parameter in the Smooks router with a file location.
+    Do not use it in a production environment because the generator takes a lot of performance.
+    For this example we already generated a report which you can find <a href="execution-report.html">here</a>.
+  </p>
+  <p>
+  The top level Smooks configuration is:
+
+  <pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!--
+  This is the main Smooks configuration file. Here we set the general configuration
+  properties and import all the smooks configuration parts. The order in which
+  we import the several configuration files is very important. Smooks uses this order
+  to determine the order in which the resource (actually called visitors in this case)
+  actions are executed before, during and after the element.
+  Lets say that visitor A and visitor B are configured in A,B order on the same element.
+  The order of execution is then as follows:
+    - Visit before action of A
+    - Visit before action of B
+    - Visit after action of B
+    - Visit after action of A
+  A visitor can have an action defined on the visit before, visit element content and/or visit after. It
+  is important to know when a visitor executes it's action.
+ --&gt;
+&lt;smooks-resource-list xmlns=&quot;http://www.milyn.org/xsd/smooks-1.1.xsd&quot;&gt;
+
+  &lt;!--
+    This part sets the global configuration parameters. In this
+      case we only set that we want to use the SAX stream filter instead of
+      the DOM stream filter. This is very important because the SAX filter is
+      faster then the DOM filter and only the SAX filter can handle huge messages.
+   --&gt;
+  &lt;params&gt;
+    &lt;param name=&quot;stream.filter.type&quot;&gt;SAX&lt;/param&gt;
+  &lt;/params&gt;
+
+  &lt;!--
+    Imports the EDI reader configuration
+   --&gt;
+  &lt;import file=&quot;read/edi-product-reader.xml&quot; /&gt;
+
+  &lt;!--
+    Imports the database datasource configuration
+   --&gt;
+  &lt;import file=&quot;database/datasource.xml&quot; /&gt;
+
+  &lt;!--
+    The following three elements import the router configurations to several
+    end points.
+    Because these routers all do there thing on the visit after action they must
+    be defined before the javabean binding and enriching configuration
+    if these actions are to be executed after the javabean binding and enriching.
+   --&gt;
+  &lt;import file=&quot;routing/route-to-database.xml&quot; /&gt;
+
+  &lt;import file=&quot;routing/route-to-jms-all-receiver.xml&quot; /&gt;
+
+  &lt;import file=&quot;routing/route-to-jms-pc-and-laptop-receiver.xml&quot; /&gt;
+
+
+  &lt;!--
+    The following two elements import the configuration which enrich the data from
+    the EDI message.
+    It is important for the stock-service that it is defined before the javabean binding
+    because it uses the data from the beans and it execute the service in the after visit
+    action.
+   --&gt;
+  &lt;import file=&quot;enrich/stock-service.xml&quot; /&gt;
+
+  &lt;import file=&quot;enrich/part-data.xml&quot; /&gt;
+
+  &lt;!--
+    Imports the javabean binding configuration
+   --&gt;
+  &lt;import file=&quot;binding/bean-binding.xml&quot; /&gt;
+
+
+&lt;/smooks-resource-list&gt;</code></pre>
+
+    In the following sections we explain each imported file. The sections are in the order as defined in this file,
+    except for the routing configuration files which we will attend to at then end. It is easier to understand those sections
+    if you first know where the data, that they route, comes from.	Remember however that the order in which we defined the imports
+    in the main configuration file is very important. As explained before, this is because the order in which the resources execute
+    depends on the order in which they appear in the resource configuration, with the visitBefore events firing "first-to-last"
+    and the visitAfter events firing "last-to-first".
+  </p>
+
+  <h4>read/edi-product-reader.xml</h4>
+
+  <p>
+    This Smooks resource configuration file defines only the EDI Parser.
+
+    <pre><code>&lt;!--
+  This resource configuration configures the EDI Parser to parse the
+  message stream into a stream of SAX events.
+
+  The &quot;mapping-model&quot; parameter defines the EDI to SAX Event mapping model configuration for the parser.
+--&gt;
+&lt;edi:reader mappingModel=&quot;/smooks/read/edi-to-xml-product-mapping.xml&quot; /&gt;</code></pre>
+
+  After configuring this resource and turning on the Smooks Execution Report we can see the message
+  event stream as produced by the EDI Parser:<br/>
+
+  <img src="inc/ser-event-stream.png" class="screenshot">
+  </p>
+
+  <h4>database/datasource.xml</h4>
+
+  <p>
+    This configuration prepares the database datasources for the internal and the external databases. The internal
+    database is used to retrieve information about the product parts which are not in the source data. In the external database
+    we insert the product and part records, as required by the requirements of the third party (see the <a href="#overview" >overview</a> section).
+
+    <pre><code>&lt;!--
+  Configure the Datasource for the 'internal' database.
+  In this example we only read from this database to demonstrate
+  the data enriching in Smooks.
+--&gt;
+&lt;ds:direct bindOnElement=&quot;$document&quot;
+               datasource=&quot;InternalPartsDatabase&quot;
+               driver=&quot;org.hsqldb.jdbcDriver&quot;
+               url=&quot;jdbc:hsqldb:hsql://localhost:9992/milyn-hsql-9992&quot;
+               username=&quot;sa&quot;
+               password=&quot;&quot;
+               autoCommit=&quot;false&quot; /&gt;
+
+&lt;!--
+  Configure the Datasource for the 'external' database.
+  In this example we write to this database to demonstrate
+  the database routing in Smooks.
+--&gt;
+&lt;ds:direct bindOnElement=&quot;$document&quot;
+               datasource=&quot;ExternalDatabase&quot;
+               driver=&quot;org.hsqldb.jdbcDriver&quot;
+               url=&quot;jdbc:hsqldb:hsql://localhost:9992/milyn-hsql-9992&quot;
+               username=&quot;sa&quot;
+               password=&quot;&quot;
+               autoCommit=&quot;false&quot; /&gt;</code></pre>
+
+    These Datasources are bound to the Smooks ExecutionContext at the start of message processing
+    via the selector parameter (the '$document' value selects the message root/document event).
+    Any JDBC Connection created for the ExecutionContext is committed/rolledback and cleaned up at the end of the
+    message processing. Note that it is also possible to use a container provided JNDI datasource by setting the 'datasource' parameter to 'JndiDataSource'.<br />
+    <br/>
+    In the execution report we can see that the datasources are bound on the 'visitBefore' event of the root 'product' element.<br/>
+
+    <img src="inc/ser-datasource-visitBefore.png" class="screenshot">
+
+    <br/>On the 'visitAfter' event we can see that the datasources are cleaned up:<br/>
+
+    <img src="inc/ser-datasource-visitAfter.png" class="screenshot">
+
+  </p>
+
+  <h4>enrich/stock-service.xml</h4>
+
+  <p>
+
+    The "enrich/stock-service.xml" resource file contains a Mule Dispatcher resource for calling the StockService to retrieve the stock information.
+
+    <pre><code>&lt;!--
+  This Mule dispatcher calls the Stock Service endpoint synchronously on every product.
+  Specifically it executes on the 'visitAfter' event. By then the product id is set in the Product object.
+  The Stock Service endpoint uses the product id to see what it's current stock is (in this
+  example it generates a random number).
+  The result returned by the service is added to the bean map under the beanId 'productStock'.
+--&gt;
+&lt;mule:dispatcher endpointName=&quot;StockServiceEndpoint&quot; resultBeanId=&quot;productStock&quot; dispatchOnElement=&quot;product/id&quot;&gt;
+  &lt;mule:messagePayload&gt;
+    &lt;mule:expression&gt;product.id&lt;/mule:expression&gt;
+  &lt;/mule:messagePayload&gt;
+&lt;/mule:dispatcher&gt;</code></pre>
+
+  The data returned by StockService is bound into the bean context and so is available to other resources executing under the
+  same ExecutionContext e.g. templating resources, BeanPopulator resources etc.
+  </p>
+
+  <h4>enrich/part-data.xml</h4>
+
+  <p>
+    This resource configuration file configures a resource for reading reference/enhancement data from the database.
+
+    <pre><code>&lt;!--
+  This SQLExecute resource configuration executes for every product part. It
+  uses the product id from the Product object to execute a query on the internal database.
+  The result set is added to the bean map under the beanId 'partDetails'.
+--&gt;
+&lt;db:executor executeOnElement=&quot;product/part&quot; datasource=&quot;InternalPartsDatabase&quot;&gt;
+    &lt;db:statement&gt;select name, brand from int_part where id = ${part.id}&lt;/db:statement&gt;
+    &lt;db:resultSet name=&quot;partDetails&quot;/&gt;
+&lt;/db:executor&gt;</code></pre>
+
+  The result set created by the resource above is a list of 'record' maps. Even if there was only one record in the result, you
+  must use the 'partDetails[0]' syntax (within the templates or scripts) to access that one record.
+  </p>
+
+  <h4>binding/bean-binding.xml</h4>
+
+  <p>
+    At the core of nearly all Smooks based message processing, is the concept of "binding" data from the Source message event
+    stream into memory (into the bean context). Once the data is bound into memory in a Physical or Virtual Object Model, it can
+    be used by other Smooks resources such as the template resources, routing resources, bean populator resources, resource conditions
+    and of course custom Smooks visitor implementations. The populated Object Model may itself be the Result output by the Smooks.filter operation.
+    Basically, the data binding functionality provided by the Javabean Cartridge is a very fundamental part of practically all
+    Smooks based filtering operations. Without it, you are quite limited in what you can do.
+
+    The following configuration file configures the bindings:
+
+    <pre><code>&lt;!--
+  This defines the binding of the product data from the EDI document to the Product object. It
+  also binds the parts and specs ArrayList to there properties. These two get configured in the next
+  resource configurations.
+--&gt;
+&lt;jb:bindings beanId=&quot;product&quot; createOnElement=&quot;product&quot; class=&quot;example.hmp.model.Product&quot; &gt;
+  &lt;jb:value property=&quot;id&quot; data=&quot;product/id&quot; decoder=&quot;Long&quot;/&gt;
+  &lt;jb:value property=&quot;name&quot; data=&quot;product/name&quot;/&gt;
+  &lt;jb:value property=&quot;brand&quot; data=&quot;product/brand&quot;/&gt;
+  &lt;jb:value property=&quot;category&quot; data=&quot;product/category&quot;/&gt;
+  &lt;jb:value property=&quot;price&quot; data=&quot;product/price&quot; decoder=&quot;BigDecimal&quot;/&gt;
+  &lt;jb:value property=&quot;tax&quot; data=&quot;product/tax&quot; decoder=&quot;Integer&quot;/&gt;
+  &lt;jb:value property=&quot;guarantee&quot; data=&quot;product/guarantee&quot;/&gt;
+
+  &lt;jb:wiring property=&quot;parts&quot; beanIdRef=&quot;parts&quot;/&gt;
+  &lt;jb:wiring property=&quot;specs&quot; beanIdRef=&quot;specs&quot;/&gt;
+&lt;/jb:bindings&gt;
+
+
+&lt;!--
+  This defines that a ArrayList is created for every product
+  and that it adds all the Part objects to the array.
+--&gt;
+&lt;jb:bindings beanId=&quot;parts&quot; createOnElement=&quot;product&quot; class=&quot;java.util.ArrayList&quot; &gt;
+  &lt;jb:wiring beanIdRef=&quot;part&quot;/&gt;
+&lt;/jb:bindings&gt;
+
+&lt;!--
+  This defines the binding of the part data from the EDI document to the Part object.
+--&gt;
+&lt;jb:bindings beanId=&quot;part&quot; createOnElement=&quot;product/part&quot; class=&quot;example.hmp.model.Part&quot; &gt;
+  &lt;jb:value property=&quot;id&quot; data=&quot;part/id&quot; decoder=&quot;Long&quot; /&gt;
+  &lt;jb:value property=&quot;quantity&quot; data=&quot;part/quantity&quot; decoder=&quot;Integer&quot; /&gt;
+  &lt;jb:value property=&quot;buildIn&quot; data=&quot;part/build-in&quot; decoder=&quot;Boolean&quot; /&gt;
+&lt;/jb:bindings&gt;
+
+&lt;!--
+  This defines that a ArrayList is created for every product
+  and that it adds all the Spec objects to the array.
+--&gt;
+&lt;jb:bindings beanId=&quot;specs&quot; createOnElement=&quot;product&quot; class=&quot;java.util.ArrayList&quot; &gt;
+  &lt;jb:wiring beanIdRef=&quot;spec&quot;/&gt;
+&lt;/jb:bindings&gt;
+
+&lt;!--
+  This defines the binding of the specs data from the EDI document to the Spec object.
+--&gt;
+&lt;jb:bindings beanId=&quot;spec&quot; createOnElement=&quot;product/spec&quot; class=&quot;example.hmp.model.Spec&quot; &gt;
+  &lt;jb:value property=&quot;name&quot; data=&quot;spec/name&quot; /&gt;
+  &lt;jb:value property=&quot;value&quot; data=&quot;spec/value&quot; /&gt;
+&lt;/jb:bindings&gt;</code></pre>
+
+  Once this data is bound into the bean context (under the beanIds of "product", "parts", "part", "specs" and "spec"),
+  it is available to all other resources executing under the same Smooks ExecutionContext. The key to
+  processing huge messages is the fact that we can keep the memory footprint associated with the ExecutionContext
+  to a minimum. We do this by only maintaining the current Product in memory at at any one time i.e. we don't
+  accumulate a list of the Products. This also means that we need to be able to use the Product data
+  (for splitting, routing etc) while we have it in memory and before we throw it away in place of the next Product
+  in the message event stream. In other words, we can't wait for the whole message to be processed before processing
+  the Product data; everything is done while we are processing the message event stream i.e. binding, templating/transforming, routing etc.
+  We do this by targeting these other resources at the same events in the message event stream i.e. the &lt;product&gt; events.
+
+  </p>
+
+  <h4>routing/route-to-database.xml</h4>
+
+  <p>
+    This resource configuration defines the routing of the product data to the External Database.
+
+    <pre><code>&lt;!--
+  Here we define a global condition. Resource later refer to this condition by it's id.
+
+  This condition is a two parter. The first part is the business rule which defines
+  that only products with a stock higher then 100 are added to the database. The productStock
+  bean comes from a Mule dispatcher that calls the Stock Service, defined in the
+  conf/smooks/enrich/stock-service.xml file.
+  The second part is 	only there because this is an example. We use it to prevent flooding of
+  the database with thousands of product and part records. The productCount bean is set
+  in the next db:executor resource.
+--&gt;
+&lt;conditions&gt;
+  &lt;condition id=&quot;minProductStock&quot;&gt;&lt;!-- productStock &gt; 100 &amp;&amp; productCount[0].numberProducts &lt; 100  --&gt;&lt;/condition&gt;
+&lt;/conditions&gt;
+
+&lt;!--
+  This SQL executor configuration executes a query that counts the number
+  of products in the external database. It is only here for the example.
+  The global condition 'minProductStock' uses it to stop the inserting into
+  the database when 99 products are inserted.
+--&gt;
+&lt;db:executor executeOnElement=&quot;product&quot; datasource=&quot;ExternalDatabase&quot; executeBefore=&quot;true&quot;&gt;
+    &lt;db:statement&gt;select count(*) as &quot;numberProducts&quot; from EXT_PRODUCT&lt;/db:statement&gt;
+    &lt;db:resultSet name=&quot;productCount&quot;/&gt;
+&lt;/db:executor&gt;
+
+&lt;!--
+  This SQL executor resource configuration executes an INSERT statement with all the necessary
+  product data on the external database. The statement executes on the after visit phase of the
+  guarantee element.
+
+  Maybe you wonder why we don't set it on the product element itself. This is
+  because the insert statement would be executed after the insert statements of the part
+  elements (those inserts are configured in the next resource-config block). That would cause
+  referential exceptions when a part gets inserted when the product insn't inserted yet. Because
+  we know that we got all the data on the after visit of the 'guarantee' element and because of the
+  nature of the EDI parser the 'guarantee' element is always there, we can safely execute the
+  insert at that moment.
+
+  The condition elements refers to the global 'minProductStock' condition.
+--&gt;
+&lt;db:executor executeOnElement=&quot;product/guarantee&quot; datasource=&quot;ExternalDatabase&quot;&gt;
+    &lt;condition idRef=&quot;minProductStock&quot;/&gt;
+    &lt;db:statement&gt;insert into EXT_PRODUCT values(${product.id}, ${product.name}, ${product.brand}, ${product.category}, ${product.price}, ${product.tax}, now())&lt;/db:statement&gt;
+&lt;/db:executor&gt;
+
+&lt;!--
+  This SQLExecutor resource configuration executes an INSERT statement with all the necessary
+  part data on the external database. The statement executes on the after visit phase of the
+  part element.
+
+  We use the same resource condition as the previous sql executor for the same reasons.
+--&gt;
+&lt;db:executor executeOnElement=&quot;product/part&quot; datasource=&quot;ExternalDatabase&quot;&gt;
+    &lt;condition idRef=&quot;minProductStock&quot;/&gt;
+    &lt;db:statement&gt;insert into EXT_PART values(${part.id}, ${product.id}, ${partDetails[0].NAME}, ${partDetails[0].BRAND})&lt;/db:statement&gt;
+&lt;/db:executor&gt;</code></pre>
+
+  You should note that in this case the condition is based on the data retrieved from the Stock service.
+  The 'productStock' bean from the bean context contains the stock size. You can also see that we
+    use the enriched Part data (the variables <b>${partDetails[0].NAME}</b> and <b>${partDetails[0].BRAND}</b>) in the insert query.
+  </p>
+
+  <h4>routing/route-to-jms-all-receiver.xml</h4>
+
+  <p>
+  This resource configuration file defines the routing resources for the "jms-all-receiver" client.
+
+
+  <pre><code>&lt;!--
+  This Mule dispatcher resource configuration executes at the end of every product.
+  It dispatches the product XML to the 'ReceiveAllProductsEndpoint' endpoint.
+  The XML is retrieved from the 'XML_ReceiveAllProducts' String from the bean Map.
+  This XML is generated by the next resource configuration.
+
+  For the same reasons as explained in the top of the config.xml file the dispatch
+  configurion must come for the XML generating configuration. Both execute in the
+  visit after action.
+--&gt;
+&lt;mule:dispatcher endpointName=&quot;ReceiveAllProductsEndpoint&quot; dispatchOnElement=&quot;product&quot;&gt;
+  &lt;mule:messagePayload beanId=&quot;XML_ReceiveAllProducts&quot; /&gt;
+&lt;/mule:dispatcher&gt;
+
+&lt;!--
+  This FreeMarker template resource configuration generates the XML
+  at the end of every product. It binds the XML String in the bean map under
+  bean ID 'XML_ReceiveAllProducts'.
+--&gt;
+&lt;ftl:freemarker applyOnElement=&quot;product&quot;&gt;
+  &lt;ftl:template&gt;&lt;!--
+    &lt;product number=&quot;${product.id?c}&quot;&gt;
+        &lt;name&gt;${product.name}&lt;/name&gt;
+        &lt;brand&gt;${product.brand}&lt;/brand&gt;
+        &lt;category&gt;${product.category}&lt;/category&gt;
+        &lt;price&gt;${product.price?c}&lt;/price&gt;
+        &lt;tax&gt;${product.tax?c}&lt;/tax&gt;
+        &lt;guarantee&gt;${product.guarantee}&lt;/guarantee&gt;
+        &lt;parts&gt;
+        &lt;#list product.parts as part&gt;
+           &lt;part number=&quot;${part.id?c}&quot;&gt;
+             &lt;quantity&gt;${part.quantity?c}&lt;/quantity&gt;
+             &lt;buildIn&gt;${part.buildIn?string}&lt;/buildIn&gt;
+           &lt;/part&gt;
+        &lt;/#list&gt;
+        &lt;/parts&gt;
+        &lt;specifications&gt;
+        &lt;#list product.specs as spec&gt;
+           &lt;#assign nodeName = spec.name?replace(' ', '-')?lower_case&gt;
+           &lt;${nodeName}&gt;${spec.value}&lt;/${nodeName}&gt;
+        &lt;/#list&gt;
+        &lt;/specifications&gt;
+    &lt;/product&gt;--&gt;
+    &lt;/ftl:template&gt;
+     &lt;ftl:use&gt;&lt;ftl:bindTo id=&quot;XML_ReceiveAllProducts&quot;/&gt;&lt;/ftl:use&gt;
+&lt;/ftl:freemarker&gt;</code></pre>
+
+  The first resource listed simply dispatches the XML (generated by the second resource) to the "ReceiveAllProductsEndpoint" endpoint. The
+  second resource generates the XML message by applying a FreeMarker template. The FreeMarker template receives it's data from the beans
+  within the bean context. This is the most straight forward transformation. We don't use any conditionals or enrich the new message by using data
+  from other resources then the source message itself.
+  </p>
+
+  <h4>routing/route-to-jms-pc-and-laptop-receiver.xml</h4>
+
+  <p>
+    The following configuration looks much like the previous "routing/route-to-jms-all-receiver.xml" configuration. The biggest difference
+    are the resource conditions. These conditions are used so that the messages are
+    only generated and dispatched to the client when the condition is met.
+
+    <pre><code>&lt;conditions&gt;
+  &lt;!--
+    This condition checks that a product is defined and that it is in the correct category.
+   --&gt;
+  &lt;condition id=&quot;productInCertainCategories&quot;&gt;
+    &lt;!-- VARS.isdef(&quot;product&quot;) &amp;&amp; product != null &amp;&amp; (product.category == &quot;Complete Systems&quot; || product.category == &quot;Laptops&quot;) --&gt;
+  &lt;/condition&gt;
+&lt;/conditions&gt;
+
+&lt;!--
+      This MuleDispatcher resource configuration executes at the end of every product.
+      It dispatches the product JSON to the 'JSON_ReceivePCsAndLaptops' endpoint. Because
+      of the condition it only dispatches if the product category is
+      &quot;Complete Systems&quot; or &quot;Laptops&quot;.
+      The JSON is retrieved from the 'JSON_ReceivePCsAndLaptops' String from the bean Map.
+      This JSON is generated by the next resource configuration.
+
+      For the same reasons as explained in the top of the config.xml file the dispatch
+      configurion must come for the JSON generating configuration. Both execute in the
+      visit after action.
+--&gt;
+&lt;mule:dispatcher endpointName=&quot;ReceivePCsAndLaptopsEndpoint&quot; dispatchOnElement=&quot;product&quot;&gt;
+  &lt;condition idRef=&quot;productInCertainCategories&quot; /&gt;
+  &lt;mule:messagePayload beanId=&quot;JSON_ReceivePCsAndLaptops&quot; /&gt;
+&lt;/mule:dispatcher&gt;
+
+&lt;!--
+      This FreeMarker template resource configuration generates the JSON
+      at the end of every product. It binds the JSON String in the bean map under
+      bean ID 'JSON_ReceivePCsAndLaptops'.
+--&gt;
+&lt;ftl:freemarker applyOnElement=&quot;product&quot;&gt;
+  &lt;condition idRef=&quot;productInCertainCategories&quot; /&gt;
+  &lt;ftl:template&gt;&lt;!--
+    {
+      &quot;id&quot; : ${product.id?c},
+      &quot;name&quot; : &quot;${product.name}&quot;,
+      &quot;brand&quot; : &quot;${product.brand}&quot;,
+      &quot;category&quot; : &lt;#if product.category == &quot;Complete Systems&quot;&gt;1&lt;#else&gt;2&lt;/#if&gt;,
+      &quot;price&quot; : ${product.price?c},
+      &quot;tax&quot; : ${product.tax?c},
+      &quot;parts&quot; : [
+      &lt;#list product.parts as part&gt;
+            ${part.id?c}&lt;#if part_has_next&gt;,&lt;/#if&gt;
+          &lt;/#list&gt;
+      ]
+    }
+       --&gt;
+  &lt;/ftl:template&gt;
+  &lt;ftl:use&gt;&lt;ftl:bindTo id=&quot;JSON_ReceivePCsAndLaptops&quot;/&gt;&lt;/ftl:use&gt;
+&lt;/ftl:freemarker&gt;</code></pre>
+  </p>
+
+
+</body>
+</html>

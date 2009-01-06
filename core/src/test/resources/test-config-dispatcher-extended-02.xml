@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd" xmlns:mule="http://dist.muleforge.org/smooks/schema/smooks-mule-1.1.xsd">
+
+	<mule:dispatcher endpointName="endpoint" dispatchOnElement="root" >
+		<mule:messagePayload beanId="payload" />
+	</mule:dispatcher>
+
+</smooks-resource-list>

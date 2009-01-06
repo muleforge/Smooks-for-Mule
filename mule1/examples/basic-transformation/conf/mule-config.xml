@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN" "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="Smooks_for_Mule_Basic_Transform_Example" version="1.0">
+
+    <description>Smooks for Mule basic transform example</description>
+
+    <connector name="FileConnector" className="org.mule.providers.file.FileConnector">
+        <properties>
+            <property name="pollingFrequency" value="1000"/>
+            <property name="moveToDirectory" value="./data/out"/>
+            <property name="binaryMode" value="false"/>
+        </properties>
+    </connector>
+
+    <transformers>
+
+    	<!--
+    		Defines the Smooks Transformer
+    	 -->
+        <transformer name="BasicXSLTTransformation" className="org.milyn.smooks.mule.Transformer">
+            <properties>
+
+                <!--
+                	Defines where the Smooks configuration is located
+                -->
+                <property name="configFile" value="/transforms/smooks-config.xml"/>
+
+                <!--
+                	Defines which result type is required. STRING is the default value.
+                	This property is just here for the illustration because it is
+                	so important in case when you need a different result type.
+                 -->
+                <property name="resultType" value="STRING"/>
+
+                <!--
+               		Defines that a execution report needs to be written.
+               		Take a look at the Smooks report. It shows how Smooks processes the
+               		message.
+               		Warning: Don't set this in a production environment. It costs a lot
+               		of performance!
+               	 -->
+                <property name="reportPath" value="target/smooks-report/report.html" />
+            </properties>
+        </transformer>
+    </transformers>
+
+    <model name="Basic">
+
+        <mule-descriptor name="BasicProcessor" implementation="org.mule.components.simple.BridgeComponent">
+
+            <inbound-router>
+                <endpoint address="file://./data/in" connector="FileConnector" transformers="BasicXSLTTransformation">
+                    <filter pattern="*.xml" className="org.mule.providers.file.filters.FilenameWildcardFilter"/>
+                </endpoint>
+
+				<!-- For unit-tests -->
+                <endpoint address="vm://BasicProcessor" transformers="BasicXSLTTransformation" />
+            </inbound-router>
+
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="stream://System.out"/>
+                </router>
+            </outbound-router>
+
+        </mule-descriptor>
+
+    </model>
+
+</mule-configuration>

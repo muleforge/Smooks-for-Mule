@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+	This is the main Smooks configuration file. Here we set the general configuration
+	properties and import all the smooks configuration parts. The order in which
+	we import the several configuration files is very important. Smooks uses this order
+	to determine the order in which the resource (actually called visitors in this case)
+	actions are executed before, during and after the element.
+	Lets say that visitor A and visitor B are configured in A,B order on the same element.
+	The order of execution is then as follows:
+	  - Visit before action of A
+	  - Visit before action of B
+	  - Visit after action of B
+	  - Visit after action of A
+	A visitor can have an action defined on the visit before, visit element content and/or visit after. It
+	is important to know when a visitor executes it's action.
+ -->
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd">
+
+	<!--
+		This part sets the global configuration parameters. In this
+	    case we only set that we want to use the SAX stream filter instead of
+	    the DOM stream filter. This is very important because the SAX filter is
+	    faster then the DOM filter and only the SAX filter can handle huge messages.
+	 -->
+	<params>
+		<param name="stream.filter.type">SAX</param>
+	</params>
+
+	<!--
+		Imports the EDI reader configuration
+	 -->
+	<import file="read/edi-product-reader.xml" />
+
+	<!--
+		Imports the database datasource configuration
+	 -->
+	<import file="database/datasource.xml" />
+
+	<!--
+		The following three elements import the router configurations to several
+		end points.
+		Because these routers all do there thing on the visit after action they must
+		be defined before the javabean binding and enriching configuration
+		if these actions are to be executed after the javabean binding and enriching.
+	 -->
+	<import file="routing/route-to-database.xml" />
+
+	<import file="routing/route-to-jms-all-receiver.xml" />
+
+	<import file="routing/route-to-jms-pc-and-laptop-receiver.xml" />
+
+
+
+	<!--
+		The following two elements import the configuration which enrich the data from
+		the EDI message.
+		It is important for the stock-service that it is defined before the javabean binding
+		because it uses the data from the beans and it execute the service in the after visit
+		action.
+	 -->
+	<import file="enrich/stock-service.xml" />
+
+	<import file="enrich/part-data.xml" />
+
+	<!--
+		Imports the javabean binding configuration
+	 -->
+	<import file="binding/bean-binding.xml" />
+
+
+</smooks-resource-list>

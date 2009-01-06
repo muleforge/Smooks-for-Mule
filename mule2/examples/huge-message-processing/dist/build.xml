@@ -1,0 +1,66 @@
+<project name="Smooks for Mule 2.x - EDI to Java example" default="install" basedir=".">
+
+	<property environment="env" />
+
+	<property name="mule.home" value="${env.MULE_HOME}" />
+
+	<path id="classpath">
+		<fileset dir="lib/user">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="lib/opt">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="../../lib/user">
+			<include name="**/*.jar" />
+		</fileset>
+
+    </path>
+
+	<target name="check-mule-home">
+
+		<fail message="MULE_HOME environment variable not set" unless="mule.home" />
+
+		<fail message="MULE_HOME '${mule.home}' does not exist.">
+			<condition>
+				<not>
+					<available file="${mule.home}" type="dir" />
+				</not>
+			</condition>
+		</fail>
+
+	</target>
+
+	<target name="install" depends="check-mule-home"  description="Installs the example with mule">
+
+		<copy todir="${mule.home}/lib/user" >
+			<fileset dir="lib/user" />
+		</copy>
+
+	</target>
+
+	<target name="generate" description="Generates a EDI file with a specifiable number of products.">
+
+		<java classname="example.hmp.generator.EdiGenerator" fork="true" classpathref="classpath" />
+
+	</target>
+
+	<target name="run-services" depends="check-mule-home" description="Runs the database and JMS service.">
+
+		<java classname="example.hmp.service.ServiceManager" fork="true" classpathref="classpath"/>
+
+	</target>
+
+	<target name="run-consumer-1" depends="check-mule-home" description="Runs the first consumer which wants all products.">
+
+		<java classname="example.hmp.consumer.AllProductsConsumer" fork="true" classpathref="classpath" />
+
+	</target>
+
+	<target name="run-consumer-2" depends="check-mule-home" description="Runs the second consumer which wants only PC's and laptop products.">
+
+		<java classname="example.hmp.consumer.PCsAndLaptopsProductsConsumer" fork="true" classpathref="classpath" />
+
+	</target>
+
+</project>

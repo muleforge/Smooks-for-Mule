@@ -1,0 +1,39 @@
+~~
+~~ Copyright (C) 2008 Maurice Zeijen <maurice@zeijen.net>
+~~ 
+~~ Licensed under the Apache License, Version 2.0 (the "License");
+~~ you may not use this file except in compliance with the License.
+~~ You may obtain a copy of the License at
+~~ 
+~~         http://www.apache.org/licenses/LICENSE-2.0
+~~ 
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~
+
+                                    ------
+                                 Smooks for Mule
+                                    ------
+                                  Maurice Zeijen
+                                    ------
+                                   12 Juli 2008
+                                    ------
+
+Smooks for Mule
+
+  Smooks for Mule enables Message Transformation and Routing using the Smooks Engine.
+  Smooks is a Java Framework/Engine for processing XML and non XML data (CSV, EDI etc).
+  More on Smooks can be found on the {{{http://milyn.codehaus.org/Smooks}Smooks website}}.
+
+  Smooks for Mule is compatible with Mule 1.x and Mule 2.x. To make that work the project is divided in three modules.
+
+    * A Core module (Mule independent)
+
+    * A Mule 1.x module (mvn: org.mule.modules:mule1-module-smooks)
+
+    * A Mule 2.x module (mvn: org.mule.modules:mule2-module-smooks)
+
+  You only need the Smooks for Mule module for the Mule version that you use. The core module is in both present.
