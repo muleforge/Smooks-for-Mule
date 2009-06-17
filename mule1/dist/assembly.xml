@@ -25,7 +25,7 @@ Assembly descriptor for the full distribution.
 
 		<moduleSet>
 			<includes>
-				<include>org.mule.modules:mule1-module-smooks</include>
+				<include>org.mule.modules.mule-module-smooks:smooks-4-mule-1</include>
 			</includes>
 			<sources>
 
@@ -67,7 +67,7 @@ Assembly descriptor for the full distribution.
 
 		<moduleSet>
 			<includes>
-				<include>org.mule.modules:mule1-module-smooks-examples-edi-to-java-transformation</include>
+				<include>org.mule.modules.mule-module-smooks:smooks-4-mule-1-examples-edi-to-java-transformation</include>
 			</includes>
 			<sources>
 				<outputDirectoryMapping>/examples/edi-to-java-transformation/</outputDirectoryMapping>
@@ -100,7 +100,7 @@ Assembly descriptor for the full distribution.
 						<excludes>
 							<exclude>commons-lang</exclude>
 							<exclude>commons-logging</exclude>
-							<exclude>org.mule.modules:mule1-module-smooks:jar</exclude>
+							<exclude>org.mule.modules.mule-module-smooks:smooks-4-mule-1:jar</exclude>
 						</excludes>
 					</dependencySet>
 				</dependencySets>
@@ -109,7 +109,7 @@ Assembly descriptor for the full distribution.
 
 		<moduleSet>
 			<includes>
-				<include>org.mule.modules:mule1-module-smooks-examples-basic-transformation</include>
+				<include>org.mule.modules.mule-module-smooks:smooks-4-mule-1-examples-basic-transformation</include>
 			</includes>
 			<sources>
 				<outputDirectoryMapping>/examples/basic-transformation/</outputDirectoryMapping>
@@ -142,7 +142,7 @@ Assembly descriptor for the full distribution.
 						<excludes>
 							<exclude>commons-lang</exclude>
 							<exclude>commons-logging</exclude>
-							<exclude>org.mule.modules:mule1-module-smooks:jar</exclude>
+							<exclude>org.mule.modules.mule-module-smooks:smooks-4-mule-1:jar</exclude>
 							<exclude>ognl</exclude>
 							<exclude>antlr</exclude>
 						</excludes>
@@ -153,7 +153,7 @@ Assembly descriptor for the full distribution.
 
 		<moduleSet>
 			<includes>
-				<include>org.mule.modules:mule1-module-smooks-examples-basic-routing</include>
+				<include>org.mule.modules.mule-module-smooks:smooks-4-mule-1-examples-basic-routing</include>
 			</includes>
 			<sources>
 				<outputDirectoryMapping>/examples/basic-routing/</outputDirectoryMapping>
@@ -186,7 +186,7 @@ Assembly descriptor for the full distribution.
 						<excludes>
 							<exclude>commons-lang</exclude>
 							<exclude>commons-logging</exclude>
-							<exclude>org.mule.modules:mule1-module-smooks:jar</exclude>
+							<exclude>org.mule.modules.mule-module-smooks:smooks-4-mule-1:jar</exclude>
 						</excludes>
 					</dependencySet>
 				</dependencySets>
