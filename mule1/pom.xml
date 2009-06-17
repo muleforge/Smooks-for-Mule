@@ -3,13 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>mule-module-smooks</artifactId>
-		<groupId>org.mule.modules</groupId>
-		<version>1.1</version>
+		<groupId>org.mule.modules.mule-module-smooks</groupId>
+		<artifactId>smooks-4-mule-parent</artifactId>
+		<version>1.1.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.mule.modules</groupId>
-	<artifactId>mule1-module-smooks-parent</artifactId>
+	<groupId>org.mule.modules.mule-module-smooks</groupId>
+	<artifactId>smooks-4-mule-1-parent</artifactId>
 	<name>Smooks for Mule 1.x - Parent pom</name>
 	<packaging>pom</packaging>
 	<description>Parent pom Smooks for Mule  1.x. This project contains the general settings of the Smooks for Mule  1.x Core and it's examples.</description>

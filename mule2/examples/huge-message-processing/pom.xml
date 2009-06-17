@@ -3,13 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>mule2-module-smooks-examples</artifactId>
-		<groupId>org.mule.modules</groupId>
-		<version>1.1</version>
+		<groupId>org.mule.modules.mule-module-smooks</groupId>
+		<artifactId>smooks-4-mule-2-examples</artifactId>
+		<version>1.1.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.mule.modules</groupId>
-	<artifactId>mule2-module-smooks-examples-huge-message-processing</artifactId>
+	<groupId>org.mule.modules.mule-module-smooks</groupId>
+	<artifactId>smooks-4-mule-2-examples-huge-message-processing</artifactId>
 	<name>Smooks for Mule 2.x - Huge message processing example</name>
 	<description>Is a extensive example how huge message can be splitted, enriched, transformed and routed with Smooks.</description>
 
@@ -85,8 +85,8 @@
 		<!-- The  Mule Smooks Module -->
 
 		<dependency>
-			<groupId>org.mule.modules</groupId>
-			<artifactId>mule2-module-smooks</artifactId>
+			<groupId>org.mule.modules.mule-module-smooks</groupId>
+			<artifactId>smooks-4-mule-2</artifactId>
 		</dependency>
 
 		<!-- The Smooks dependencies -->

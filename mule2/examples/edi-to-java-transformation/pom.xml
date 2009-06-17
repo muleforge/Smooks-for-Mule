@@ -3,13 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>mule2-module-smooks-examples</artifactId>
-		<groupId>org.mule.modules</groupId>
-		<version>1.1</version>
+		<groupId>org.mule.modules.mule-module-smooks</groupId>
+		<artifactId>smooks-4-mule-2-examples</artifactId>
+		<version>1.1.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.mule.modules</groupId>
-	<artifactId>mule2-module-smooks-examples-edi-to-java-transformation</artifactId>
+	<groupId>org.mule.modules.mule-module-smooks</groupId>
+	<artifactId>smooks-4-mule-2-examples-edi-to-java-transformation</artifactId>
 	<name>Smooks for Mule 2.x - EDI to Java example</name>
 	<description>Is a simple example of how the Smooks for Mule Transformer can be used.</description>
 
@@ -80,8 +80,8 @@
 		<!-- The  Mule Smooks Module -->
 
 		<dependency>
-			<groupId>org.mule.modules</groupId>
-			<artifactId>mule2-module-smooks</artifactId>
+			<groupId>org.mule.modules.mule-module-smooks</groupId>
+			<artifactId>smooks-4-mule-2</artifactId>
 		</dependency>
 
 		<!-- The Smooks dependencies -->
