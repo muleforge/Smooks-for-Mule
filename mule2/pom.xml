@@ -36,7 +36,7 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
-					<finalName>mule2-module-smooks-${version}</finalName>
+					<finalName>smooks-4-mule-2-${version}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<descriptors>
 						<descriptor>dist/assembly.xml</descriptor>
