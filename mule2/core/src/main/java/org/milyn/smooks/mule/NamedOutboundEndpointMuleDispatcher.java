@@ -157,11 +157,6 @@ public class NamedOutboundEndpointMuleDispatcher implements NamedEndpointMuleDis
 
 		try {
 
-			if (!forceSynchronous)
-            {
-                message.setBooleanProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, endpoint.isRemoteSync());
-            }
-
 			if(synchr) {
 				return router.send(muleSession, message, endpoint);
 			} else {
