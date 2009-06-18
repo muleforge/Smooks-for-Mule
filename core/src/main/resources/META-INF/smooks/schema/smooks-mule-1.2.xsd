@@ -19,8 +19,8 @@
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:smooks="http://www.milyn.org/xsd/smooks-1.1.xsd"
-           xmlns:mule="http://dist.muleforge.org/smooks/schema/smooks-mule-1.1.xsd"
-           targetNamespace="http://dist.muleforge.org/smooks/schema/smooks-mule-1.1.xsd"
+           xmlns:mule="http://dist.muleforge.org/smooks/schema/smooks-mule-1.2.xsd"
+           targetNamespace="http://dist.muleforge.org/smooks/schema/smooks-mule-1.2.xsd"
            elementFormDefault="qualified">
 
     <xs:import namespace="http://www.milyn.org/xsd/smooks-1.1.xsd"/>

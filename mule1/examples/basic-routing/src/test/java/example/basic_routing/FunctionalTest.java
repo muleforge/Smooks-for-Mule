@@ -46,7 +46,7 @@ public class FunctionalTest extends FunctionalTestCase
 		MuleClient client = new MuleClient();
 		client.send("vm://BasicRouting", new MuleMessage(in));
 
-		assert getReportFile().exists() : "The report file wasn't created";
+		assertTrue("The report file wasn't created", getReportFile().exists());
 	}
 
 

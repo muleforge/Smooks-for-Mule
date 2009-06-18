@@ -21,6 +21,6 @@ package org.milyn.smooks.mule.core;
  */
 public class Constants {
 
-	public static final String MULE_SMOOKS_NAMESPACE = "http://dist.muleforge.org/smooks/schema/smooks-mule-1.1.xsd";
+	public static final String MULE_SMOOKS_NAMESPACE = "http://dist.muleforge.org/smooks/schema/smooks-mule-1.2.xsd";
 
 }

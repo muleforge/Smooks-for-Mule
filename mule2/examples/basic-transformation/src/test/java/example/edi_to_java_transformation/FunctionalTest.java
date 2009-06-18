@@ -58,7 +58,7 @@ public class FunctionalTest extends FunctionalTestCase
 
 		Object payload = reply.getPayload();
 
-		assert payload instanceof String : "The message payload is not an instance of String";
+		assertTrue("The message payload is not an instance of String", payload instanceof String);
 
 		String result = (String) payload;
 
@@ -66,7 +66,7 @@ public class FunctionalTest extends FunctionalTestCase
 
 		assertTrue(StreamUtils.compareCharStreams(new ByteArrayInputStream(expected), new ByteArrayInputStream(result.getBytes())));
 
-		assert getReportFile().exists() : "The report file wasn't created";
+		assertTrue("The report file wasn't created", getReportFile().exists());
 	}
 
 

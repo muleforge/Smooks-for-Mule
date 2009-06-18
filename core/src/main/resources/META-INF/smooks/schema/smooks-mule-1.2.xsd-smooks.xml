@@ -17,13 +17,13 @@
 
 -->
 
-<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd" default-selector-namespace="http://dist.muleforge.org/smooks/schema/smooks-mule-1.1.xsd">
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd" default-selector-namespace="http://dist.muleforge.org/smooks/schema/smooks-mule-1.2.xsd">
 
 	<!-- PERSISTER -->
 
     <resource-config selector="dispatcher">
         <resource>org.milyn.cdr.extension.NewResourceConfig</resource>
-        <param name="resource">org.milyn.smooks.mule.MuleDispatcher</param>
+        <param name="resource">org.milyn.smooks.mule.core.MuleDispatcher</param>
     </resource-config>
 
     <resource-config selector="dispatcher">
@@ -75,7 +75,7 @@
     </resource-config>
 
     <resource-config selector="dispatcher">
-        <resource>org.milyn.smooks.mule.ext.DecodeParamResolver</resource>
+        <resource>org.milyn.smooks.mule.core.ext.DecodeParamResolver</resource>
     </resource-config>
 
 </smooks-resource-list>

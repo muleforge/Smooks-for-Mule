@@ -65,7 +65,7 @@
             </inbound>
             <outbound>
             	<pass-through-router>
-            		<stdio:outbound-endpoint system="OUT" />
+            		<stdio:outbound-endpoint system="OUT" synchronous="true" />
             	</pass-through-router>
             </outbound>
         </service>

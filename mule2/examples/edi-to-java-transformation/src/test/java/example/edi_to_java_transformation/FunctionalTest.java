@@ -63,11 +63,11 @@ public class FunctionalTest extends FunctionalTestCase
 
 		Object payload = reply.getPayload();
 
-		assert payload instanceof Order : "The message payload is not an instance of Order";
+		assertTrue("The message payload is not an instance of Order", payload instanceof Order);
 
 		assertOrder((Order) payload);
 
-		assert getReportFile().exists() : "The report file wasn't created";
+		assertTrue("The report file wasn't created", getReportFile().exists());
 	}
 
 	private void assertOrder(Order order) {

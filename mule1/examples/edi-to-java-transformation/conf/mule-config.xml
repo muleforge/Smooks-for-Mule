@@ -65,7 +65,7 @@
 
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="stream://System.out"/>
+                    <endpoint address="stream://System.out" synchronous="true"/>
                 </router>
             </outbound-router>
         </mule-descriptor>
