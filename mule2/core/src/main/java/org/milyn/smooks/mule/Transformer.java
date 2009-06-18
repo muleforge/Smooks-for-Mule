@@ -16,8 +16,7 @@
 
 package org.milyn.smooks.mule;
 
-import static org.milyn.smooks.mule.Constants.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT;
-import static org.milyn.smooks.mule.Constants.MESSAGE_PROPERTY_KEY_PROFILE;
+import static org.milyn.smooks.mule.Constants.*;
 import static org.mule.config.i18n.MessageFactory.createStaticMessage;
 
 import java.io.IOException;
@@ -29,6 +28,13 @@ import org.milyn.Smooks;
 import org.milyn.container.ExecutionContext;
 import org.milyn.container.plugin.PayloadProcessor;
 import org.milyn.event.report.HtmlReportGenerator;
+import org.milyn.smooks.mule.core.ClassNameResultFactory;
+import org.milyn.smooks.mule.core.ExecutionContextUtil;
+import org.milyn.smooks.mule.core.GenericSourceResultFactory;
+import org.milyn.smooks.mule.core.ResultFactory;
+import org.milyn.smooks.mule.core.ResultType;
+import org.milyn.smooks.mule.core.SmooksPayloadProcessor;
+import org.milyn.smooks.mule.core.SourceResultFactory;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
@@ -60,7 +66,7 @@ import org.xml.sax.SAXException;
  * <li><i>resultClass</i> - When the resultType is set to "RESULT" then this attribute defines the Result Class which will be used.
  * 							The class must implement the {@link javax.xml.transform.Result} interface and must have an argumentless constructor.
  * <li><i>resultFactoryClass</i> - When the resultType is set to "RESULT" then this attribute defines the ResultFactory	Class which will be used
- * 								   to create the	Result Class. The class must implement the	{@link org.milyn.smooks.mule.ResultFactory} interface and
+ * 								   to create the	Result Class. The class must implement the	{@link org.milyn.smooks.mule.core.ResultFactory} interface and
  * 								   must have an argumentless constructor.
  * <li><i>profile</i> - The Smooks profile to execute. If a profile name was found on the message then that one is used.
  * <li><i>profileMessagePropertyKey</i> - The name of the message property which could contain a possible profile name.
@@ -97,7 +103,7 @@ import org.xml.sax.SAXException;
  * If you need to use a factory class to instantiate the result class then this is also possible. By
  * setting the "resultFactoryClass" with the class name of the factory the transformer will instantiate
  * that factory an use its createResult() method to instantiate the Result object.
- * The Factory must implement the {@link org.milyn.smooks.mule.ResultFactory} and have an argumentless constructor.
+ * The Factory must implement the {@link org.milyn.smooks.mule.core.ResultFactory} and have an argumentless constructor.
  *
  * <p/>
  * It is expected that the above mechanism will be satisfactory for most use cases, but not all.

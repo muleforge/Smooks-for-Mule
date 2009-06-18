@@ -16,8 +16,7 @@
 
 package org.milyn.smooks.mule;
 
-import static org.milyn.smooks.mule.Constants.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT;
-import static org.milyn.smooks.mule.Constants.MESSAGE_PROPERTY_KEY_PROFILE;
+import static org.milyn.smooks.mule.Constants.*;
 import static org.mule.config.i18n.MessageFactory.createStaticMessage;
 
 import java.io.IOException;
@@ -28,6 +27,10 @@ import org.apache.commons.lang.StringUtils;
 import org.milyn.Smooks;
 import org.milyn.container.ExecutionContext;
 import org.milyn.event.report.HtmlReportGenerator;
+import org.milyn.smooks.mule.core.MuleDispatcher;
+import org.milyn.smooks.mule.core.NamedEndpointMuleDispatcher;
+import org.milyn.smooks.mule.core.ResultType;
+import org.milyn.smooks.mule.core.SmooksPayloadProcessor;
 import org.mule.config.i18n.Message;
 import org.mule.routing.outbound.FilteringOutboundRouter;
 import org.mule.umo.UMOMessage;
@@ -77,7 +80,7 @@ import org.xml.sax.SAXException;
  * so that it knows which endpoint to use.
  *
  * <h3>Using the Smooks MuleDispatcher</h3>
- * Within the Smooks Router the {@link org.milyn.smooks.mule.MuleDispatcher} resource is used to actually route the message parts
+ * Within the Smooks Router the {@link org.milyn.smooks.mule.core.MuleDispatcher} resource is used to actually route the message parts
  * to one of the defined endpoints (using the endpoint name). The following example demonstrates how to configure a MuleDispatcher:
  *
  * <pre>

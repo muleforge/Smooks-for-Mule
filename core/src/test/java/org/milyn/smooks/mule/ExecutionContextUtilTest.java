@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 
 import org.milyn.container.ExecutionContext;
 import org.milyn.container.MockExecutionContext;
+import org.milyn.smooks.mule.core.ExecutionContextUtil;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>

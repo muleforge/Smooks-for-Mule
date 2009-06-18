@@ -27,6 +27,11 @@ import junit.framework.TestCase;
 import org.milyn.Smooks;
 import org.milyn.container.MockExecutionContext;
 import org.milyn.payload.StringResult;
+import org.milyn.smooks.mule.core.ClassNameResultFactory;
+import org.milyn.smooks.mule.core.GenericSourceResultFactory;
+import org.milyn.smooks.mule.core.ResultType;
+import org.milyn.smooks.mule.core.SmooksPayloadProcessor;
+import org.milyn.smooks.mule.core.SourceResultFactory;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>

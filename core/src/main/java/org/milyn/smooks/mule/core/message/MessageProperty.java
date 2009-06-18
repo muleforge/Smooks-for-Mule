@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.milyn.smooks.mule.message;
+package org.milyn.smooks.mule.core.message;
 
 import org.milyn.container.ExecutionContext;
 

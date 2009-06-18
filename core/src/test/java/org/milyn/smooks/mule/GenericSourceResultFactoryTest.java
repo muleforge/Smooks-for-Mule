@@ -23,6 +23,8 @@ import javax.xml.transform.Result;
 import junit.framework.TestCase;
 
 import org.milyn.container.plugin.SourceResult;
+import org.milyn.smooks.mule.core.GenericSourceResultFactory;
+import org.milyn.smooks.mule.core.ResultFactory;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>

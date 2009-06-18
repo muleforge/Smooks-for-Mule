@@ -23,6 +23,7 @@ import java.io.IOException;
 import javax.xml.transform.dom.DOMResult;
 
 import org.milyn.io.StreamUtils;
+import org.milyn.smooks.mule.Constants;
 import org.mule.impl.RequestContext;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOEventContext;

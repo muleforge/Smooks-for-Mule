@@ -14,36 +14,31 @@
  * limitations under the License.
  */
 
-package org.milyn.smooks.mule.message;
-
-import java.util.Map;
+package org.milyn.smooks.mule.core.message;
 
 import org.milyn.container.ExecutionContext;
-import org.milyn.expression.MVELExpressionEvaluator;
-import org.milyn.javabean.BeanAccessor;
-import org.milyn.javabean.repository.BeanRepository;
+
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
  *
  */
-public class MVELEvaluatingMessagePropertyValue implements MessagePropertyValue {
+public class StaticMessagePropertyValue implements MessagePropertyValue {
 
-	private final MVELExpressionEvaluator evaluator;
+	private final Object value;
 
 	/**
 	 * @param value
 	 */
-	public MVELEvaluatingMessagePropertyValue(MVELExpressionEvaluator evaluator) {
-		this.evaluator = evaluator;
+	public StaticMessagePropertyValue(Object value) {
+		this.value = value;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.milyn.smooks.mule.MessagePropertyValue#getValue()
 	 */
 	public Object getValue(ExecutionContext executionContext) {
-		Map<?, ?> beanMap = BeanRepository.getInstance(executionContext).getBeanMap();
-		return evaluator.getValue(beanMap);
+		return value;
 	}
 
 }

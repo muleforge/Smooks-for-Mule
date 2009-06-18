@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package test;
+package org.milyn.smooks.mule.core;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.dom.DOMResult;
-
-import org.milyn.smooks.mule.core.ResultFactory;
+import java.util.Map;
 
 /**
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  */
-public class DummyResultFactory implements ResultFactory {
+public interface NamedEndpointMuleDispatcher {
 
-	public Result createResult() {
-		return new DOMResult();
-	}
+	static String SMOOKS_CONTEXT = NamedEndpointMuleDispatcher.class.getName() + "#CONTEXT";
+
+	Object dispatch(String endpointName, Object payload, Map<?, ?> messageProperties, boolean forceSynchronous);
 
 }

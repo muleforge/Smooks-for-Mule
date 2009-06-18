@@ -19,6 +19,9 @@ package org.milyn.smooks.mule;
 import java.util.Map;
 
 import org.milyn.container.ExecutionContext;
+import org.milyn.smooks.mule.core.ExecutionContextUtil;
+import org.milyn.smooks.mule.core.MuleDispatcher;
+import org.milyn.smooks.mule.core.NamedEndpointMuleDispatcher;
 import org.mule.config.MuleProperties;
 import org.mule.impl.MuleMessage;
 import org.mule.routing.outbound.AbstractOutboundRouter;

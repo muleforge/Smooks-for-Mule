@@ -29,6 +29,7 @@ import org.milyn.Smooks;
 import org.milyn.container.ExecutionContext;
 import org.milyn.event.report.HtmlReportGenerator;
 import org.milyn.payload.JavaResult;
+import org.milyn.smooks.mule.core.NamedEndpointMuleDispatcher;
 import org.xml.sax.SAXException;
 
 import junit.framework.TestCase;

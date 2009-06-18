@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package test;
+package org.milyn.smooks.mule.core.message;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.dom.DOMResult;
-
-import org.milyn.smooks.mule.core.ResultFactory;
+import org.milyn.container.ExecutionContext;
 
 /**
+ * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
  *
- * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  */
-public class DummyResultFactory implements ResultFactory {
+public interface MessagePropertyValue {
 
-	public Result createResult() {
-		return new DOMResult();
-	}
+	Object getValue(ExecutionContext executionContext);
 
 }

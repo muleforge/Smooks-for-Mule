@@ -14,21 +14,37 @@
  * limitations under the License.
  */
 
-package test;
+package org.milyn.smooks.mule.core;
 
 import javax.xml.transform.Result;
-import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.Source;
 
-import org.milyn.smooks.mule.core.ResultFactory;
+import org.milyn.container.plugin.SourceFactory;
+import org.milyn.container.plugin.SourceResult;
 
 /**
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
+ *
  */
-public class DummyResultFactory implements ResultFactory {
+public class GenericSourceResultFactory implements SourceResultFactory {
 
-	public Result createResult() {
-		return new DOMResult();
+	private final ResultFactory resultFactory;
+
+	public GenericSourceResultFactory(ResultFactory resultFactory) {
+		this.resultFactory = resultFactory;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.milyn.smooks.mule.SourceResultFactory#createSourceResult(java.lang.Object)
+	 */
+	public SourceResult createSourceResult(Object payload) {
+
+		Source source = SourceFactory.getInstance().createSource(payload);
+		Result result = resultFactory.createResult();
+
+		return new SourceResult(source, result);
+
 	}
 
 }

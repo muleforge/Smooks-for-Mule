@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.milyn.smooks.mule.ext;
+package org.milyn.smooks.mule.core.ext;
 
 import org.milyn.delivery.dom.DOMVisitAfter;
 import org.milyn.delivery.dom.DOMVisitBefore;
@@ -26,8 +26,8 @@ import org.milyn.container.ExecutionContext;
 import org.milyn.delivery.dom.DOMVisitBefore;
 import org.milyn.javabean.BeanUtils;
 import org.milyn.javabean.DataDecoder;
-import org.milyn.smooks.mule.Constants;
-import org.milyn.smooks.mule.MuleDispatcher;
+import org.milyn.smooks.mule.core.Constants;
+import org.milyn.smooks.mule.core.MuleDispatcher;
 import org.milyn.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

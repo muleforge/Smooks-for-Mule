@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package test;
+package org.milyn.smooks.mule.core;
 
 import javax.xml.transform.Result;
-import javax.xml.transform.dom.DOMResult;
-
-import org.milyn.smooks.mule.core.ResultFactory;
 
 /**
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
+ *
  */
-public class DummyResultFactory implements ResultFactory {
+public interface ResultFactory {
 
-	public Result createResult() {
-		return new DOMResult();
-	}
+	Result createResult();
 
 }

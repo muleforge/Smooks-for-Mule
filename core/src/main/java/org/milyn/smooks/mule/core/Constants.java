@@ -13,32 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.milyn.smooks.mule.message;
-
-import org.milyn.container.ExecutionContext;
-
+package org.milyn.smooks.mule.core;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
  *
  */
-public class StaticMessagePropertyValue implements MessagePropertyValue {
+public class Constants {
 
-	private final Object value;
-
-	/**
-	 * @param value
-	 */
-	public StaticMessagePropertyValue(Object value) {
-		this.value = value;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.milyn.smooks.mule.MessagePropertyValue#getValue()
-	 */
-	public Object getValue(ExecutionContext executionContext) {
-		return value;
-	}
+	public static final String MULE_SMOOKS_NAMESPACE = "http://dist.muleforge.org/smooks/schema/smooks-mule-1.1.xsd";
 
 }

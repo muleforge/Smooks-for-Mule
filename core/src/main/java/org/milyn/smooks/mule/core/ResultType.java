@@ -14,21 +14,27 @@
  * limitations under the License.
  */
 
-package test;
-
-import javax.xml.transform.Result;
-import javax.xml.transform.dom.DOMResult;
-
-import org.milyn.smooks.mule.core.ResultFactory;
+package org.milyn.smooks.mule.core;
 
 /**
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
+ *
  */
-public class DummyResultFactory implements ResultFactory {
+public enum ResultType {
+	STRING(org.milyn.container.plugin.ResultType.STRING),
+    BYTES(org.milyn.container.plugin.ResultType.BYTES),
+    JAVA(org.milyn.container.plugin.ResultType.JAVA),
+    RESULT(null),
+    NORESULT(org.milyn.container.plugin.ResultType.NORESULT);
 
-	public Result createResult() {
-		return new DOMResult();
+    private org.milyn.container.plugin.ResultType smooksResultType;
+
+    public org.milyn.container.plugin.ResultType getSmooksResultType() {
+		return smooksResultType;
 	}
 
+	private ResultType(org.milyn.container.plugin.ResultType smooksResultType) {
+    	this.smooksResultType = smooksResultType;
+	}
 }
