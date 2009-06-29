@@ -18,9 +18,11 @@ package org.milyn.smooks.mule.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.milyn.SmooksException;
@@ -38,6 +40,8 @@ import org.milyn.delivery.annotation.Initialize;
 import org.milyn.delivery.annotation.VisitAfterIf;
 import org.milyn.delivery.annotation.VisitBeforeIf;
 import org.milyn.delivery.dom.DOMElementVisitor;
+import org.milyn.delivery.ordering.Consumer;
+import org.milyn.delivery.ordering.Producer;
 import org.milyn.delivery.sax.SAXElement;
 import org.milyn.delivery.sax.SAXVisitAfter;
 import org.milyn.delivery.sax.SAXVisitBefore;
@@ -54,6 +58,7 @@ import org.milyn.smooks.mule.core.message.MVELEvaluatingMessagePropertyValue;
 import org.milyn.smooks.mule.core.message.MessageProperty;
 import org.milyn.smooks.mule.core.message.MessagePropertyValue;
 import org.milyn.smooks.mule.core.message.StaticMessagePropertyValue;
+import org.milyn.util.CollectionsUtil;
 import org.milyn.xml.DomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,7 +152,7 @@ import org.w3c.dom.NodeList;
 @VisitAfterIf(condition = "!parameters.containsKey('executeBefore') || parameters.executeBefore.value != 'true'")
 @VisitBeforeReport(summary = "Dispatch to endpoint '${resource.parameters.endpointName}'.", detailTemplate = "reporting/MuleDispatcher.html")
 @VisitAfterReport(summary = "Dispatch to endpoint '${resource.parameters.endpointName}'.", detailTemplate = "reporting/MuleDispatcher.html")
-public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVisitAfter {
+public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVisitAfter, Consumer, Producer {
 
 	private static final String MESSAGE_PROPERTIES_PARAMETER_TYPE = "type";
 
@@ -500,5 +505,29 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 
         return decoder;
     }
+
+	/* (non-Javadoc)
+	 * @see org.milyn.delivery.ordering.Consumer#consumes(java.lang.Object)
+	 */
+	public boolean consumes(Object object) {
+		if(object.toString().equals(beanIdName)) {
+            return true;
+        }
+		if(object.toString().equals(messagePropertiesBeanIdName)) {
+            return true;
+        }
+
+        return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.milyn.delivery.ordering.Producer#getProducts()
+	 */
+	public Set<? extends Object> getProducts() {
+		if(resultBeanIdName == null) {
+			return Collections.emptySet();
+		}
+		return CollectionsUtil.toSet(resultBeanIdName);
+	}
 
 }
