@@ -21,6 +21,7 @@ import java.util.List;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
 import org.slf4j.Logger;
@@ -55,6 +56,13 @@ public class PersistingMessageListener implements MessageListener{
 		if(logger.isDebugEnabled() && message instanceof TextMessage) {
 			try {
 				logger.debug("Message content {}", ((TextMessage)message).getText());
+			} catch (JMSException e) {
+				logger.error("Tried to read the TextMessage but got an exception", e);
+			}
+		}
+		if(logger.isDebugEnabled() && message instanceof ObjectMessage) {
+			try {
+				logger.debug("Message content {}", ((ObjectMessage)message).getObject());
 			} catch (JMSException e) {
 				logger.error("Tried to read the TextMessage but got an exception", e);
 			}

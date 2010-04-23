@@ -16,7 +16,12 @@
 
 package org.milyn.smooks.mule;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isNull;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -25,14 +30,13 @@ import java.util.HashMap;
 
 import javax.xml.transform.stream.StreamSource;
 
+import junit.framework.TestCase;
+
 import org.milyn.Smooks;
 import org.milyn.container.ExecutionContext;
-import org.milyn.event.report.HtmlReportGenerator;
 import org.milyn.payload.JavaResult;
 import org.milyn.smooks.mule.core.NamedEndpointMuleDispatcher;
 import org.xml.sax.SAXException;
-
-import junit.framework.TestCase;
 
 /**
  * TODO: Write Unit Tests for MuleDispatcher
@@ -71,7 +75,7 @@ public class MuleDispatcherTest extends TestCase {
         ExecutionContext execContext = smooks.createExecutionContext();
         execContext.setAttribute(NamedEndpointMuleDispatcher.SMOOKS_CONTEXT, dispatcher);
 
-        smooks.filter(new StreamSource(getClass().getResourceAsStream("/test-data-01.xml")), null, execContext);
+        smooks.filterSource(execContext, new StreamSource(getClass().getResourceAsStream("/test-data-01.xml")));
 
         verify(dispatcher);
     }
@@ -101,7 +105,7 @@ public class MuleDispatcherTest extends TestCase {
 
 		result.getResultMap().put("payload", payload);
 
-        smooks.filter(new StreamSource(getClass().getResourceAsStream("/test-data-01.xml")), result, execContext);
+        smooks.filterSource(execContext, new StreamSource(getClass().getResourceAsStream("/test-data-01.xml")), result);
 
         verify(dispatcher);
     }
@@ -125,7 +129,7 @@ public class MuleDispatcherTest extends TestCase {
 		ExecutionContext execContext = smooks.createExecutionContext();
 		execContext.setAttribute(NamedEndpointMuleDispatcher.SMOOKS_CONTEXT, dispatcher);
 
-        smooks.filter(new StreamSource(getClass().getResourceAsStream("/test-data-01.xml")), null, execContext);
+        smooks.filterSource(execContext, new StreamSource(getClass().getResourceAsStream("/test-data-01.xml")));
 
         verify(dispatcher);
     }
@@ -152,7 +156,7 @@ public class MuleDispatcherTest extends TestCase {
 		execContext.setAttribute(NamedEndpointMuleDispatcher.SMOOKS_CONTEXT, dispatcher);
 
 		JavaResult javaResult = new JavaResult();
-        smooks.filter(new StreamSource(getClass().getResourceAsStream("/test-data-01.xml")), javaResult, execContext);
+        smooks.filterSource(execContext, new StreamSource(getClass().getResourceAsStream("/test-data-01.xml")), javaResult);
 
         verify(dispatcher);
 
@@ -193,7 +197,7 @@ public class MuleDispatcherTest extends TestCase {
 		JavaResult javaResult = new JavaResult();
 		javaResult.getResultMap().put("messageProperties", propertiesToInject);
 
-        smooks.filter(new StreamSource(getClass().getResourceAsStream("/test-data-01.xml")), javaResult, execContext);
+        smooks.filterSource(execContext, new StreamSource(getClass().getResourceAsStream("/test-data-01.xml")), javaResult);
 
         verify(dispatcher);
     }

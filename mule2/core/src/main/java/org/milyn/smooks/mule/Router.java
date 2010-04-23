@@ -16,7 +16,8 @@
 
 package org.milyn.smooks.mule;
 
-import static org.milyn.smooks.mule.Constants.*;
+import static org.milyn.smooks.mule.Constants.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT;
+import static org.milyn.smooks.mule.Constants.MESSAGE_PROPERTY_KEY_PROFILE;
 import static org.mule.config.i18n.MessageFactory.createStaticMessage;
 
 import java.io.IOException;

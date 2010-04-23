@@ -54,6 +54,9 @@ public class Spec {
 		this.value = value;
 	}
 
-
+	@Override
+	public String toString() {
+		return "Spec [name=" + name + ", value=" + value + "]";
+	}
 
 }

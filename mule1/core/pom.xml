@@ -50,6 +50,18 @@
 			<artifactId>smooks-4-mule-core</artifactId>
 		</dependency>
 
+		<!-- Smooks Dependencies -->
+		<dependency>
+			<groupId>org.milyn</groupId>
+			<artifactId>milyn-smooks-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.milyn</groupId>
+			<artifactId>milyn-smooks-templating</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- Mule Dependencies -->
 		<dependency>
 			<groupId>org.mule</groupId>
@@ -88,17 +100,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Smooks Dependencies -->
-		<dependency>
-			<groupId>org.milyn</groupId>
-			<artifactId>milyn-smooks-core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.milyn</groupId>
-			<artifactId>milyn-smooks-templating</artifactId>
-			<scope>test</scope>
-		</dependency>
 
 		<!-- log4 j -->
 		<dependency>

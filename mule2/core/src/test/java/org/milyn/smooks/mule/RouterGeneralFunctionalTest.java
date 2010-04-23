@@ -71,7 +71,7 @@ public class RouterGeneralFunctionalTest extends FunctionalTestCase {
         assertTrue("File '" + testReplyFile + "' doesn't exist.", testReplyFile.exists());
 
         String testReplyFileContent = IOUtils.toString(new FileInputStream(testReplyFile), "UTF-8");
-        assertEquals("Reply value incorrect", "Hello World,testValue,test2Value,10,1215797456000,xmlTest1Value,xmlTest2Value,overwritten", testReplyFileContent);
+        assertEquals("Reply value incorrect", "Hello World,testValue,test2Value,10,1215779456000,xmlTest1Value,xmlTest2Value,overwritten", testReplyFileContent);
 
         assertTrue(reportFile.exists());
     }

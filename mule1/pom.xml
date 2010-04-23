@@ -61,12 +61,24 @@
 				<artifactId>mule-module-client</artifactId>
 				<version>${muleVersion}</version>
 				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<artifactId>dom4j</artifactId>
+						<groupId>dom4j</groupId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.mule.tests</groupId>
 				<artifactId>mule-tests-functional</artifactId>
 				<version>${muleVersion}</version>
 				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<artifactId>dom4j</artifactId>
+						<groupId>dom4j</groupId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<!-- Mule Transport Dependencies -->

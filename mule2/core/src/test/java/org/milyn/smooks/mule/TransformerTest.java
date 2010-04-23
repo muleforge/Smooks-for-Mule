@@ -24,7 +24,6 @@ import javax.xml.transform.dom.DOMResult;
 
 import org.junit.Before;
 import org.milyn.io.StreamUtils;
-import org.milyn.smooks.mule.Constants;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;

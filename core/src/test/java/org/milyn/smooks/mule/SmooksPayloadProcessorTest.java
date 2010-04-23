@@ -16,8 +16,11 @@
 
 package org.milyn.smooks.mule;
 
-import static org.easymock.EasyMock.*;
-import static org.easymock.classextension.EasyMock.*;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.same;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
@@ -54,7 +57,7 @@ public class SmooksPayloadProcessorTest extends TestCase {
 
 		MockExecutionContext context =  new MockExecutionContext();
 
-		mockSmooks.filter(isA(Source.class), isA(StringResult.class), same(context));
+		mockSmooks.filterSource(same(context), isA(Source.class), isA(StringResult.class));
 
 		replay(mockSmooks);
 
@@ -69,7 +72,7 @@ public class SmooksPayloadProcessorTest extends TestCase {
 
 		MockExecutionContext context =  new MockExecutionContext();
 
-		mockSmooks.filter(isA(Source.class), isA(DOMResult.class), same(context));
+		mockSmooks.filterSource(same(context), isA(Source.class), isA(DOMResult.class));
 
 		replay(mockSmooks);
 
