@@ -50,11 +50,14 @@ public class FunctionalTest extends FunctionalTestCase
 
 	private PersistingMessageListener pcsAndLaptopsProductsConsumerListener;
 
+	public FunctionalTest() {
+		setFailOnTimeout(false);
+	}
+
 	@Override
 	protected String getConfigResources() {
 		return "mule-config.xml";
 	}
-
 
 	@Test
 	public void testSmooks() throws Exception {

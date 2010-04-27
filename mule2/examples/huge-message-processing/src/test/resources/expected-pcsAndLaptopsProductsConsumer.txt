@@ -1,14 +1,16 @@
-{
-	"id" : 1000001,
-	"name" : "Avia C44",
-	"brand" : "XYZ-Blink",
-	"category" : 1,
-	"price" : 981.29,
-	"tax" : 19,
-	"parts" : [
-    	100003,
-    	100002,
-    	100009,
-    	100001
-	]
-}
+
+			{
+				"id" : 1000001,
+				"name" : "Avia C44",
+				"brand" : "XYZ-Blink",
+				"category" : 1,
+				"price" : 981.29,
+				"tax" : 19,
+				"parts" : [
+		        	100003,
+		        	100002,
+		        	100009,
+		        	100001
+				]
+			}
+

@@ -19,10 +19,10 @@ package org.milyn.smooks.mule;
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
 
+import junit.framework.TestCase;
+
 import org.milyn.smooks.mule.core.ClassNameResultFactory;
 import org.milyn.smooks.mule.core.ResultFactory;
-
-import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>

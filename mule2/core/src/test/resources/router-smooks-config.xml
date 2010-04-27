@@ -44,7 +44,7 @@
 			<property name="test" value="testValue" />
 			<property name="test2">"test2Value"</property>
 			<property name="testInt" value="10" type="Integer" />
-			<property name="testDate" value="2008-07-11 12:30:56" type="DateTime" />
+			<property name="testDate" value="2008-07-11 12:30:56 -0000" type="DateTime" />
 			<property name="testOverwritten" value="12345" />
 		</param>
 	</resource-config>
@@ -81,7 +81,7 @@
 
 	<resource-config selector="decoder:DateTime">
         <resource>org.milyn.javabean.decoders.DateDecoder</resource>
-        <param name="format">yyyy-MM-dd HH:mm:ss</param>
+        <param name="format">yyyy-MM-dd HH:mm:ss Z</param>
     </resource-config>
 
 </smooks-resource-list>

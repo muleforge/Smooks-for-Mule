@@ -54,8 +54,6 @@ Assembly descriptor for the full distribution.
 							<exclude>org.mule:mule-core</exclude>
 							<exclude>log4j:log4j</exclude>
 							<exclude>slf4j</exclude>
-							<exclude>cglib</exclude>
-							<exclude>org.easymock</exclude>
 							<exclude>xpp3</exclude>
 							<exclude>xstream</exclude>
 							<exclude>xerces</exclude>

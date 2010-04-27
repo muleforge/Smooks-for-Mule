@@ -73,4 +73,11 @@ public class Part {
 		this.buildIn = buildIn;
 	}
 
+	@Override
+	public String toString() {
+		return "Part [id=" + id + ", buildIn=" + buildIn + ", quantity="
+				+ quantity + "]";
+	}
+
+
 }

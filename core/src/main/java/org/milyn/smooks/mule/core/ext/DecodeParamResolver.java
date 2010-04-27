@@ -15,88 +15,65 @@
  */
 package org.milyn.smooks.mule.core.ext;
 
-import org.milyn.delivery.dom.DOMVisitAfter;
-import org.milyn.delivery.dom.DOMVisitBefore;
+import java.util.UUID;
 
 import org.milyn.SmooksException;
 import org.milyn.cdr.Parameter;
 import org.milyn.cdr.SmooksResourceConfiguration;
 import org.milyn.cdr.extension.ExtensionContext;
 import org.milyn.container.ExecutionContext;
+import org.milyn.delivery.dom.DOMVisitAfter;
 import org.milyn.delivery.dom.DOMVisitBefore;
-import org.milyn.javabean.BeanUtils;
 import org.milyn.javabean.DataDecoder;
 import org.milyn.smooks.mule.core.Constants;
 import org.milyn.smooks.mule.core.MuleDispatcher;
 import org.milyn.xml.DomUtils;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-
-import java.util.UUID;
 
 /**
  * Type decoder parameter mapping visitor.
  *
  * @author <a href="mailto:maurice.zeijen@smies.com">maurice.zeijen@smies.com</a>
  */
-public class DecodeParamResolver implements DOMVisitAfter {
+public class DecodeParamResolver implements DOMVisitBefore {
 
-    public void visitAfter(Element element, ExecutionContext executionContext) throws SmooksException {
-
+    public void visitBefore(Element element, ExecutionContext executionContext) throws SmooksException {
         ExtensionContext extensionContext = ExtensionContext.getExtensionContext(executionContext);
-        SmooksResourceConfiguration dispatcherConfig = extensionContext.getResourceStack().peek();
 
+    	NodeList decodeParams = element.getElementsByTagNameNS(Constants.MULE_SMOOKS_NAMESPACE, "decodeParam");
 
-        Parameter messagePropertiesParam = dispatcherConfig.getParameter(MuleDispatcher.PARAMETER_MESSAGE_PROPERTIES);
+    	// Check if this property has decode parameters.
+    	if(decodeParams.getLength() > 0) {
 
-        if(messagePropertiesParam == null) {
-        	return;
-        }
+    		try {
+    			// Create a new resource configuration for the configured decoder
+                SmooksResourceConfiguration decoderConfig = new SmooksResourceConfiguration();
+                extensionContext.addResource(decoderConfig);
 
-        //lookup all the property elements
-        NodeList propertyNodes = messagePropertiesParam.getXml().getElementsByTagNameNS(Constants.MULE_SMOOKS_NAMESPACE, "property");
-        for(int i = 0; i < propertyNodes.getLength(); i++) {
-        	Element propertyElem = (Element)propertyNodes.item(i);
+            	// retrieve the original decoder name
+            	String decoderName = element.getAttribute("decoder");
 
-        	NodeList decodeParams = propertyElem.getElementsByTagNameNS(Constants.MULE_SMOOKS_NAMESPACE, "decodeParam");
+            	// Create the data decoder. This also checks if the data decoder can be found
+            	DataDecoder decoder = DataDecoder.Factory.create(decoderName);
 
-        	// Check if this property has decode parameters.
-        	if(decodeParams.getLength() > 0) {
+            	// generate a random new decoder name
+                String reType = UUID.randomUUID().toString();
 
-        		try {
-        			// Create a new resource configuration for the configured decoder
-	                SmooksResourceConfiguration decoderConfig = new SmooksResourceConfiguration();
-	                extensionContext.addResource(decoderConfig);
+                // set the new decoder name in the xml
+                element.setAttribute("decoder", reType);
 
-	            	// retrieve the original decoder name
-	            	String decoderName = propertyElem.getAttribute("decoder");
-
-	            	// Create the data decoder. This also checks if the data decoder can be found
-	            	DataDecoder decoder = DataDecoder.Factory.create(decoderName);
-
-	            	// generate a random new decoder name
-	                String reType = UUID.randomUUID().toString();
-
-	                // set the new decoder name in the xml
-	                propertyElem.setAttribute("decoder", reType);
-
-	                // Configure the new decoder config...
-	                decoderConfig.setSelector("decoder:" + reType);
-	                decoderConfig.setTargetProfile(extensionContext.getDefaultProfile());
-	                decoderConfig.setResource(decoder.getClass().getName());
-	                for(int j = 0; j < decodeParams.getLength(); j++) {
-	                    Element decoderParam = (Element) decodeParams.item(j);
-	                    decoderConfig.setParameter(decoderParam.getAttribute("name"), DomUtils.getAllText(decoderParam, true));
-	                }
-        		 } finally {
-        			 extensionContext.getResourceStack().pop();
-        	     }
-        	}
-        }
-
-
-
+                // Configure the new decoder config...
+                decoderConfig.setSelector("decoder:" + reType);
+                decoderConfig.setTargetProfile(extensionContext.getDefaultProfile());
+                decoderConfig.setResource(decoder.getClass().getName());
+                for(int j = 0; j < decodeParams.getLength(); j++) {
+                    Element decoderParam = (Element) decodeParams.item(j);
+                    decoderConfig.setParameter(decoderParam.getAttribute("name"), DomUtils.getAllText(decoderParam, true));
+                }
+    		 } finally {
+    			 extensionContext.getResourceStack().pop();
+    	     }
+    	}
     }
 }

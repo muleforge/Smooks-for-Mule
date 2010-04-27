@@ -16,7 +16,8 @@
 
 package org.milyn.smooks.mule;
 
-import static org.milyn.smooks.mule.Constants.*;
+import static org.milyn.smooks.mule.Constants.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT;
+import static org.milyn.smooks.mule.Constants.MESSAGE_PROPERTY_KEY_PROFILE;
 import static org.mule.config.i18n.MessageFactory.createStaticMessage;
 
 import java.io.IOException;
@@ -185,6 +186,11 @@ public class Router extends FilteringOutboundRouter {
 			initialized = true;
 		} catch (InitialisationException e) {
 			initialisationException = e;
+
+			logger.error("Unable to initialise route because of an exception", e);
+		} catch (Error e) {
+			logger.error("Unable to initialise route because of an error", e);
+			throw e;
 		}
 	}
 
@@ -404,16 +410,11 @@ public class Router extends FilteringOutboundRouter {
 
 		try
 		{
+			logger.debug("Creating Smooks object");
 			return new Smooks ( configFile );
-		}
-		catch ( final IOException e)
-		{
-			final Message errorMsg = createStaticMessage( "IOException while trying to get smooks instance: " );
-			throw new InitialisationException( errorMsg, e, this);
-		}
-		catch ( final SAXException e)
-		{
-			final Message errorMsg = createStaticMessage( "SAXException while trying to get smooks instance: " );
+		} catch (Exception e) {
+			Message errorMsg = createStaticMessage( "Exception while trying to create a smooks instance: " );
+
 			throw new InitialisationException( errorMsg, e, this);
 		}
 	}

@@ -50,10 +50,9 @@ import org.milyn.event.report.annotation.VisitBeforeReport;
 import org.milyn.expression.MVELExpressionEvaluator;
 import org.milyn.javabean.DataDecodeException;
 import org.milyn.javabean.DataDecoder;
+import org.milyn.javabean.context.BeanContext;
+import org.milyn.javabean.context.BeanIdStore;
 import org.milyn.javabean.repository.BeanId;
-import org.milyn.javabean.repository.BeanIdRegister;
-import org.milyn.javabean.repository.BeanRepository;
-import org.milyn.javabean.repository.BeanRepositoryManager;
 import org.milyn.smooks.mule.core.message.MVELEvaluatingMessagePropertyValue;
 import org.milyn.smooks.mule.core.message.MessageProperty;
 import org.milyn.smooks.mule.core.message.MessagePropertyValue;
@@ -201,17 +200,16 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 
 	@Initialize
 	public void initialize() {
-		BeanRepositoryManager beanRepositoryManager = BeanRepositoryManager.getInstance(appContext);
-		BeanIdRegister beanIdRegister = beanRepositoryManager.getBeanIdRegister();
+		BeanIdStore beanIdStore = appContext.getBeanIdStore();
 
 		if(beanIdName != null) {
-			beanId = beanIdRegister.register(beanIdName);
+			beanId = beanIdStore.register(beanIdName);
 		}
 		if(resultBeanIdName != null) {
-			resultBeanId = beanIdRegister.register(resultBeanIdName);
+			resultBeanId = beanIdStore.register(resultBeanIdName);
 		}
 		if(messagePropertiesBeanIdName != null) {
-			messagePropertiesBeanId = beanIdRegister.register(messagePropertiesBeanIdName);
+			messagePropertiesBeanId = beanIdStore.register(messagePropertiesBeanIdName);
 		}
 
 	}
@@ -253,7 +251,7 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 	private void dispatch(ExecutionContext executionContext) {
 		Object payload = null;
 
-		BeanRepository beanRepository = BeanRepository.getInstance(executionContext);
+		BeanContext beanRepository = executionContext.getBeanContext();
 
 		if(expression != null) {
 			Map<?, ?> beanMap = beanRepository.getBeanMap();
@@ -315,9 +313,9 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 
 		if(messagePropertiesBeanId != null) {
 
-			BeanRepository beanRepository = BeanRepository.getInstance(executionContext);
+			BeanContext beanContext = executionContext.getBeanContext();
 
-			Map bProperties = (Map<String, Object>) beanRepository.getBean(messagePropertiesBeanId);
+			Map bProperties = (Map<String, Object>) beanContext.getBean(messagePropertiesBeanId);
 
 			if(bProperties == null) {
 				throw new SmooksConfigurationException("No properties map could be found under the beanId '" + messagePropertiesBeanId.getName() + "'");

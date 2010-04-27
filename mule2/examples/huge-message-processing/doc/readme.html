@@ -251,7 +251,7 @@
 
     You don't need a lot of knowledge of Smooks to understand the explanation. It could
     however be a bit heavy if this is the first time that you see Smooks in action. Take a
-    look at the <a href="http://milyn.codehaus.org/smooks">Smooks website</a> for more information
+    look at the <a href="http://www.smooks.org">Smooks website</a> for more information
     on how to use Smooks.
 
     Take a good look at the comments within the configuration files. They explain for the biggest part
@@ -391,41 +391,44 @@ SPC|Width|6000mm
 
   <pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
 &lt;!--
-  This is the main Smooks configuration file. Here we set the general configuration
-  properties and import all the smooks configuration parts. The order in which
-  we import the several configuration files is very important. Smooks uses this order
-  to determine the order in which the resource (actually called visitors in this case)
-  actions are executed before, during and after the element.
-  Lets say that visitor A and visitor B are configured in A,B order on the same element.
-  The order of execution is then as follows:
-    - Visit before action of A
-    - Visit before action of B
-    - Visit after action of B
-    - Visit after action of A
-  A visitor can have an action defined on the visit before, visit element content and/or visit after. It
-  is important to know when a visitor executes it's action.
+	This is the main Smooks configuration file. Here we set the general configuration
+	properties and import all the smooks configuration parts.
  --&gt;
-&lt;smooks-resource-list xmlns=&quot;http://www.milyn.org/xsd/smooks-1.1.xsd&quot;&gt;
+&lt;smooks-resource-list xmlns=&quot;http://www.milyn.org/xsd/smooks-1.1.xsd&quot;
+  xmlns:core=&quot;http://www.milyn.org/xsd/smooks/smooks-core-1.3.xsd&quot;&gt;
 
   &lt;!--
     This part sets the global configuration parameters. In this
-      case we only set that we want to use the SAX stream filter instead of
-      the DOM stream filter. This is very important because the SAX filter is
-      faster then the DOM filter and only the SAX filter can handle huge messages.
-   --&gt;
+    case we only set that we want to use the SAX stream filter instead of
+    the DOM stream filter. This is very important because the SAX filter is
+    faster then the DOM filter and only the SAX filter can handle huge messages.
+  --&gt;
   &lt;params&gt;
     &lt;param name=&quot;stream.filter.type&quot;&gt;SAX&lt;/param&gt;
   &lt;/params&gt;
 
   &lt;!--
     Imports the EDI reader configuration
-   --&gt;
+  --&gt;
   &lt;import file=&quot;read/edi-product-reader.xml&quot; /&gt;
 
   &lt;!--
     Imports the database datasource configuration
-   --&gt;
+  --&gt;
   &lt;import file=&quot;database/datasource.xml&quot; /&gt;
+
+  &lt;!--
+    Imports the javabean binding configuration
+  --&gt;
+  &lt;import file=&quot;binding/bean-binding.xml&quot; /&gt;
+
+  &lt;!--
+    The following two elements import the configuration which enrich the data from
+	the EDI message.
+  --&gt;
+  &lt;import file=&quot;enrich/stock-service.xml&quot; /&gt;
+
+  &lt;import file=&quot;enrich/part-data.xml&quot; /&gt;
 
   &lt;!--
     The following three elements import the router configurations to several
@@ -433,30 +436,12 @@ SPC|Width|6000mm
     Because these routers all do there thing on the visit after action they must
     be defined before the javabean binding and enriching configuration
     if these actions are to be executed after the javabean binding and enriching.
-   --&gt;
+  --&gt;
   &lt;import file=&quot;routing/route-to-database.xml&quot; /&gt;
 
   &lt;import file=&quot;routing/route-to-jms-all-receiver.xml&quot; /&gt;
 
   &lt;import file=&quot;routing/route-to-jms-pc-and-laptop-receiver.xml&quot; /&gt;
-
-
-  &lt;!--
-    The following two elements import the configuration which enrich the data from
-    the EDI message.
-    It is important for the stock-service that it is defined before the javabean binding
-    because it uses the data from the beans and it execute the service in the after visit
-    action.
-   --&gt;
-  &lt;import file=&quot;enrich/stock-service.xml&quot; /&gt;
-
-  &lt;import file=&quot;enrich/part-data.xml&quot; /&gt;
-
-  &lt;!--
-    Imports the javabean binding configuration
-   --&gt;
-  &lt;import file=&quot;binding/bean-binding.xml&quot; /&gt;
-
 
 &lt;/smooks-resource-list&gt;</code></pre>
 
@@ -594,52 +579,52 @@ SPC|Width|6000mm
   also binds the parts and specs ArrayList to there properties. These two get configured in the next
   resource configurations.
 --&gt;
-&lt;jb:bindings beanId=&quot;product&quot; createOnElement=&quot;product&quot; class=&quot;example.hmp.model.Product&quot; &gt;
-  &lt;jb:value property=&quot;id&quot; data=&quot;product/id&quot; decoder=&quot;Long&quot;/&gt;
-  &lt;jb:value property=&quot;name&quot; data=&quot;product/name&quot;/&gt;
-  &lt;jb:value property=&quot;brand&quot; data=&quot;product/brand&quot;/&gt;
-  &lt;jb:value property=&quot;category&quot; data=&quot;product/category&quot;/&gt;
-  &lt;jb:value property=&quot;price&quot; data=&quot;product/price&quot; decoder=&quot;BigDecimal&quot;/&gt;
-  &lt;jb:value property=&quot;tax&quot; data=&quot;product/tax&quot; decoder=&quot;Integer&quot;/&gt;
-  &lt;jb:value property=&quot;guarantee&quot; data=&quot;product/guarantee&quot;/&gt;
+&lt;java:bean beanId=&quot;product&quot; createOnElement=&quot;product&quot; class=&quot;example.hmp.model.Product&quot; &gt;
+  &lt;java:value property=&quot;id&quot; data=&quot;product/id&quot; decoder=&quot;Long&quot;/&gt;
+  &lt;java:value property=&quot;name&quot; data=&quot;product/name&quot;/&gt;
+  &lt;java:value property=&quot;brand&quot; data=&quot;product/brand&quot;/&gt;
+  &lt;java:value property=&quot;category&quot; data=&quot;product/category&quot;/&gt;
+  &lt;java:value property=&quot;price&quot; data=&quot;product/price&quot; decoder=&quot;BigDecimal&quot;/&gt;
+  &lt;java:value property=&quot;tax&quot; data=&quot;product/tax&quot; decoder=&quot;Integer&quot;/&gt;
+  &lt;java:value property=&quot;guarantee&quot; data=&quot;product/guarantee&quot;/&gt;
 
-  &lt;jb:wiring property=&quot;parts&quot; beanIdRef=&quot;parts&quot;/&gt;
-  &lt;jb:wiring property=&quot;specs&quot; beanIdRef=&quot;specs&quot;/&gt;
-&lt;/jb:bindings&gt;
+  &lt;java:wiring property=&quot;parts&quot; beanIdRef=&quot;parts&quot;/&gt;
+  &lt;java:wiring property=&quot;specs&quot; beanIdRef=&quot;specs&quot;/&gt;
+&lt;/java:bean&gt;
 
 
 &lt;!--
   This defines that a ArrayList is created for every product
   and that it adds all the Part objects to the array.
 --&gt;
-&lt;jb:bindings beanId=&quot;parts&quot; createOnElement=&quot;product&quot; class=&quot;java.util.ArrayList&quot; &gt;
-  &lt;jb:wiring beanIdRef=&quot;part&quot;/&gt;
-&lt;/jb:bindings&gt;
+&lt;java:bean beanId=&quot;parts&quot; createOnElement=&quot;product&quot; class=&quot;java.util.ArrayList&quot; &gt;
+  &lt;java:wiring beanIdRef=&quot;part&quot;/&gt;
+&lt;/java:bean&gt;
 
 &lt;!--
   This defines the binding of the part data from the EDI document to the Part object.
 --&gt;
-&lt;jb:bindings beanId=&quot;part&quot; createOnElement=&quot;product/part&quot; class=&quot;example.hmp.model.Part&quot; &gt;
-  &lt;jb:value property=&quot;id&quot; data=&quot;part/id&quot; decoder=&quot;Long&quot; /&gt;
-  &lt;jb:value property=&quot;quantity&quot; data=&quot;part/quantity&quot; decoder=&quot;Integer&quot; /&gt;
-  &lt;jb:value property=&quot;buildIn&quot; data=&quot;part/build-in&quot; decoder=&quot;Boolean&quot; /&gt;
-&lt;/jb:bindings&gt;
+&lt;java:bean beanId=&quot;part&quot; createOnElement=&quot;product/part&quot; class=&quot;example.hmp.model.Part&quot; &gt;
+  &lt;java:value property=&quot;id&quot; data=&quot;part/id&quot; decoder=&quot;Long&quot; /&gt;
+  &lt;java:value property=&quot;quantity&quot; data=&quot;part/quantity&quot; decoder=&quot;Integer&quot; /&gt;
+  &lt;java:value property=&quot;buildIn&quot; data=&quot;part/build-in&quot; decoder=&quot;Boolean&quot; /&gt;
+&lt;/java:bean&gt;
 
 &lt;!--
   This defines that a ArrayList is created for every product
   and that it adds all the Spec objects to the array.
 --&gt;
-&lt;jb:bindings beanId=&quot;specs&quot; createOnElement=&quot;product&quot; class=&quot;java.util.ArrayList&quot; &gt;
-  &lt;jb:wiring beanIdRef=&quot;spec&quot;/&gt;
-&lt;/jb:bindings&gt;
+&lt;java:bean beanId=&quot;specs&quot; createOnElement=&quot;product&quot; class=&quot;java.util.ArrayList&quot; &gt;
+  &lt;java:wiring beanIdRef=&quot;spec&quot;/&gt;
+&lt;/java:bean&gt;
 
 &lt;!--
   This defines the binding of the specs data from the EDI document to the Spec object.
 --&gt;
-&lt;jb:bindings beanId=&quot;spec&quot; createOnElement=&quot;product/spec&quot; class=&quot;example.hmp.model.Spec&quot; &gt;
-  &lt;jb:value property=&quot;name&quot; data=&quot;spec/name&quot; /&gt;
-  &lt;jb:value property=&quot;value&quot; data=&quot;spec/value&quot; /&gt;
-&lt;/jb:bindings&gt;</code></pre>
+&lt;java:bean beanId=&quot;spec&quot; createOnElement=&quot;product/spec&quot; class=&quot;example.hmp.model.Spec&quot; &gt;
+  &lt;java:value property=&quot;name&quot; data=&quot;spec/name&quot; /&gt;
+  &lt;java:value property=&quot;value&quot; data=&quot;spec/value&quot; /&gt;
+&lt;/java:bean&gt;</code></pre>
 
   Once this data is bound into the bean context (under the beanIds of "product", "parts", "part", "specs" and "spec"),
   it is available to all other resources executing under the same Smooks ExecutionContext. The key to
@@ -728,20 +713,6 @@ SPC|Width|6000mm
 
 
   <pre><code>&lt;!--
-  This Mule dispatcher resource configuration executes at the end of every product.
-  It dispatches the product XML to the 'ReceiveAllProductsEndpoint' endpoint.
-  The XML is retrieved from the 'XML_ReceiveAllProducts' String from the bean Map.
-  This XML is generated by the next resource configuration.
-
-  For the same reasons as explained in the top of the config.xml file the dispatch
-  configurion must come for the XML generating configuration. Both execute in the
-  visit after action.
---&gt;
-&lt;mule:dispatcher endpointName=&quot;ReceiveAllProductsEndpoint&quot; dispatchOnElement=&quot;product&quot;&gt;
-  &lt;mule:messagePayload beanId=&quot;XML_ReceiveAllProducts&quot; /&gt;
-&lt;/mule:dispatcher&gt;
-
-&lt;!--
   This FreeMarker template resource configuration generates the XML
   at the end of every product. It binds the XML String in the bean map under
   bean ID 'XML_ReceiveAllProducts'.
@@ -772,12 +743,24 @@ SPC|Width|6000mm
     &lt;/product&gt;--&gt;
     &lt;/ftl:template&gt;
      &lt;ftl:use&gt;&lt;ftl:bindTo id=&quot;XML_ReceiveAllProducts&quot;/&gt;&lt;/ftl:use&gt;
-&lt;/ftl:freemarker&gt;</code></pre>
+&lt;/ftl:freemarker&gt;
 
-  The first resource listed simply dispatches the XML (generated by the second resource) to the "ReceiveAllProductsEndpoint" endpoint. The
-  second resource generates the XML message by applying a FreeMarker template. The FreeMarker template receives it's data from the beans
+&lt;!--
+  This Mule dispatcher resource configuration executes at the end of every product.
+  It dispatches the product XML to the 'ReceiveAllProductsEndpoint' endpoint.
+  The XML is retrieved from the 'XML_ReceiveAllProducts' String from the bean Map.
+  This XML is generated by the next resource configuration.
+--&gt;
+&lt;mule:dispatcher endpointName=&quot;ReceiveAllProductsEndpoint&quot; dispatchOnElement=&quot;product&quot;&gt;
+  &lt;mule:messagePayload beanId=&quot;XML_ReceiveAllProducts&quot; /&gt;
+&lt;/mule:dispatcher&gt;
+
+</code></pre>
+
+  The first resource generates the XML message by applying a FreeMarker template. The FreeMarker template receives it's data from the beans
   within the bean context. This is the most straight forward transformation. We don't use any conditionals or enrich the new message by using data
   from other resources then the source message itself.
+  The second resource listed simply dispatches the XML (generated by the first resource) to the "ReceiveAllProductsEndpoint" endpoint.
   </p>
 
   <h4>routing/route-to-jms-pc-and-laptop-receiver.xml</h4>
@@ -795,23 +778,6 @@ SPC|Width|6000mm
     &lt;!-- VARS.isdef(&quot;product&quot;) &amp;&amp; product != null &amp;&amp; (product.category == &quot;Complete Systems&quot; || product.category == &quot;Laptops&quot;) --&gt;
   &lt;/condition&gt;
 &lt;/conditions&gt;
-
-&lt;!--
-      This MuleDispatcher resource configuration executes at the end of every product.
-      It dispatches the product JSON to the 'JSON_ReceivePCsAndLaptops' endpoint. Because
-      of the condition it only dispatches if the product category is
-      &quot;Complete Systems&quot; or &quot;Laptops&quot;.
-      The JSON is retrieved from the 'JSON_ReceivePCsAndLaptops' String from the bean Map.
-      This JSON is generated by the next resource configuration.
-
-      For the same reasons as explained in the top of the config.xml file the dispatch
-      configurion must come for the JSON generating configuration. Both execute in the
-      visit after action.
---&gt;
-&lt;mule:dispatcher endpointName=&quot;ReceivePCsAndLaptopsEndpoint&quot; dispatchOnElement=&quot;product&quot;&gt;
-  &lt;condition idRef=&quot;productInCertainCategories&quot; /&gt;
-  &lt;mule:messagePayload beanId=&quot;JSON_ReceivePCsAndLaptops&quot; /&gt;
-&lt;/mule:dispatcher&gt;
 
 &lt;!--
       This FreeMarker template resource configuration generates the JSON
@@ -837,7 +803,20 @@ SPC|Width|6000mm
        --&gt;
   &lt;/ftl:template&gt;
   &lt;ftl:use&gt;&lt;ftl:bindTo id=&quot;JSON_ReceivePCsAndLaptops&quot;/&gt;&lt;/ftl:use&gt;
-&lt;/ftl:freemarker&gt;</code></pre>
+&lt;/ftl:freemarker&gt;
+
+&lt;!--
+      This MuleDispatcher resource configuration executes at the end of every product.
+      It dispatches the product JSON to the 'JSON_ReceivePCsAndLaptops' endpoint. Because
+      of the condition it only dispatches if the product category is
+      &quot;Complete Systems&quot; or &quot;Laptops&quot;.
+      The JSON is retrieved from the 'JSON_ReceivePCsAndLaptops' String from the bean Map.
+      This JSON is generated by the next resource configuration.
+--&gt;
+&lt;mule:dispatcher endpointName=&quot;ReceivePCsAndLaptopsEndpoint&quot; dispatchOnElement=&quot;product&quot;&gt;
+  &lt;condition idRef=&quot;productInCertainCategories&quot; /&gt;
+  &lt;mule:messagePayload beanId=&quot;JSON_ReceivePCsAndLaptops&quot; /&gt;
+&lt;/mule:dispatcher&gt;</code></pre>
   </p>
 
 

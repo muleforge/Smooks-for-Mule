@@ -33,8 +33,7 @@ import org.mule.util.IOUtils;
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  *
  */
-public class FunctionalTest extends FunctionalTestCase
-{
+public class FunctionalTest extends FunctionalTestCase {
 	@Override
 	protected String getConfigResources() {
 

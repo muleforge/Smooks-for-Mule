@@ -169,5 +169,13 @@ public class Product {
 		this.specs = specs;
 	}
 
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", name=" + name + ", brand=" + brand
+				+ ", category=" + category + ", guarantee=" + guarantee
+				+ ", parts=" + parts + ", price=" + price + ", specs=" + specs
+				+ ", tax=" + tax + "]";
+	}
+
 
 }

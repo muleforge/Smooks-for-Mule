@@ -1,29 +1,30 @@
-<product number="1000001">
-    <name>Avia C44</name>
-    <brand>XYZ-Blink</brand>
-    <category>Complete Systems</category>
-    <price>981.29</price>
-    <tax>19</tax>
-    <guarantee>1 years</guarantee>
-    <parts>
-       <part number="100003">
-         <quantity>9</quantity>
-         <buildIn>false</buildIn>
-       </part>
-       <part number="100002">
-         <quantity>1</quantity>
-         <buildIn>false</buildIn>
-       </part>
-       <part number="100009">
-         <quantity>6</quantity>
-         <buildIn>false</buildIn>
-       </part>
-       <part number="100001">
-         <quantity>9</quantity>
-         <buildIn>false</buildIn>
-       </part>
-    </parts>
-    <specifications>
-       <height>6000mm</height>
-    </specifications>
-</product>
+
+	    <product number="1000001">
+	        <name>Avia C44</name>
+	        <brand>XYZ-Blink</brand>
+	        <category>Complete Systems</category>
+	        <price>981.29</price>
+	        <tax>19</tax>
+	        <guarantee>1 years</guarantee>
+	        <parts>
+	           <part number="100003">
+	             <quantity>9</quantity>
+	             <buildIn>false</buildIn>
+	           </part>
+	           <part number="100002">
+	             <quantity>1</quantity>
+	             <buildIn>false</buildIn>
+	           </part>
+	           <part number="100009">
+	             <quantity>6</quantity>
+	             <buildIn>false</buildIn>
+	           </part>
+	           <part number="100001">
+	             <quantity>9</quantity>
+	             <buildIn>false</buildIn>
+	           </part>
+	        </parts>
+	        <specifications>
+	           <height>6000mm</height>
+	        </specifications>
+	    </product>

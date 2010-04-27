@@ -74,7 +74,7 @@
         <param name="mapTo">messageProperties</param>
     </resource-config>
 
-    <resource-config selector="dispatcher">
+    <resource-config selector="dispatcher/messageProperties/property">
         <resource>org.milyn.smooks.mule.core.ext.DecodeParamResolver</resource>
     </resource-config>
 
