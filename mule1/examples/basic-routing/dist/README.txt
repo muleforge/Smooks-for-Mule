@@ -7,7 +7,7 @@ This example demonstrates how to route message fragments in Mule 1, using Smooks
 | Installing the example |
 +------------------------+
 Make sure you have set the MULE_HOME environment variable
-and that you have installed the Smooks for Mule module itself
+and that you have installed the Smooks for Mule module itself.
 
 Run "ant install" from this folder.
 

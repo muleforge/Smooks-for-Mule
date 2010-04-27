@@ -68,7 +68,7 @@
 
  For information on Smooks go to their website:
 
-    http://milyn.codehaus.org/Smooks
+    http://www.smooks.org
 
 +------------------------+
 | Questions?             |
@@ -86,4 +86,4 @@
  Question on Smooks itself can best be asked by sending
  a mail to the Smooks mailing list:
 
-   http://milyn.codehaus.org/Mailing+Lists
+   http://www.smooks.org/mediawiki/index.php?title=Mailing_Lists

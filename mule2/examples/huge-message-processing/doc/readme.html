@@ -251,7 +251,7 @@
 
     You don't need a lot of knowledge of Smooks to understand the explanation. It could
     however be a bit heavy if this is the first time that you see Smooks in action. Take a
-    look at the <a href="http://milyn.codehaus.org/smooks">Smooks website</a> for more information
+    look at the <a href="http://www.smooks.org">Smooks website</a> for more information
     on how to use Smooks.
 
     Take a good look at the comments within the configuration files. They explain for the biggest part
@@ -579,52 +579,52 @@ SPC|Width|6000mm
   also binds the parts and specs ArrayList to there properties. These two get configured in the next
   resource configurations.
 --&gt;
-&lt;jb:bindings beanId=&quot;product&quot; createOnElement=&quot;product&quot; class=&quot;example.hmp.model.Product&quot; &gt;
-  &lt;jb:value property=&quot;id&quot; data=&quot;product/id&quot; decoder=&quot;Long&quot;/&gt;
-  &lt;jb:value property=&quot;name&quot; data=&quot;product/name&quot;/&gt;
-  &lt;jb:value property=&quot;brand&quot; data=&quot;product/brand&quot;/&gt;
-  &lt;jb:value property=&quot;category&quot; data=&quot;product/category&quot;/&gt;
-  &lt;jb:value property=&quot;price&quot; data=&quot;product/price&quot; decoder=&quot;BigDecimal&quot;/&gt;
-  &lt;jb:value property=&quot;tax&quot; data=&quot;product/tax&quot; decoder=&quot;Integer&quot;/&gt;
-  &lt;jb:value property=&quot;guarantee&quot; data=&quot;product/guarantee&quot;/&gt;
+&lt;java:bean beanId=&quot;product&quot; createOnElement=&quot;product&quot; class=&quot;example.hmp.model.Product&quot; &gt;
+  &lt;java:value property=&quot;id&quot; data=&quot;product/id&quot; decoder=&quot;Long&quot;/&gt;
+  &lt;java:value property=&quot;name&quot; data=&quot;product/name&quot;/&gt;
+  &lt;java:value property=&quot;brand&quot; data=&quot;product/brand&quot;/&gt;
+  &lt;java:value property=&quot;category&quot; data=&quot;product/category&quot;/&gt;
+  &lt;java:value property=&quot;price&quot; data=&quot;product/price&quot; decoder=&quot;BigDecimal&quot;/&gt;
+  &lt;java:value property=&quot;tax&quot; data=&quot;product/tax&quot; decoder=&quot;Integer&quot;/&gt;
+  &lt;java:value property=&quot;guarantee&quot; data=&quot;product/guarantee&quot;/&gt;
 
-  &lt;jb:wiring property=&quot;parts&quot; beanIdRef=&quot;parts&quot;/&gt;
-  &lt;jb:wiring property=&quot;specs&quot; beanIdRef=&quot;specs&quot;/&gt;
-&lt;/jb:bindings&gt;
+  &lt;java:wiring property=&quot;parts&quot; beanIdRef=&quot;parts&quot;/&gt;
+  &lt;java:wiring property=&quot;specs&quot; beanIdRef=&quot;specs&quot;/&gt;
+&lt;/java:bean&gt;
 
 
 &lt;!--
   This defines that a ArrayList is created for every product
   and that it adds all the Part objects to the array.
 --&gt;
-&lt;jb:bindings beanId=&quot;parts&quot; createOnElement=&quot;product&quot; class=&quot;java.util.ArrayList&quot; &gt;
-  &lt;jb:wiring beanIdRef=&quot;part&quot;/&gt;
-&lt;/jb:bindings&gt;
+&lt;java:bean beanId=&quot;parts&quot; createOnElement=&quot;product&quot; class=&quot;java.util.ArrayList&quot; &gt;
+  &lt;java:wiring beanIdRef=&quot;part&quot;/&gt;
+&lt;/java:bean&gt;
 
 &lt;!--
   This defines the binding of the part data from the EDI document to the Part object.
 --&gt;
-&lt;jb:bindings beanId=&quot;part&quot; createOnElement=&quot;product/part&quot; class=&quot;example.hmp.model.Part&quot; &gt;
-  &lt;jb:value property=&quot;id&quot; data=&quot;part/id&quot; decoder=&quot;Long&quot; /&gt;
-  &lt;jb:value property=&quot;quantity&quot; data=&quot;part/quantity&quot; decoder=&quot;Integer&quot; /&gt;
-  &lt;jb:value property=&quot;buildIn&quot; data=&quot;part/build-in&quot; decoder=&quot;Boolean&quot; /&gt;
-&lt;/jb:bindings&gt;
+&lt;java:bean beanId=&quot;part&quot; createOnElement=&quot;product/part&quot; class=&quot;example.hmp.model.Part&quot; &gt;
+  &lt;java:value property=&quot;id&quot; data=&quot;part/id&quot; decoder=&quot;Long&quot; /&gt;
+  &lt;java:value property=&quot;quantity&quot; data=&quot;part/quantity&quot; decoder=&quot;Integer&quot; /&gt;
+  &lt;java:value property=&quot;buildIn&quot; data=&quot;part/build-in&quot; decoder=&quot;Boolean&quot; /&gt;
+&lt;/java:bean&gt;
 
 &lt;!--
   This defines that a ArrayList is created for every product
   and that it adds all the Spec objects to the array.
 --&gt;
-&lt;jb:bindings beanId=&quot;specs&quot; createOnElement=&quot;product&quot; class=&quot;java.util.ArrayList&quot; &gt;
-  &lt;jb:wiring beanIdRef=&quot;spec&quot;/&gt;
-&lt;/jb:bindings&gt;
+&lt;java:bean beanId=&quot;specs&quot; createOnElement=&quot;product&quot; class=&quot;java.util.ArrayList&quot; &gt;
+  &lt;java:wiring beanIdRef=&quot;spec&quot;/&gt;
+&lt;/java:bean&gt;
 
 &lt;!--
   This defines the binding of the specs data from the EDI document to the Spec object.
 --&gt;
-&lt;jb:bindings beanId=&quot;spec&quot; createOnElement=&quot;product/spec&quot; class=&quot;example.hmp.model.Spec&quot; &gt;
-  &lt;jb:value property=&quot;name&quot; data=&quot;spec/name&quot; /&gt;
-  &lt;jb:value property=&quot;value&quot; data=&quot;spec/value&quot; /&gt;
-&lt;/jb:bindings&gt;</code></pre>
+&lt;java:bean beanId=&quot;spec&quot; createOnElement=&quot;product/spec&quot; class=&quot;example.hmp.model.Spec&quot; &gt;
+  &lt;java:value property=&quot;name&quot; data=&quot;spec/name&quot; /&gt;
+  &lt;java:value property=&quot;value&quot; data=&quot;spec/value&quot; /&gt;
+&lt;/java:bean&gt;</code></pre>
 
   Once this data is bound into the bean context (under the beanIds of "product", "parts", "part", "specs" and "spec"),
   it is available to all other resources executing under the same Smooks ExecutionContext. The key to

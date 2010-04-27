@@ -55,11 +55,8 @@ Assembly descriptor for the full distribution.
 							<exclude>org.mule.modules:mule-module-spring-config</exclude>
 							<exclude>log4j:log4j</exclude>
 							<exclude>slf4j</exclude>
-							<exclude>cglib</exclude>
-							<exclude>org.easymock</exclude>
 							<exclude>xpp3</exclude>
 							<exclude>xstream</exclude>
-							<exclude>xerces</exclude>
 						</excludes>
 					</dependencySet>
 				</dependencySets>
@@ -235,19 +232,10 @@ Assembly descriptor for the full distribution.
 						<excludes>
 							<exclude>commons-lang</exclude>
 							<exclude>commons-logging</exclude>
-							<exclude>commons-httpclient</exclude>
 							<exclude>commons-net</exclude>
 							<exclude>stringtemplate</exclude>
-							<exclude>jboss</exclude>
-							<exclude>com.mockrunner</exclude>
-							<exclude>cglib</exclude>
-							<exclude>easymock</exclude>
 							<exclude>org.mule.modules.mule-module-smooks:smooks-4-mule-2:jar</exclude>
-							<exclude>backport-util-concurrent</exclude>
-							<exclude>xmlunit</exclude>
 							<exclude>ognl</exclude>
-							<exclude>mockejb</exclude>
-							<exclude>xalan</exclude>
 							<exclude>antlr</exclude>
 						</excludes>
 					</dependencySet>

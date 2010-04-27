@@ -11,7 +11,8 @@ Just run "mvn clean package" from this folder.
 +------------------------+
 | Installing the example |
 +------------------------+
-Make sure you have set the MULE_HOME environment variable.
+Make sure you have set the MULE_HOME environment variable
+and that you have installed the Smooks for Mule module itself.
 
 Run "mvn -P install-in-mule install" from this folder.
 
