@@ -6,12 +6,13 @@
 	<artifactId>smooks-4-mule-parent</artifactId>
 	<name>Smooks for Mule Parent</name>
 	<packaging>pom</packaging>
-	<version>1.2</version>
+	<version>1.3-SNAPSHOT</version>
 
 	<modules>
 		<module>core</module>
 		<module>mule1</module>
 		<module>mule2</module>
+		<module>mule3</module>
 	</modules>
 
 	<properties>
