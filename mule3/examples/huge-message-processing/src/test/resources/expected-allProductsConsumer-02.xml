@@ -1,0 +1,16 @@
+
+	    <product number="1000002">
+	        <name>4GB (2x 2GB2) DDR2 PC2-8500</name>
+	        <brand>Pear</brand>
+	        <category>Memory</category>
+	        <price>100.1</price>
+	        <tax>12</tax>
+	        <guarantee>2 years</guarantee>
+	        <parts>
+	        </parts>
+	        <specifications>
+	           <memory-module>1GB</memory-module>
+	           <memory-size>4GB</memory-size>
+	           <reaction-time>5ms</reaction-time>
+	        </specifications>
+	    </product>

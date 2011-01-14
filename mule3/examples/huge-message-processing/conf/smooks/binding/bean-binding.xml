@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
+	xmlns:java="http://www.milyn.org/xsd/smooks/javabean-1.3.xsd">
+
+	<!--
+		This defines the binding of the product data from the EDI document to the Product object. It
+		also binds the parts and specs ArrayList to there properties. These two get configured in the next
+		resource configurations.
+	-->
+	<java:bean beanId="product" createOnElement="product" class="example.hmp.model.Product" >
+		<java:value property="id" data="product/id" decoder="Long"/>
+		<java:value property="name" data="product/name"/>
+		<java:value property="brand" data="product/brand"/>
+		<java:value property="category" data="product/category"/>
+		<java:value property="price" data="product/price" decoder="BigDecimal"/>
+		<java:value property="tax" data="product/tax" decoder="Integer"/>
+		<java:value property="guarantee" data="product/guarantee"/>
+
+		<java:wiring property="parts" beanIdRef="parts"/>
+		<java:wiring property="specs" beanIdRef="specs"/>
+	</java:bean>
+
+
+	<!--
+		This defines that a ArrayList is created for every product
+		and that it adds all the Part objects to the array.
+	-->
+	<java:bean beanId="parts" createOnElement="product" class="java.util.ArrayList" >
+		<java:wiring beanIdRef="part"/>
+	</java:bean>
+
+	<!--
+		This defines the binding of the part data from the EDI document to the Part object.
+	-->
+	<java:bean beanId="part" createOnElement="product/part" class="example.hmp.model.Part" >
+		<java:value property="id" data="part/id" decoder="Long" />
+		<java:value property="quantity" data="part/quantity" decoder="Integer" />
+		<java:value property="buildIn" data="part/build-in" decoder="Boolean" />
+	</java:bean>
+
+	<!--
+		This defines that a ArrayList is created for every product
+		and that it adds all the Spec objects to the array.
+	-->
+	<java:bean beanId="specs" createOnElement="product" class="java.util.ArrayList" >
+		<java:wiring beanIdRef="spec"/>
+	</java:bean>
+
+	<!--
+		This defines the binding of the specs data from the EDI document to the Spec object.
+	-->
+	<java:bean beanId="spec" createOnElement="product/spec" class="example.hmp.model.Spec" >
+		<java:value property="name" data="spec/name" />
+		<java:value property="value" data="spec/value" />
+	</java:bean>
+
+</smooks-resource-list>

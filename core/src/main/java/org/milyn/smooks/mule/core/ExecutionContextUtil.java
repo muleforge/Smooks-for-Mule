@@ -41,17 +41,16 @@ public final class ExecutionContextUtil {
      * @param smooksAttribuesMap 	- Map containing attributes from the Smooks ExecutionContext
      * @return Map	- Map containing only the Serializable objects from the passed-in map.
      */
-    @SuppressWarnings( "unchecked" )
-	public static Map getAtrributesMap( final ExecutionContext executionContext, boolean excludeNonSerializables )
+	public static Map<Object, Object> getAtrributesMap( final ExecutionContext executionContext, boolean excludeNonSerializables )
 	{
-    	Map attributes = executionContext.getAttributes();
+    	Map<Object, Object>  attributes = executionContext.getAttributes();
 
-    	Map smooksExecutionContextMap;
+    	Map<Object, Object>  smooksExecutionContextMap;
     	if ( excludeNonSerializables ) {
-    		smooksExecutionContextMap = new HashMap();
+    		smooksExecutionContextMap = new HashMap<Object, Object> ();
 
-    		Set<Map.Entry> s = attributes.entrySet();
-    		for (Map.Entry me : s)
+    		Set<Map.Entry<Object, Object> > s = attributes.entrySet();
+    		for (Map.Entry<Object, Object>  me : s)
     		{
     			Object value = me.getValue();
     			if( value instanceof Serializable )

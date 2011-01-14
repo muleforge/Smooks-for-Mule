@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
+	xmlns:mule="http://dist.muleforge.org/smooks/schema/smooks-mule-1.2.xsd"
+	xmlns:java="http://www.milyn.org/xsd/smooks/javabean-1.3.xsd">
+
+	<!--
+		At the beginning of every "a" element a HashMap is created and binded
+		to the "a" bindId. It gets two entries. The first with the name "id" and the value
+		is the "id" attribute value. The second with the name "value" and the value is
+		contents of the "a" element.
+	-->
+	<java:bean beanId="a" class="java.util.HashMap" createOnElement="a" >
+		<java:value property="id" data="a/@id" />
+		<java:value property="value" data="a" />
+	</java:bean>
+
+	<!--
+	    At the end of every "a" element, route the HashMap under beanId "a" to the
+	    "endpointA" Endpoint.
+	-->
+	<mule:dispatcher endpointName="endpointA" dispatchOnElement="a">
+		<mule:messagePayload beanId="a" />
+	</mule:dispatcher>
+
+	<!-- Same as with the "a" element but then for the "b" element -->
+	<java:bean beanId="b" class="java.util.HashMap" createOnElement="b" >
+		<java:value property="id" data="b/@id" />
+		<java:value property="value" data="b" />
+	</java:bean>
+
+	<!-- Same as with the "a" element but then for the "b" element -->
+	<mule:dispatcher endpointName="endpointB" dispatchOnElement="b">
+		<mule:messagePayload beanId="b" />
+	</mule:dispatcher>
+
+</smooks-resource-list>

@@ -26,6 +26,6 @@ public interface NamedEndpointMuleDispatcher {
 
 	static String SMOOKS_CONTEXT = NamedEndpointMuleDispatcher.class.getName() + "#CONTEXT";
 
-	Object dispatch(String endpointName, Object payload, Map<?, ?> messageProperties, boolean forceSynchronous);
+	Object dispatch(String endpointName, Object payload, Map<String, Object> messageProperties, boolean forceSynchronous);
 
 }

@@ -123,7 +123,7 @@ public class NamedOutboundEndpointMuleDispatcher implements NamedEndpointMuleDis
 		return endpointMap;
 	}
 
-	public Object dispatch(String endpointName, Object payload, Map<?, ?> messageProperties, boolean forceSynchronous) {
+	public Object dispatch(String endpointName, Object payload, Map<String, Object> messageProperties, boolean forceSynchronous) {
 		OutboundEndpoint outboundEndpoint = endpointMap.get(endpointName);
 
 		if(outboundEndpoint == null) {

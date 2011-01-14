@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>org.mule.modules.mule-module-smooks</groupId>
+		<artifactId>smooks-4-mule-3-examples</artifactId>
+		<version>1.3-SNAPSHOT</version>
+		<relativePath>../</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.mule.modules.mule-module-smooks</groupId>
+	<artifactId>smooks-4-mule-3-examples-basic-routing</artifactId>
+	<name>Smooks for Mule 3.x - Basic routing example</name>
+	<description>Is a basic example of how the Smooks for Mule routing can be used.</description>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<build>
+      <defaultGoal>install</defaultGoal>
+
+      <!-- Allow config files to be in the "conf" directory to make it easier for users to find them. -->
+      <resources>
+          <resource>
+              <directory>conf</directory>
+          </resource>
+          <resource>
+              <directory>src/main/resources</directory>
+          </resource>
+      </resources>
+
+  </build>
+
+	<dependencies>
+
+		<!-- Mule dependencies -->
+		<dependency>
+			<groupId>org.mule</groupId>
+			<artifactId>mule-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-module-client</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.tests</groupId>
+			<artifactId>mule-tests-functional</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Mule Transport Dependencies -->
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-vm</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-tcp</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-file</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-stdio</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- The  Mule Smooks Module -->
+
+		<dependency>
+			<groupId>org.mule.modules.mule-module-smooks</groupId>
+			<artifactId>smooks-4-mule-2</artifactId>
+		</dependency>
+
+		<!-- The Smooks dependencies -->
+		<dependency>
+			<groupId>org.milyn</groupId>
+			<artifactId>milyn-smooks-javabean</artifactId>
+		</dependency>
+
+		<!-- Better testing of XML -->
+		<dependency>
+			<groupId>xmlunit</groupId>
+			<artifactId>xmlunit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>install-in-mule</id>
+
+			<build>
+				<plugins>
+		            <!-- "mvn -P install-in-mule install" will copy the target jar to the $MULE_HOME/lib/user directory,
+		                overwriting the previous one.-->
+		            <plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-dependency-plugin</artifactId>
+		                <executions>
+		                    <execution>
+		                        <id>copy-artifact</id>
+		                        <phase>install</phase>
+		                        <goals>
+		                            <goal>copy</goal>
+		                        </goals>
+		                        <configuration>
+		                            <outputDirectory>${MULE_HOME}/lib/user</outputDirectory>
+		                            <overWriteReleases>true</overWriteReleases>
+		                            <overWriteSnapshots>true</overWriteSnapshots>
+		                            <artifactItems>
+		                                <artifactItem>
+		                                    <groupId>${groupId}</groupId>
+		                                    <artifactId>${artifactId}</artifactId>
+		                                    <version>${version}</version>
+		                                    <destFileName>${artifactId}.jar</destFileName>
+		                                </artifactItem>
+		                            </artifactItems>
+		                        </configuration>
+		                    </execution>
+		                    <execution>
+		                        <id>copy-dependencies</id>
+		                        <phase>install</phase>
+		                        <goals>
+		                            <goal>copy-dependencies</goal>
+		                        </goals>
+		                        <configuration>
+		                            <outputDirectory>${MULE_HOME}/lib/user</outputDirectory>
+		                            <overWriteReleases>true</overWriteReleases>
+		                            <overWriteSnapshots>true</overWriteSnapshots>
+									<includeGroupIds>milyn,org.mvel,org.freemarker,antlr,xmlbeans</includeGroupIds>
+		                        </configuration>
+		                    </execution>
+		                    <execution>
+		                        <id>copy-parent-dependencies</id>
+		                        <phase>install</phase>
+		                        <goals>
+		                            <goal>copy-dependencies</goal>
+		                        </goals>
+		                        <configuration>
+		                            <outputDirectory>${MULE_HOME}/lib/user</outputDirectory>
+		                            <overWriteReleases>true</overWriteReleases>
+		                            <overWriteSnapshots>true</overWriteSnapshots>
+									<includeArtifactIds>mule2-module-smooks-transformer</includeArtifactIds>
+		                        </configuration>
+		                    </execution>
+		                </executions>
+		            </plugin>
+		        </plugins>
+			</build>
+
+		</profile>
+	</profiles>
+
+</project>
