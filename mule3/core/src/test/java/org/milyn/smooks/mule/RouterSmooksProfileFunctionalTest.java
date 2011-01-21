@@ -48,7 +48,7 @@ public class RouterSmooksProfileFunctionalTest extends FunctionalTestCase {
     {
 		InputStream in = getClass().getResourceAsStream("/router-input-message.xml");
 
-        MuleClient client = new MuleClient(true);
+        MuleClient client = new MuleClient(muleContext);
         client.send("vm://messageInput", new DefaultMuleMessage(in, client.getMuleContext()));
 
         assertFalse("File '" + test1File + "' exists.", test1File.exists());
@@ -61,7 +61,7 @@ public class RouterSmooksProfileFunctionalTest extends FunctionalTestCase {
     {
 		InputStream in = getClass().getResourceAsStream("/router-input-message.xml");
 
-		MuleClient client = new MuleClient(true);
+		MuleClient client = new MuleClient(muleContext);
 
 		MuleMessage message = new DefaultMuleMessage(in, client.getMuleContext());
 		message.setOutboundProperty("smooksMessageProfile", "profile2");

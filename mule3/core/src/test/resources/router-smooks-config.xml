@@ -17,7 +17,7 @@
 
 -->
 
-<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.0.xsd">
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd">
 
 	<resource-config selector="properties">
 	    <resource>org.milyn.javabean.BeanPopulator</resource>
@@ -29,13 +29,13 @@
 	</resource-config>
 
 	<resource-config selector="a">
-		<resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+		<resource>org.milyn.smooks.mule.core.MuleDispatcher</resource>
 		<param name="endpointName">file1</param>
 		<param name="beanId">a</param>
 	</resource-config>
 
 	<resource-config selector="a">
-		<resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+		<resource>org.milyn.smooks.mule.core.MuleDispatcher</resource>
 		<param name="endpointName">reply</param>
 		<param name="beanId">a</param>
 		<param name="resultBeanId">reply</param>
@@ -58,23 +58,23 @@
 		</param>
 	</resource-config>
 
+    <resource-config selector="b c">
+        <resource>org.milyn.javabean.BeanPopulator</resource>
+        <param name="beanClass">java.util.HashMap</param>
+        <param name="beanId">c</param>
+        <param name="bindings">
+            <binding property="value" selector="c" />
+        </param>
+    </resource-config>
+
 	<resource-config selector="b c">
-		<resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+		<resource>org.milyn.smooks.mule.core.MuleDispatcher</resource>
 		<param name="endpointName">file2</param>
 		<param name="beanId">c</param>
 	</resource-config>
 
-	<resource-config selector="b c">
-		<resource>org.milyn.javabean.BeanPopulator</resource>
-		<param name="beanClass">java.util.HashMap</param>
-		<param name="beanId">c</param>
-		<param name="bindings">
-			<binding property="value" selector="c" />
-		</param>
-	</resource-config>
-
 	<resource-config selector="$document">
-		<resource>org.milyn.smooks.mule.MuleDispatcher</resource>
+		<resource>org.milyn.smooks.mule.core.MuleDispatcher</resource>
 		<param name="endpointName">fileReply</param>
 		<param name="beanId">reply</param>
 	</resource-config>

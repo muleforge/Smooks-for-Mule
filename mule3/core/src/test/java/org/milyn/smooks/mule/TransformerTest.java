@@ -20,15 +20,25 @@ package org.milyn.smooks.mule;
 import java.io.File;
 import java.io.IOException;
 
+import static org.mockito.Mockito.*;
+
 import javax.xml.transform.dom.DOMResult;
 
+import junit.framework.TestCase;
 import org.junit.Before;
 import org.milyn.io.StreamUtils;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mule.DefaultMuleMessage;
+import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
+import org.mule.api.config.MuleConfiguration;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
+import org.mule.api.transport.PropertyScope;
 import org.mule.tck.AbstractMuleTestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -41,13 +51,24 @@ import org.mule.tck.AbstractMuleTestCase;
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
  *
  */
-public class TransformerTest extends AbstractMuleTestCase
+public class TransformerTest extends TestCase
 {
-	private SmooksTransformer transformer;
+	private final static Logger logger = LoggerFactory.getLogger(TransformerTest.class);
+
+    private SmooksTransformer transformer;
 
 	private final String smooksConfigFile = "/transformer-smooks-config.xml";
 
 	private final String smooksProfiledConfigFile = "/transformer-smooks-config-profiled.xml";
+
+   // @Mock
+   // private MuleMessage message;
+
+    @Mock
+    private MuleContext muleContext;
+
+    @Mock
+    private MuleConfiguration muleConfiguration;
 
 	public void testInitWithoutSmooksConfigFile() throws InitialisationException
 	{
@@ -198,18 +219,23 @@ public class TransformerTest extends AbstractMuleTestCase
 
 		byte[] inputMessage = readInputMessage();
 
-		MuleMessage message = new DefaultMuleMessage(inputMessage);
+        MuleMessage message = new DefaultMuleMessage(inputMessage, muleContext);
+
 		Object transformedObject = transformer.transform( message );
+
+        transformer.dispose();
 
 		assertNotNull ( transformedObject );
 
-		Object attributes = message.getProperty( executionContextMessagePropertyKey );
+		Object attributes = message.getOutboundProperty(executionContextMessagePropertyKey);
 
 		if(setExecuctionContextAsMessageKey != null && setExecuctionContextAsMessageKey) {
 			assertNotNull( attributes );
 		} else {
 			assertNull( attributes );
 		}
+
+
 	}
 
 	public void testDoTransformationWithSmooksReportGeneration() throws InitialisationException, TransformerException
@@ -222,6 +248,9 @@ public class TransformerTest extends AbstractMuleTestCase
 		try
 		{
     		Object transformedObject = transformer.transform( inputMessage );
+
+            transformer.dispose();
+
     		assertNotNull ( transformedObject );
 			assertTrue( reportFile.exists() );
 		}
@@ -244,6 +273,8 @@ public class TransformerTest extends AbstractMuleTestCase
 
 		Object transformedObject = transformer.transform( inputMessage );
 
+        transformer.dispose();
+
 		assertNotNull ( transformedObject );
 		assertTrue("transformed Object not a DOMResult", transformedObject instanceof DOMResult);
 	}
@@ -257,6 +288,8 @@ public class TransformerTest extends AbstractMuleTestCase
 		byte[] inputMessage = readInputMessage();
 
 		Object transformedObject = transformer.transform( inputMessage );
+
+        transformer.dispose();
 
 		assertNotNull ( transformedObject );
 		assertTrue("transformed Object not a DOMResult", transformedObject instanceof DOMResult);
@@ -274,6 +307,8 @@ public class TransformerTest extends AbstractMuleTestCase
 
 		Object transformedObject = transformer.transform( inputMessage );
 
+        transformer.dispose();
+
 		assertNotNull ( transformedObject );
 		assertTrue("transformed Object not a String", transformedObject instanceof String);
 		assertTrue("result doesn't contain right xml", transformedObject.toString().contains("<yyy></yyy>"));
@@ -290,10 +325,12 @@ public class TransformerTest extends AbstractMuleTestCase
 
 		byte[] inputMessage = readInputMessage();
 
-		MuleMessage message = new DefaultMuleMessage(inputMessage);
-		message.setStringProperty(messagePropertyProfileKey, "profile2");
+        MuleMessage message = new DefaultMuleMessage(inputMessage, muleContext);
+        message.setProperty(messagePropertyProfileKey, "profile2", PropertyScope.INBOUND);
 
 		Object transformedObject = transformer.transform( message );
+
+        transformer.dispose();
 
 		assertNotNull ( transformedObject );
 		assertTrue("transformed Object not a String", transformedObject instanceof String);
@@ -313,10 +350,13 @@ public class TransformerTest extends AbstractMuleTestCase
 
 		byte[] inputMessage = readInputMessage();
 
-		MuleMessage message = new DefaultMuleMessage(inputMessage);
-		message.setStringProperty(messagePropertyProfileKey, "profile2");
+		MuleMessage message = new DefaultMuleMessage(inputMessage, muleContext);
+        message.setProperty(messagePropertyProfileKey, "profile2", PropertyScope.INBOUND);
+
 
 		Object transformedObject = transformer.transform( message );
+
+        transformer.dispose();
 
 		assertNotNull ( transformedObject );
 		assertTrue("transformed Object not a String", transformedObject instanceof String);
@@ -324,10 +364,17 @@ public class TransformerTest extends AbstractMuleTestCase
 	}
 
 	@Override
-	@Before
-	public void doSetUp() throws Exception
+    @Before
+	public void setUp() throws Exception
 	{
-    	transformer = new SmooksTransformer();
+        MockitoAnnotations.initMocks(this);
+
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+        when(muleConfiguration.isAutoWrapMessageAwareTransform()).thenReturn(true);
+
+        transformer = new SmooksTransformer();
+        transformer.setMuleContext(muleContext);
+
 	}
 
 	//	private

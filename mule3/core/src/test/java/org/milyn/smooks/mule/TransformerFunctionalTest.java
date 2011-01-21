@@ -46,7 +46,7 @@ public class TransformerFunctionalTest extends FunctionalTestCase
     {
 		InputStream in = getClass().getResourceAsStream("/transformer-input-message.xml");
 
-        MuleClient client = new MuleClient(true);
+        MuleClient client = new MuleClient(muleContext);
         MuleMessage reply = client.send("vm://messageInput", new DefaultMuleMessage(in, client.getMuleContext()));
 
         assertNotNull(reply);

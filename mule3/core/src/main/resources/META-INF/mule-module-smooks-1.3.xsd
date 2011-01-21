@@ -13,7 +13,6 @@
 <xsd:schema
 	xmlns="http://www.muleforge.org/smooks/schema/mule-module-smooks"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:spring="http://www.springframework.org/schema/beans"
 	xmlns:mule="http://www.mulesoft.org/schema/mule/core"
 	targetNamespace="http://www.muleforge.org/smooks/schema/mule-module-smooks"
 	elementFormDefault="qualified"
@@ -201,11 +200,11 @@
 
 	<xsd:simpleType name="resultTypeType">
 		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="STRING"></xsd:enumeration>
-			<xsd:enumeration value="BYTES"></xsd:enumeration>
-			<xsd:enumeration value="JAVA"></xsd:enumeration>
-			<xsd:enumeration value="RESULT"></xsd:enumeration>
-			<xsd:enumeration value="NORESULT"></xsd:enumeration>
+			<xsd:enumeration value="STRING"/>
+			<xsd:enumeration value="BYTES"/>
+			<xsd:enumeration value="JAVA"/>
+			<xsd:enumeration value="RESULT"/>
+			<xsd:enumeration value="NORESULT"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 </xsd:schema>

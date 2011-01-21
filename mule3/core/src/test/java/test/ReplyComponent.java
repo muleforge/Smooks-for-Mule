@@ -36,13 +36,13 @@ public class ReplyComponent implements Callable {
 		MuleMessage message = eventContext.getMessage();
 		Map<String, Object> payload = (Map<String, Object>) message.getPayload();
 
-		String test = (String) message.getProperty("test");
-		String test2 = (String) message.getProperty("test2");
-		Integer testInt = (Integer) message.getProperty("testInt");
-		Date testDate = (Date) message.getProperty("testDate");
-		String xmlTest1 = (String) message.getProperty("xmlTest1");
-		String xmlTest2 = (String) message.getProperty("xmlTest2");
-		String testOverwritten = (String) message.getProperty("testOverwritten");
+		String test = (String) message.getInboundProperty("test");
+		String test2 = (String) message.getInboundProperty("test2");
+		Integer testInt = (Integer) message.getInboundProperty("testInt");
+		Date testDate = (Date) message.getInboundProperty("testDate");
+		String xmlTest1 = (String) message.getInboundProperty("xmlTest1");
+		String xmlTest2 = (String) message.getInboundProperty("xmlTest2");
+		String testOverwritten = (String) message.getInboundProperty("testOverwritten");
 
 		return payload.get("value").toString() + "," +
 				test  + "," +

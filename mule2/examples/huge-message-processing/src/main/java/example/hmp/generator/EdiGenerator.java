@@ -412,7 +412,7 @@ public class EdiGenerator {
 		specs.put("Width", "518mm");
 		specs.put("Height", "6000mm");
 		specs.put("Reaction Time", "5ms");
-		specs.put("Contrast", "300cd/m²");
+		specs.put("Contrast", "300cd/m");
 		specs.put("Connection", "D-Sub");
 		specs.put("LCD Panel", "TN");
 		specs.put("Power", "2258W");

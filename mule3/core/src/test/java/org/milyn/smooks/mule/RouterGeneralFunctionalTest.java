@@ -59,7 +59,7 @@ public class RouterGeneralFunctionalTest extends FunctionalTestCase {
     {
 		InputStream in = getClass().getResourceAsStream("/router-input-message.xml");
 
-        MuleClient client = new MuleClient(true);
+        MuleClient client = new MuleClient(muleContext);
         client.send("vm://messageInput", new DefaultMuleMessage(in, client.getMuleContext()));
 
         assertTrue("File '" + test1File + "' doesn't exist.", test1File.exists());
