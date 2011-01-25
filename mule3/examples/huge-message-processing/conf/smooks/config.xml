@@ -4,7 +4,7 @@
 	properties and import all the smooks configuration parts.
  -->
 <smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
-		xmlns:core="http://www.milyn.org/xsd/smooks/smooks-core-1.3.xsd">
+		xmlns:core="http://www.milyn.org/xsd/smooks/smooks-core-1.4.xsd">
 
 	<!--
 		This part sets the global configuration parameters. In this
@@ -12,9 +12,7 @@
 	    the DOM stream filter. This is very important because the SAX filter is
 	    faster then the DOM filter and only the SAX filter can handle huge messages.
 	 -->
-	<params>
-		<param name="stream.filter.type">SAX</param>
-	</params>
+    <core:filterSettings type="SAX" defaultSerialization="false"/>
 
 	<!--
 		Imports the EDI reader configuration

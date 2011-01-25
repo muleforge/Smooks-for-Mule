@@ -44,8 +44,8 @@ public class FunctionalTest extends FunctionalTestCase {
 	public void testSmooks() throws Exception {
 		InputStream in = IOUtils.getResourceAsStream("test-message01.xml", this.getClass());
 
-		MuleClient client = new MuleClient();
-		client.send("vm://BasicRouting", new DefaultMuleMessage(in));
+		MuleClient client = new MuleClient(muleContext);
+		client.send("vm://BasicRouting", new DefaultMuleMessage(in, muleContext));
 
 		assertTrue("The report file wasn't created", getReportFile().exists());
 	}

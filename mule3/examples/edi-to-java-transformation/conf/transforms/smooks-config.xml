@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
-		xmlns:edi="http://www.milyn.org/xsd/smooks/edi-1.1.xsd"
-		xmlns:java="http://www.milyn.org/xsd/smooks/javabean-1.3.xsd">
+		xmlns:edi="http://www.milyn.org/xsd/smooks/edi-1.2.xsd"
+		xmlns:java="http://www.milyn.org/xsd/smooks/javabean-1.4.xsd">
 
     <!--
     Configure the EDI Parser to parse the message stream into a stream of SAX events.

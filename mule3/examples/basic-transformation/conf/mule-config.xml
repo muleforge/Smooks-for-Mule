@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:spring="http://www.springframework.org/schema/beans"
-       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.2"
-       xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.2"
-       xmlns:file="http://www.mulesource.org/schema/mule/file/2.2"
-       xmlns:smooks="http://www.muleforge.org/smooks/schema/mule-module-smooks/1.2"
-    xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-       http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd
-       http://www.mulesource.org/schema/mule/vm/2.2 http://www.mulesource.org/schema/mule/vm/2.2/mule-vm.xsd
-       http://www.mulesource.org/schema/mule/stdio/2.2 http://www.mulesource.org/schema/mule/stdio/2.2/mule-stdio.xsd
-       http://www.mulesource.org/schema/mule/file/2.2 http://www.mulesource.org/schema/mule/file/2.2/mule-file.xsd
-       http://www.muleforge.org/smooks/schema/mule-module-smooks/1.2 http://dist.muleforge.org/smooks/schema/mule-module-smooks/1.2/mule-module-smooks.xsd
-       ">
-
-
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:stdio="http://www.mulesoft.org/schema/mule/stdio"
+      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	  xmlns:smooks="http://www.muleforge.org/smooks/schema/mule-module-smooks"
+      xmlns:file="http://www.mulesoft.org/schema/mule/file"
+      xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.1/mule.xsd
+        http://www.mulesoft.org/schema/mule/stdio http://www.mulesoft.org/schema/mule/stdio/3.1/mule-stdio.xsd
+        http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/3.1/mule-file.xsd
+        http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.1/mule-vm.xsd
+		http://www.muleforge.org/smooks/schema/mule-module-smooks http://dist.muleforge.org/smooks/schema/mule-module-smooks/1.3/mule-module-smooks.xsd"
+>
     <description>
         This example demonstrates transforming an XML message with the Smooks Transformer
     </description>
@@ -54,12 +50,12 @@
                 </file:inbound-endpoint>
 
                 <!-- For unit-test -->
-                <vm:inbound-endpoint path="BasicProcessor" transformer-refs="BasicXSLTTransformation" />
+                <vm:inbound-endpoint path="BasicProcessor" transformer-refs="BasicXSLTTransformation" exchange-pattern="request-response" />
 
             </inbound>
             <outbound>
             	<pass-through-router>
-            		<stdio:outbound-endpoint system="OUT" synchronous="true" />
+            		<stdio:outbound-endpoint system="OUT" exchange-pattern="request-response" />
             	</pass-through-router>
             </outbound>
         </service>

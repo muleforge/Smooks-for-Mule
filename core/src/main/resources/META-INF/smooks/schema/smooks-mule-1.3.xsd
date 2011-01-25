@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2008 Maurice Zeijen <maurice@zeijen.net>
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:smooks="http://www.milyn.org/xsd/smooks-1.1.xsd"
+           xmlns:mule="http://dist.muleforge.org/smooks/schema/smooks-mule-1.3.xsd"
+           targetNamespace="http://dist.muleforge.org/smooks/schema/smooks-mule-1.3.xsd"
+           elementFormDefault="qualified">
+
+    <xs:import namespace="http://www.milyn.org/xsd/smooks-1.1.xsd"/>
+
+    <xs:annotation>
+        <xs:documentation xml:lang="en">Smooks 4 Mule - Smooks Configuration</xs:documentation>
+    </xs:annotation>
+
+    <xs:element name="dispatcher" type="mule:dispatcher" substitutionGroup="smooks:abstract-resource-config">
+    	<xs:annotation>
+			<xs:documentation xml:lang="en">
+			</xs:documentation>
+		</xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="dispatcher">
+    	<xs:annotation>
+    		<xs:documentation xml:lang="en"></xs:documentation>
+    	</xs:annotation>
+
+    	<xs:complexContent>
+    		<xs:extension base="smooks:element-visitor">
+    			<xs:sequence>
+    				<xs:element name="messagePayload" type="mule:messagePayload" maxOccurs="1" minOccurs="0">
+    					<xs:annotation>
+	    					<xs:documentation xml:lang="en">
+	    						The message payload configuration
+	    					</xs:documentation>
+	    				</xs:annotation>
+    				</xs:element>
+    				<xs:element name="messageProperties" type="mule:messageProperties" maxOccurs="1" minOccurs="0">
+    					<xs:annotation>
+	    					<xs:documentation xml:lang="en">
+	    						The message properties configuration
+	    					</xs:documentation>
+	    				</xs:annotation>
+    				</xs:element>
+    			</xs:sequence>
+    			<xs:attribute name="endpointName" type="xs:string"
+    				use="required">
+    				<xs:annotation>
+    					<xs:documentation xml:lang="en">
+    						The name of the endpoint which will be used
+    						when routing the message. If no endpoint can
+    						be found under that name then an exception
+    						is thrown.
+    					</xs:documentation>
+    				</xs:annotation>
+    			</xs:attribute>
+    			<xs:attribute name="resultBeanId" type="xs:string"
+    				use="optional">
+    				<xs:annotation>
+    					<xs:documentation xml:lang="en">
+    						If the endpoint returns a result then the
+    						payload of that result is bounded to the
+    						resultBeanId. When the resultBeanId isn't
+    						set then the result is discarded. If the
+    						resultBeanId is set then the endpoint is
+    						forced to distpatch synchronous.
+    					</xs:documentation>
+    				</xs:annotation>
+    			</xs:attribute>
+    			<xs:attribute name="dispatchOnElement" type="xs:string"
+    				use="required">
+    				<xs:annotation>
+    					<xs:documentation xml:lang="en">
+    						The element on which the message will be
+    						dispatched.
+    					</xs:documentation>
+    				</xs:annotation>
+    			</xs:attribute>
+    			<xs:attribute name="dispatchOnElementNS"
+    				type="xs:anyURI" use="optional">
+    				<xs:annotation>
+    					<xs:documentation xml:lang="en">
+    						Namespace control for the
+    						"dispatchOnElement" attribute.
+    					</xs:documentation>
+    				</xs:annotation>
+    			</xs:attribute>
+    			<xs:attribute name="dispatchBefore" type="xs:boolean"
+    				use="optional" default="false">
+    				<xs:annotation>
+    					<xs:documentation xml:lang="en">
+    						If the message is dispatched before the
+    						element else the message is dispatched after
+    						the element.
+    					</xs:documentation>
+    				</xs:annotation>
+    			</xs:attribute>
+    		</xs:extension>
+    	</xs:complexContent>
+
+    </xs:complexType>
+
+
+
+
+    <xs:complexType name="messagePayload">
+    	<xs:sequence>
+    		<xs:element name="expression" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+    	</xs:sequence>
+    	<xs:attribute name="beanId" type="xs:string" use="optional">
+		 	<xs:annotation>
+				<xs:documentation xml:lang="en">
+					The bean id of the bean which will be used as the message payload. The context of the
+ 					MVEL script contains all the beans of the bean map.
+				</xs:documentation>
+			</xs:annotation>
+    	</xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="messageProperties">
+    	<xs:sequence>
+    		<xs:element name="property" type="mule:messageProperty" maxOccurs="unbounded" minOccurs="0">
+    			<xs:annotation>
+					<xs:documentation xml:lang="en">
+						A property that will be set on the dispatched message. The value can be set from
+						static string or an expression. Via a decoder the static string can be decoded
+						to the desired type.
+					</xs:documentation>
+				</xs:annotation>
+    		</xs:element>
+    	</xs:sequence>
+    	<xs:attribute name="beanId" type="xs:string" use="optional">
+
+    		<xs:annotation>
+				<xs:documentation xml:lang="en">
+					The bean id of the bean which will be used for the message properties. The bean must
+					be a Map&lt;String, Object&gt; else an IllegalCastException will be thrown.
+				</xs:documentation>
+			</xs:annotation>
+    	</xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="messageProperty">
+    	<xs:annotation>
+			<xs:documentation xml:lang="en">
+				A MVEL expression from which the result is used as property value.
+				The MVEL context contains all the beans from the bean map.
+                      The type and value attribute are ignored when the element content is set.
+			</xs:documentation>
+		</xs:annotation>
+    	<xs:sequence>
+            <xs:element name="expression" type="xs:string" maxOccurs="1" minOccurs="0">
+            	<xs:annotation>
+					<xs:documentation xml:lang="en">
+						A MVEL expression from which the result is used as property value.
+						The MVEL context contains all the beans from the bean map.
+                        The type and value attribute are ignored when the element content is set.
+					</xs:documentation>
+				</xs:annotation>
+            </xs:element>
+            <xs:element name="decodeParam" type="mule:decodeParam" maxOccurs="unbounded" minOccurs="0">
+            	<xs:annotation>
+					<xs:documentation xml:lang="en">
+						Some decoders may require parameters in order to complete the decoding process e.g. the
+                 		<a href="http://milyn.codehaus.org/javadoc/smooks/org/milyn/javabean/decoders/DateDecoder.html">DateDecoder</a>.
+                	   These parameters can be specified by adding &lt;decodeParam&gt; sub-elements. Review the Decoder's Javadoc for details of the custom parameters.
+					</xs:documentation>
+				</xs:annotation>
+            </xs:element>
+    	</xs:sequence>
+    	<xs:attribute name="name" type="xs:string" use="required">
+    		<xs:annotation>
+				<xs:documentation xml:lang="en">
+					The message property name (required)
+				</xs:documentation>
+			</xs:annotation>
+    	</xs:attribute>
+    	<xs:attribute name="value" type="xs:string" use="optional">
+    		<xs:annotation>
+				<xs:documentation xml:lang="en">
+					The value of the property. The property element content can also be set. If both are set then the value attribute is used.
+				</xs:documentation>
+			</xs:annotation>
+    	</xs:attribute>
+    	<xs:attribute name="decoder" type="xs:string" use="optional">
+    		<xs:annotation>
+				<xs:documentation xml:lang="en">
+					The name of the Decoder to use on the property value. This uses the standard DataDecoder feature from Smooks. The DataDecoder can be configured
+					by setting the decoder-param elements or by creating a "decoder" resource-configuration. (Default decoder: String)
+				</xs:documentation>
+			</xs:annotation>
+    	</xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="decodeParam">
+    	<xs:simpleContent>
+    		<xs:extension base="xs:string">
+                   <xs:attribute name="name" type="xs:string" use="required">
+                       <xs:annotation>
+                           <xs:documentation xml:lang="en">The name of the parameter.</xs:documentation>
+                       </xs:annotation>
+                   </xs:attribute>
+               </xs:extension>
+    	</xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

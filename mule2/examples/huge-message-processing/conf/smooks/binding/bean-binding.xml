@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
-	xmlns:java="http://www.milyn.org/xsd/smooks/javabean-1.3.xsd">
+	xmlns:java="http://www.milyn.org/xsd/smooks/javabean-1.4.xsd">
 
 	<!--
 		This defines the binding of the product data from the EDI document to the Product object. It

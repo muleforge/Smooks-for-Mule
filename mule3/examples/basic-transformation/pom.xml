@@ -82,7 +82,7 @@
 
 		<dependency>
 			<groupId>org.mule.modules.mule-module-smooks</groupId>
-			<artifactId>smooks-4-mule-2</artifactId>
+			<artifactId>smooks-4-mule-3</artifactId>
 		</dependency>
 
 		<!-- The Smooks dependencies -->

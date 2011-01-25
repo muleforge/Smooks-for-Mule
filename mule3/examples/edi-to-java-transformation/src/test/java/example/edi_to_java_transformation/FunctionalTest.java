@@ -55,8 +55,8 @@ public class FunctionalTest extends FunctionalTestCase
 	public void testSmooks() throws Exception {
 		InputStream in = IOUtils.getResourceAsStream("test-message01.edi", this.getClass());
 
-		MuleClient client = new MuleClient();
-		MuleMessage reply = client.send("vm://EDIOrderToJavaOrder",	new DefaultMuleMessage(in));
+		MuleClient client = new MuleClient(muleContext);
+		MuleMessage reply = client.send("vm://EDIOrderToJavaOrder",	new DefaultMuleMessage(in, muleContext));
 
 		assertNotNull(reply);
 		assertNotNull(reply.getPayload());

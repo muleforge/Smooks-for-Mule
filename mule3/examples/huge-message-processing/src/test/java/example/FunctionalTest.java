@@ -63,8 +63,8 @@ public class FunctionalTest extends FunctionalTestCase
 	public void testSmooks() throws Exception {
 		InputStream in = IOUtils.getResourceAsStream("test-message01.edi", this.getClass());
 
-		MuleClient client = new MuleClient();
-		client.send("vm://TestMessageIn",	new DefaultMuleMessage(in));
+		MuleClient client = new MuleClient(muleContext);
+		client.send("vm://TestMessageIn",	new DefaultMuleMessage(in, muleContext));
 
 		//Sleep a second in the hope that all messages are processed.
 		Thread.sleep(1000);
