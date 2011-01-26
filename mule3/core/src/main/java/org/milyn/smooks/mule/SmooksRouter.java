@@ -111,7 +111,7 @@ import org.xml.sax.SAXException;
  * <p />
  * An example of accessing the attributes map is:
  * <pre>
- * muleEvent.getMessage().getInboundProperty( Constants.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT );
+ * inboundEvent.getMessage().getInboundProperty( Constants.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT );
  * </pre>
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
@@ -344,7 +344,7 @@ public class SmooksRouter extends FilteringOutboundRouter {
 		}
 
 		// Create the dispatcher which handles the dispatching of messages
-		NamedOutboundEndpointMuleDispatcher dispatcher = new NamedOutboundEndpointMuleDispatcher(event, executionContext);
+		Dispatcher dispatcher = new Dispatcher(event, executionContext);
 
 		// make the dispatcher available for Smooks
 		executionContext.setAttribute(NamedEndpointMuleDispatcher.SMOOKS_CONTEXT, dispatcher);
@@ -420,17 +420,17 @@ public class SmooksRouter extends FilteringOutboundRouter {
         }
 	}
 
-	private class NamedOutboundEndpointMuleDispatcher implements NamedEndpointMuleDispatcher {
+	private class Dispatcher implements NamedEndpointMuleDispatcher {
 
 		private final ExecutionContext executionContext;
 
-		private final MuleEvent muleEvent;
+		private final MuleEvent inboundEvent;
 
-		public NamedOutboundEndpointMuleDispatcher(
-				MuleEvent muleEvent,
+		public Dispatcher(
+				MuleEvent inboundEvent,
 				ExecutionContext executionContext) {
 
-			this.muleEvent = muleEvent;
+			this.inboundEvent = inboundEvent;
 			this.executionContext = executionContext;
 		}
 
@@ -447,6 +447,8 @@ public class SmooksRouter extends FilteringOutboundRouter {
 			} else {
 				muleMessage = new DefaultMuleMessage(payload, messageProperties, muleContext);
 			}
+
+            muleMessage.setCorrelationId(inboundEvent.getMessage().getUniqueId());
 
 			MuleEvent resultEvent = dispatch(outboundEndpoint, muleMessage, forceSynchronous);
 
@@ -465,7 +467,7 @@ public class SmooksRouter extends FilteringOutboundRouter {
 	        }
 
 			try {
-				return sendRequest(muleEvent, message, endpoint, forceSynchronous);
+				return sendRequest(inboundEvent, message, endpoint, forceSynchronous);
 			} catch (MuleException e) {
 				throw new RuntimeException(e);
 			}

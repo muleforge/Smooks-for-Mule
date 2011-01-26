@@ -60,10 +60,9 @@ public class RouterGeneralFunctionalTest extends FunctionalTestCase {
     {
 		InputStream in = getClass().getResourceAsStream("/router-input-message.xml");
 
-
-
         MuleClient client = new MuleClient();
-        client.send("vm://messageInput", new MuleMessage(in));
+        MuleMessage message =  new MuleMessage(in);
+        client.send("vm://messageInput", message);
 
         assertTrue("File '" + test1File + "' doesn't exist.", test1File.exists());
 
@@ -74,7 +73,7 @@ public class RouterGeneralFunctionalTest extends FunctionalTestCase {
         assertTrue("File '" + testReplyFile + "' doesn't exist.", testReplyFile.exists());
 
         String testReplyFileContent = IOUtils.toString(new FileInputStream(testReplyFile), "UTF-8");
-        assertEquals("Reply value incorrect", "Hello World,testValue,test2Value,10,1215779456000,xmlTest1Value,xmlTest2Value,overwritten", testReplyFileContent);
+        assertEquals("Reply value incorrect", "Hello World,testValue,test2Value,10,1215779456000,xmlTest1Value,xmlTest2Value,overwritten," + message.getUniqueId(), testReplyFileContent);
 
         assertTrue(reportFile.exists());
     }

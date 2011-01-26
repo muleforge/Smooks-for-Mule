@@ -25,6 +25,7 @@ import java.util.TimeZone;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.mule.DefaultMuleMessage;
+import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.FileUtils;
@@ -37,7 +38,7 @@ public class RouterGeneralFunctionalTest extends FunctionalTestCase {
 
 	private final File routingTestDir = new File("target/routing-test");
 
-	private final File reportFile = new File ( "target" + File.separator + "smooks-report" + File.separator +  "report.html" );
+	private final File reportFile = new File ( "target" + File.separator + "smooks-report" + File.separator +  "functional-report.html" );
 
 	private final File test1File = new File(routingTestDir, "file1.dat");
 
@@ -60,7 +61,9 @@ public class RouterGeneralFunctionalTest extends FunctionalTestCase {
 		InputStream in = getClass().getResourceAsStream("/router-input-message.xml");
 
         MuleClient client = new MuleClient(muleContext);
-        client.send("vm://messageInput", new DefaultMuleMessage(in, client.getMuleContext()));
+        MuleMessage message = new DefaultMuleMessage(in, client.getMuleContext());
+
+        client.send("vm://messageInput", message);
 
         assertTrue("File '" + test1File + "' doesn't exist.", test1File.exists());
 
@@ -71,7 +74,7 @@ public class RouterGeneralFunctionalTest extends FunctionalTestCase {
         assertTrue("File '" + testReplyFile + "' doesn't exist.", testReplyFile.exists());
 
         String testReplyFileContent = IOUtils.toString(new FileInputStream(testReplyFile), "UTF-8");
-        assertEquals("Reply value incorrect", "Hello World,testValue,test2Value,10,1215779456000,xmlTest1Value,xmlTest2Value,overwritten", testReplyFileContent);
+        assertEquals("Reply value incorrect", "Hello World,testValue,test2Value,10,1215779456000,xmlTest1Value,xmlTest2Value,overwritten," + message.getUniqueId(), testReplyFileContent);
 
         assertTrue(reportFile.exists());
     }

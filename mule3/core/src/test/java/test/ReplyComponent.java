@@ -43,6 +43,7 @@ public class ReplyComponent implements Callable {
 		String xmlTest1 = (String) message.getInboundProperty("xmlTest1");
 		String xmlTest2 = (String) message.getInboundProperty("xmlTest2");
 		String testOverwritten = (String) message.getInboundProperty("testOverwritten");
+        String correlationId = message.getCorrelationId();
 
 		return payload.get("value").toString() + "," +
 				test  + "," +
@@ -51,7 +52,8 @@ public class ReplyComponent implements Callable {
 				testDate.getTime() + "," +
 				xmlTest1 + "," +
 				xmlTest2 + "," +
-				testOverwritten;
+				testOverwritten + "," +
+                correlationId;
 	}
 
 }

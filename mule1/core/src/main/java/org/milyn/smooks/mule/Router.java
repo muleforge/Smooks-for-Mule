@@ -28,17 +28,19 @@ import org.apache.commons.lang.StringUtils;
 import org.milyn.Smooks;
 import org.milyn.container.ExecutionContext;
 import org.milyn.event.report.HtmlReportGenerator;
-import org.milyn.smooks.mule.core.MuleDispatcher;
-import org.milyn.smooks.mule.core.NamedEndpointMuleDispatcher;
-import org.milyn.smooks.mule.core.ResultType;
-import org.milyn.smooks.mule.core.SmooksPayloadProcessor;
+import org.milyn.smooks.mule.core.*;
+import org.mule.config.MuleProperties;
 import org.mule.config.i18n.Message;
+import org.mule.impl.MuleMessage;
+import org.mule.routing.outbound.AbstractOutboundRouter;
 import org.mule.routing.outbound.FilteringOutboundRouter;
+import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.lifecycle.InitialisationException;
+import org.mule.umo.routing.CouldNotRouteOutboundMessageException;
 import org.mule.umo.routing.RoutingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -373,7 +375,7 @@ public class Router extends FilteringOutboundRouter {
 
 
 		// Create the dispatcher which handles the dispatching of messages
-		NamedOutboundEndpointMuleDispatcher dispatcher = createDispatcher(executionContext, session, synchronous);
+		Dispatcher dispatcher = new Dispatcher(session, message, executionContext, synchronous);
 
 		// make the dispatcher available for Smooks
 		executionContext.setAttribute(NamedEndpointMuleDispatcher.SMOOKS_CONTEXT, dispatcher);
@@ -426,16 +428,6 @@ public class Router extends FilteringOutboundRouter {
 		}
 	}
 
-
-	private NamedOutboundEndpointMuleDispatcher createDispatcher(final ExecutionContext executionContext, final UMOSession muleSession, final  boolean synchronous) {
-		initialiseEndpointMap();
-
-		//Create the dispatcher which will dispatch the messages provided by Smooks
-		NamedOutboundEndpointMuleDispatcher dispatcher = new NamedOutboundEndpointMuleDispatcher(endpointMap, this, muleSession, executionContext, executionContextAsMessageProperty, executionContextMessagePropertyKey, excludeNonSerializables, honorSynchronicity, synchronous);
-
-		return dispatcher;
-	}
-
 	private void addReportingSupport(UMOMessage message, final ExecutionContext executionContext ) throws RoutingException
 	{
 		if( reportPath != null )
@@ -483,4 +475,86 @@ public class Router extends FilteringOutboundRouter {
 			}
 		}
 	}
+
+    private class Dispatcher implements NamedEndpointMuleDispatcher {
+
+       private final ExecutionContext executionContext;
+
+       private final UMOSession muleSession;
+
+       private final UMOMessage inboundMessage;
+
+       private final boolean synchronous;
+
+       public Dispatcher( UMOSession muleSession, UMOMessage inboundMessage, ExecutionContext executionContext, boolean synchronous) {
+           this.muleSession = muleSession;
+           this.inboundMessage = inboundMessage;
+           this.executionContext = executionContext;
+           this.synchronous = synchronous;
+       }
+
+       public Object dispatch(String endpointName, Object payload, Map<String, Object> messageProperties, boolean forceSynchronous) {
+           UMOEndpoint outboundEndpoint = endpointMap.get(endpointName);
+
+           if(outboundEndpoint == null) {
+               throw new IllegalArgumentException("The outbound endpoint with the name '" + endpointName + "' isn't declared in the outbound endpoint map");
+           }
+
+           UMOMessage muleMessage;
+           if(messageProperties == null || messageProperties.size() == 0) {
+               muleMessage = new MuleMessage(payload);
+           } else {
+               muleMessage = new MuleMessage(payload, messageProperties);
+           }
+
+           muleMessage.setCorrelationId(inboundMessage.getUniqueId());
+
+           UMOMessage resultMessage = dispatch(outboundEndpoint, muleMessage, forceSynchronous);
+
+           Object result = null;
+           if(resultMessage != null) {
+               result = resultMessage.getPayload();
+           }
+           return result;
+       }
+
+       public UMOMessage dispatch(UMOEndpoint endpoint, UMOMessage message, boolean forceSynchronous) {
+           boolean synchr = synchronous || forceSynchronous;
+           if (!forceSynchronous && honorSynchronicity)
+           {
+               synchr = endpoint.isSynchronous();
+           }
+
+           if(executionContextAsMessageProperty) {
+               // Set the Smooks Excecution properties on the Mule Message object
+               message.setProperty(executionContextMessagePropertyKey, ExecutionContextUtil.getAtrributesMap(executionContext, excludeNonSerializables));
+           }
+
+           try {
+
+               if (!forceSynchronous && honorSynchronicity)
+               {
+                   message.setBooleanProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, endpoint.isRemoteSync());
+               }
+
+               if(synchr) {
+
+                   return Router.this.send(muleSession, message, endpoint);
+
+               } else {
+                   Router.this.dispatch(muleSession, message, endpoint);
+               }
+
+           } catch (UMOException e) {
+
+               throw new RuntimeException(new CouldNotRouteOutboundMessageException(message, endpoint, e));
+
+           }
+           return null;
+       }
+
+
+
+   }
+
 }

@@ -30,15 +30,20 @@ import org.milyn.container.ExecutionContext;
 import org.milyn.container.plugin.PayloadProcessor;
 import org.milyn.container.plugin.ResultType;
 import org.milyn.event.report.HtmlReportGenerator;
+import org.milyn.smooks.mule.core.ExecutionContextUtil;
 import org.milyn.smooks.mule.core.MuleDispatcher;
 import org.milyn.smooks.mule.core.NamedEndpointMuleDispatcher;
+import org.mule.DefaultMuleMessage;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.routing.CouldNotRouteOutboundMessageException;
 import org.mule.api.routing.RoutingException;
 import org.mule.config.i18n.Message;
+import org.mule.routing.outbound.AbstractOutboundRouter;
 import org.mule.routing.outbound.FilteringOutboundRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -334,7 +339,7 @@ public class Router extends FilteringOutboundRouter {
 		}
 
 		// Create the dispatcher which handles the dispatching of messages
-		NamedOutboundEndpointMuleDispatcher dispatcher = createDispatcher(executionContext, session);
+		Dispatcher dispatcher = new Dispatcher(session, message, executionContext);
 
 		// make the dispatcher available for Smooks
 		executionContext.setAttribute(NamedEndpointMuleDispatcher.SMOOKS_CONTEXT, dispatcher);
@@ -392,15 +397,6 @@ public class Router extends FilteringOutboundRouter {
 		}
 	}
 
-
-
-	/**
-	 *	Create the dispatcher which will dispatch the messages provided by Smooks
-	 */
-	private NamedOutboundEndpointMuleDispatcher createDispatcher(final ExecutionContext executionContext, final MuleSession muleSession) {
-		return new NamedOutboundEndpointMuleDispatcher(endpointMap, this, muleSession, executionContext, executionContextAsMessageProperty, executionContextMessagePropertyKey, excludeNonSerializables);
-	}
-
 	private void addReportingSupport(final MuleMessage message, final ExecutionContext executionContext ) throws RoutingException
 	{
 		if( reportPath != null )
@@ -417,5 +413,72 @@ public class Router extends FilteringOutboundRouter {
             }
         }
 	}
+
+    private class Dispatcher implements NamedEndpointMuleDispatcher {
+
+        private final ExecutionContext executionContext;
+
+        private final MuleSession muleSession;
+
+        private final MuleMessage inboundMessage;
+
+
+        public Dispatcher(MuleSession muleSession, MuleMessage inboundMessage, ExecutionContext executionContext) {
+            this.muleSession = muleSession;
+            this.inboundMessage = inboundMessage;
+            this.executionContext = executionContext;
+        }
+
+        public Object dispatch(String endpointName, Object payload, Map<String, Object> messageProperties, boolean forceSynchronous) {
+            OutboundEndpoint outboundEndpoint = endpointMap.get(endpointName);
+
+            if(outboundEndpoint == null) {
+                throw new IllegalArgumentException("The outbound endpoint with the name '" + endpointName + "' isn't declared in the outbound endpoint map");
+            }
+
+            MuleMessage muleMessage;
+            if(messageProperties == null || messageProperties.size() == 0) {
+                muleMessage = new DefaultMuleMessage(payload);
+            } else {
+                muleMessage = new DefaultMuleMessage(payload, messageProperties);
+            }
+
+            muleMessage.setCorrelationId(inboundMessage.getUniqueId());
+
+            MuleMessage resultMessage = dispatch(outboundEndpoint, muleMessage, forceSynchronous);
+
+            Object result = null;
+            if(resultMessage != null) {
+                result = resultMessage.getPayload();
+            }
+            return result;
+        }
+
+        public MuleMessage dispatch(OutboundEndpoint endpoint, MuleMessage message, boolean forceSynchronous) {
+            boolean synchr = endpoint.isSynchronous() || forceSynchronous;
+
+            if(executionContextAsMessageProperty) {
+                // Set the Smooks Excecution properties on the Mule Message object
+                message.setProperty(executionContextMessagePropertyKey, ExecutionContextUtil.getAtrributesMap(executionContext, excludeNonSerializables) );
+            }
+
+            try {
+
+                if(synchr) {
+                    return Router.this.send(muleSession, message, endpoint);
+                } else {
+                    Router.this.dispatch(muleSession, message, endpoint);
+                }
+
+            } catch (MuleException e) {
+
+                throw new RuntimeException(new CouldNotRouteOutboundMessageException(message, endpoint, e));
+
+            }
+            return null;
+        }
+
+    }
+
 
 }
