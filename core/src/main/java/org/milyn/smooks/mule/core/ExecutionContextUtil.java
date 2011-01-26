@@ -53,12 +53,17 @@ public final class ExecutionContextUtil {
         Map<String, Object> beanContextMap = executionContext.getBeanContext().getBeanMap();
     	if ( excludeNonSerializables ) {
             smooksExecutionContextMap = filterSerializable(attributes);
-            smooksExecutionContextMap.put(BEAN_CONTEXT_KEY, filterSerializable(beanContextMap));
+            beanContextMap = filterSerializable(beanContextMap);
 		} else {
 			smooksExecutionContextMap = attributes;
-            smooksExecutionContextMap.put(BEAN_CONTEXT_KEY, new HashMap<String, Object>(beanContextMap));
+            beanContextMap = new HashMap<String, Object>(beanContextMap);
 		}
 
+        //Remove the SMOOKS_BEAN_MULE_MESSAGE entry from the bean context map because we don't want a copy of the message within
+        //the properties of the same message.
+        beanContextMap.remove(Constants.SMOOKS_BEAN_MULE_MESSAGE);
+
+        smooksExecutionContextMap.put(BEAN_CONTEXT_KEY, beanContextMap);
 
 		return Collections.unmodifiableMap(smooksExecutionContextMap);
 	}

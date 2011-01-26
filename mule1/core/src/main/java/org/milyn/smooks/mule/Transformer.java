@@ -87,15 +87,19 @@ import org.xml.sax.SAXException;
  * <li><i>reportPath</i> -
  * </ul>
  *
+ * <h3>Accessing the inbound MuleMessage within Smooks</h3>
+ * The inbound MuleMessage is added to the Smooks bean context under the key <b>MULE_MESSAGE</b>. This means that you can access the Message from within
+ * the Smooks filter process.
+ *
  * <h3>Accessing Smooks ExecutionContext attributes</h3>
  * After Smooks finished filtering they payload and if the "executionContextAsMessageProperty" property is set to <code>true</code>
  * then the transform method will make the attributes that have been set in the the ExecutionContext available for
  * other actions in the Mule ESB by setting the attributes map as a property of the message.
  * The attributes can be accessed by using the key defined under the property "executionContextMessagePropertyKey". Default
- * "SmooksExecutionContext" is used, which is set under the constant {@link #MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT}.
+ * "SmooksExecutionContext" is used, which is set under the constant {@link Constants#MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT}.
  * An example of accessing the attributes map is:
  * <pre>
- * umoEventContext.getMessage().get( SmooksTransformer.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT );
+ * umoEventContext.getMessage().get( Constants.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT );
  * </pre>
  *
  * <h3>Specifying the Source and Result Types</h3>
@@ -317,7 +321,7 @@ public class Transformer extends AbstractEventAwareTransformer
 	}
 
     /**
-	 * @param setExecutionContextMessageProperty the setExecutionContextMessageProperty to set
+	 * @param executionContextMessageProperty the setExecutionContextMessageProperty to set
 	 */
 	public void setExecutionContextAsMessageProperty(
 			boolean executionContextMessageProperty) {
@@ -376,6 +380,9 @@ public class Transformer extends AbstractEventAwareTransformer
 		} else {
 			executionContext = smooks.createExecutionContext();
 		}
+
+        // Make the inbound Mule message accessable via the Smooks bean context
+        executionContext.getBeanContext().addBean(org.milyn.smooks.mule.core.Constants.SMOOKS_BEAN_MULE_MESSAGE, umoEventContext.getMessage());
 
 		//	Add smooks reporting if configured
 		addReportingSupport( executionContext );

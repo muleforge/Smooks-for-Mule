@@ -98,15 +98,19 @@ import org.xml.sax.SAXException;
  * <p/>
  * More information on the configuration options of the {@link MuleDispatcher} can be found in the javadoc of the {@link MuleDispatcher} itself.
  *
+ * <h3>Accessing the inbound MuleMessage within Smooks</h3>
+ * The inbound MuleMessage is added to the Smooks bean context under the key <b>MULE_MESSAGE</b>. This means that you can access the Message from within
+ * the Smooks filter process.
+ *
  * <h3>Accessing Smooks ExecutionContext attributes</h3>
  * When the {@link MuleDispatcher} dispatches a message and if the "executionContextAsMessageProperty" property
  * is set to <code>true</code> then the MuleDispatcher will make the attributes that have been set in the
  * ExecutionContext at that moment available for other actions in the Mule ESB by setting the attributes map as a property of the message.
  * The attributes can be accessed by using the key defined under the property "executionContextMessagePropertyKey". Default
- * "SmooksExecutionContext" is used, which is set under the constant {@link #MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT}.
+ * "SmooksExecutionContext" is used, which is set under the constant {@link Constants#MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT}.
  * An example of accessing the attributes map is:
  * <pre>
- * umoEventContext.getMessage().get( SmooksTransformer.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT );
+ * umoEventContext.getMessage().get( Constants.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT );
  * </pre>
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
@@ -288,7 +292,7 @@ public class Router extends FilteringOutboundRouter {
 	}
 
     /**
-	 * @param setExecutionContextMessageProperty the setExecutionContextMessageProperty to set
+	 * @param executionContextMessageProperty the setExecutionContextMessageProperty to set
 	 */
 	public void setExecutionContextAsMessageProperty(
 			boolean executionContextMessageProperty) {
@@ -373,6 +377,9 @@ public class Router extends FilteringOutboundRouter {
 
 		// make the dispatcher available for Smooks
 		executionContext.setAttribute(NamedEndpointMuleDispatcher.SMOOKS_CONTEXT, dispatcher);
+
+        // Make the inbound Mule message accessable via the Smooks bean context
+        executionContext.getBeanContext().addBean(org.milyn.smooks.mule.core.Constants.SMOOKS_BEAN_MULE_MESSAGE, message);
 
 		//	Add smooks reporting if configured
 		addReportingSupport( message, executionContext );

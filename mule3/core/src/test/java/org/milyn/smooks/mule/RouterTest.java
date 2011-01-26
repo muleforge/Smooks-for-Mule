@@ -16,6 +16,7 @@
 
 package org.milyn.smooks.mule;
 
+import org.milyn.smooks.mule.SmooksRouter;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.tck.AbstractMuleTestCase;
 

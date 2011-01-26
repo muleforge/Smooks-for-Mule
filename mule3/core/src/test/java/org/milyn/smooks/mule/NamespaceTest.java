@@ -16,6 +16,8 @@
 
 package org.milyn.smooks.mule;
 
+import org.milyn.smooks.mule.SmooksRouter;
+import org.milyn.smooks.mule.SmooksTransformer;
 import org.mule.routing.outbound.DefaultOutboundRouterCollection;
 import org.mule.tck.FunctionalTestCase;
 

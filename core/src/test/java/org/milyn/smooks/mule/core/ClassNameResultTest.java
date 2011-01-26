@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.milyn.smooks.mule;
+package org.milyn.smooks.mule.core;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;

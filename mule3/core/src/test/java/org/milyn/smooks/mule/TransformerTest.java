@@ -36,16 +36,15 @@ import org.mule.api.config.MuleConfiguration;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.PropertyScope;
-import org.mule.tck.AbstractMuleTestCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * Unit test for {@link SmooksTransformer}
+ * Unit test for {@link org.milyn.smooks.mule.SmooksTransformer}
  * <p/>
  * The test in the class intentionally only test the configuration and <br>
- * execution of {@link SmooksTransformer} and not the actual tranformations<br>
+ * execution of {@link org.milyn.smooks.mule.SmooksTransformer} and not the actual tranformations<br>
  * that Smooks performs as these are covered in the Smooks project.
  *
  * @author <a href="mailto:maurice@zeijen.net">Maurice Zeijen</a>
@@ -212,7 +211,7 @@ public class TransformerTest extends TestCase
 		if(executionContextMessagePropertyKey != null) {
 			transformer.setExecutionContextMessagePropertyKey(executionContextMessagePropertyKey);
 		} else {
-			executionContextMessagePropertyKey = Constants.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT;
+			executionContextMessagePropertyKey = org.milyn.smooks.mule.Constants.MESSAGE_PROPERTY_KEY_EXECUTION_CONTEXT;
 		}
 
 		transformer.initialise();
