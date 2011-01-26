@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.milyn.container.ExecutionContext;
+import org.milyn.javabean.BeanAccessor;
+import org.milyn.javabean.context.BeanContext;
 
 /**
  *
@@ -31,37 +33,48 @@ import org.milyn.container.ExecutionContext;
  */
 public final class ExecutionContextUtil {
 
+    public static final String BEAN_CONTEXT_KEY = "SMOOKS_BEAN_CONTEXT";
+
 	private ExecutionContextUtil() {
 	}
 
 	/**
      * Will return a Map containing only the Serializable objects
-     * that exist in the passed-in Map if {@link #excludeNonSerializables} is true.
+     * that exist in the passed-in Map if excludeNonSerializables is true.
      *
-     * @param smooksAttribuesMap 	- Map containing attributes from the Smooks ExecutionContext
+     * @param executionContext 	- Map containing attributes from the Smooks ExecutionContext
      * @return Map	- Map containing only the Serializable objects from the passed-in map.
      */
 	public static Map<Object, Object> getAtrributesMap( final ExecutionContext executionContext, boolean excludeNonSerializables )
 	{
-    	Map<Object, Object>  attributes = executionContext.getAttributes();
+    	Map<Object, Object> attributes = executionContext.getAttributes();
 
-    	Map<Object, Object>  smooksExecutionContextMap;
+    	Map<Object, Object> smooksExecutionContextMap;
+        Map<String, Object> beanContextMap = executionContext.getBeanContext().getBeanMap();
     	if ( excludeNonSerializables ) {
-    		smooksExecutionContextMap = new HashMap<Object, Object> ();
-
-    		Set<Map.Entry<Object, Object> > s = attributes.entrySet();
-    		for (Map.Entry<Object, Object>  me : s)
-    		{
-    			Object value = me.getValue();
-    			if( value instanceof Serializable )
-    			{
-    				smooksExecutionContextMap.put( me.getKey(), value );
-    			}
-    		}
+            smooksExecutionContextMap = filterSerializable(attributes);
+            smooksExecutionContextMap.put(BEAN_CONTEXT_KEY, filterSerializable(beanContextMap));
 		} else {
 			smooksExecutionContextMap = attributes;
+            smooksExecutionContextMap.put(BEAN_CONTEXT_KEY, new HashMap<String, Object>(beanContextMap));
 		}
+
 
 		return Collections.unmodifiableMap(smooksExecutionContextMap);
 	}
+
+    private static <K, V> Map<K, V> filterSerializable(Map<K, V> inMap) {
+        Map<K, V> outMap = new HashMap<K, V>();
+
+        Set<Map.Entry<K, V> > s = inMap.entrySet();
+        for (Map.Entry<K, V>  me : s)
+        {
+            V value = me.getValue();
+            if( value instanceof Serializable)
+            {
+                outMap.put(me.getKey(), value);
+            }
+        }
+        return outMap;
+    }
 }

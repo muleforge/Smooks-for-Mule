@@ -41,17 +41,29 @@ public class ExecutionContextUtilTest extends TestCase {
 		ExecutionContext executionContext = new MockExecutionContext();
 		executionContext.setAttribute(attrKey1, attrValue1);
 		executionContext.setAttribute(attrKey2, attrValue2);
+        executionContext.getBeanContext().addBean(attrKey1, attrValue1);
+        executionContext.getBeanContext().addBean(attrKey2, attrValue2);
 
 		Map<?, ?> attributesMap = ExecutionContextUtil.getAtrributesMap(executionContext, false);
 
-		assertEquals("Not all values are in the map.", 2, attributesMap.size());
+		assertEquals("Not all values are in the map.", 3, attributesMap.size());
 		assertSame("Value of key1 is not the same as the one we entered .", attrValue1, attributesMap.get(attrKey1));
 		assertSame("Value of key2 is not the same as the one we entered .", attrValue2, attributesMap.get(attrKey2));
 
+        Map<String, Object> beanContextMap = (Map<String, Object>) attributesMap.get(ExecutionContextUtil.BEAN_CONTEXT_KEY);
+
+        assertSame("Bean context value of key1 is not the same as the one we entered .", attrValue1, beanContextMap.get(attrKey1));
+        assertSame("Bean context value of key2 is not the same as the one we entered .", attrValue2, beanContextMap.get(attrKey2));
+
 		attributesMap = ExecutionContextUtil.getAtrributesMap(executionContext, true);
 
-		assertEquals("There is more or less then 1 value in the map.", 1, attributesMap.size());
+		assertEquals("There is more or less then 2 values in the map.", 2, attributesMap.size());
 		assertSame("Value of key1 is not the same as the one we entered .", attrValue1, attributesMap.get(attrKey1));
+
+        beanContextMap = (Map<String, Object>) attributesMap.get(ExecutionContextUtil.BEAN_CONTEXT_KEY);
+
+        assertSame("Bean context value of key1 is not the same as the one we entered .", attrValue1, beanContextMap.get(attrKey1));
+        assertFalse("Bean context key2 should not be there.", beanContextMap.containsKey(attrKey2));
 
 	}
 
