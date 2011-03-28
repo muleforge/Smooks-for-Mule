@@ -66,7 +66,7 @@ public class MuleDispatcherTest extends TestCase {
 
 	private void test_no_payload(String config) throws IOException, SAXException {
 
-		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(new HashMap<String, Object>()), eq(false)))
+		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(new HashMap<String, Object>()), eq(false), eq(false), eq(true), eq(true)))
 			.andReturn(null);
 
 		replay(dispatcher);
@@ -92,7 +92,7 @@ public class MuleDispatcherTest extends TestCase {
 
 		Object payload = new Object();
 
-		expect(dispatcher.dispatch(eq("endpoint"), eq(payload), eq(new HashMap<String, Object>()), eq(false)))
+		expect(dispatcher.dispatch(eq("endpoint"), eq(payload), eq(new HashMap<String, Object>()), eq(false), eq(false), eq(true), eq(true)))
 			.andReturn(null);
 
 		replay(dispatcher);
@@ -120,7 +120,7 @@ public class MuleDispatcherTest extends TestCase {
 
 	private void test_with_payload_with_expression(String config) throws IOException, SAXException {
 
-		expect(dispatcher.dispatch(eq("endpoint"), eq("payload"), eq(new HashMap<String, Object>()), eq(false)))
+		expect(dispatcher.dispatch(eq("endpoint"), eq("payload"), eq(new HashMap<String, Object>()), eq(false), eq(false), eq(true), eq(true)))
 			.andReturn(null);
 
 		replay(dispatcher);
@@ -146,7 +146,7 @@ public class MuleDispatcherTest extends TestCase {
 
 		Object result = new Object();
 
-		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(new HashMap<String, Object>()), eq(true)))
+		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(new HashMap<String, Object>()), eq(true), eq(false), eq(true), eq(true)))
 			.andReturn(result);
 
 		replay(dispatcher);
@@ -182,7 +182,7 @@ public class MuleDispatcherTest extends TestCase {
 
 		Object result = new Object();
 
-		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(properties), eq(false)))
+		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(properties), eq(false), eq(false), eq(true), eq(true)))
 			.andReturn(result);
 
 		replay(dispatcher);

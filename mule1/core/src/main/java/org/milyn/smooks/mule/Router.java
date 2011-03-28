@@ -493,7 +493,7 @@ public class Router extends FilteringOutboundRouter {
            this.synchronous = synchronous;
        }
 
-       public Object dispatch(String endpointName, Object payload, Map<String, Object> messageProperties, boolean forceSynchronous) {
+       public Object dispatch(String endpointName, Object payload, Map<String, Object> messageProperties, boolean forceSynchronous, boolean copyOriginalMessageProperties, boolean overrideOriginalMessageProperties, boolean ignorePropertiesWithNullValues) {
            UMOEndpoint outboundEndpoint = endpointMap.get(endpointName);
 
            if(outboundEndpoint == null) {

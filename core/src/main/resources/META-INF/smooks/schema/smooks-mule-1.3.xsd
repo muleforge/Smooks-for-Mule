@@ -154,6 +154,35 @@
 				</xs:documentation>
 			</xs:annotation>
     	</xs:attribute>
+        <xs:attribute name="copyOriginal" type="xs:boolean" use="optional" default="false">
+
+    		<xs:annotation>
+				<xs:documentation xml:lang="en">
+					If the original message properties need to be copied to the message that is going to be
+                    dispatched.
+				</xs:documentation>
+			</xs:annotation>
+    	 </xs:attribute>
+         <xs:attribute name="overrideOriginal" type="xs:boolean" use="optional" default="true">
+
+    		<xs:annotation>
+				<xs:documentation xml:lang="en">
+					If the original message properties are overridden by the properties that are set via
+                    this dispatcher.
+                    This attribute only affects anything if the 'copyOriginalMessageProperties'
+                    attribute is set to true.
+				</xs:documentation>
+			</xs:annotation>
+    	</xs:attribute>
+         <xs:attribute name="ignoreNullValues" type="xs:boolean" use="optional" default="false">
+
+    		<xs:annotation>
+				<xs:documentation xml:lang="en">
+					If properties with a NULL value are ignored and are there for
+                    not set as a property on the map that is dispatched.
+				</xs:documentation>
+			</xs:annotation>
+    	</xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="messageProperty">

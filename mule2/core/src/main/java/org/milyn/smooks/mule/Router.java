@@ -429,7 +429,7 @@ public class Router extends FilteringOutboundRouter {
             this.executionContext = executionContext;
         }
 
-        public Object dispatch(String endpointName, Object payload, Map<String, Object> messageProperties, boolean forceSynchronous) {
+        public Object dispatch(String endpointName, Object payload, Map<String, Object> messageProperties, boolean forceSynchronous, boolean copyOriginalMessageProperties, boolean overrideOriginalMessageProperties, boolean ignorePropertiesWithNullValues) {
             OutboundEndpoint outboundEndpoint = endpointMap.get(endpointName);
 
             if(outboundEndpoint == null) {

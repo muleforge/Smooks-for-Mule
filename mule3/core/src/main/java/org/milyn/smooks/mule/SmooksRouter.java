@@ -434,7 +434,7 @@ public class SmooksRouter extends FilteringOutboundRouter {
 			this.executionContext = executionContext;
 		}
 
-		public Object dispatch(String endpointName, Object payload, Map<String, Object> messageProperties, boolean forceSynchronous) {
+		public Object dispatch(String endpointName, Object payload, Map<String, Object> messageProperties, boolean forceSynchronous, boolean copyOriginalMessageProperties, boolean overrideOriginalMessageProperties, boolean ignorePropertiesWithNullValues) {
 			OutboundEndpoint outboundEndpoint = endpointMap.get(endpointName);
 
 			if(outboundEndpoint == null) {
@@ -450,27 +450,23 @@ public class SmooksRouter extends FilteringOutboundRouter {
 
             muleMessage.setCorrelationId(inboundEvent.getMessage().getUniqueId());
 
-			MuleEvent resultEvent = dispatch(outboundEndpoint, muleMessage, forceSynchronous);
+            if(executionContextAsMessageProperty) {
+	        	// Set the Smooks Excecution properties on the Mule Message object
+	        	muleMessage.setOutboundProperty(executionContextMessagePropertyKey, ExecutionContextUtil.getAtrributesMap(executionContext, excludeNonSerializables) );
+	        }
+
+            MuleEvent resultEvent;
+            try {
+			    resultEvent = sendRequest(inboundEvent, muleMessage, outboundEndpoint, forceSynchronous);
+            } catch (MuleException e) {
+				throw new RuntimeException(e);
+			}
 
 			Object result = null;
 			if(resultEvent != null) {
 				result = resultEvent.getMessage().getPayload();
 			}
 			return result;
-		}
-
-		public MuleEvent dispatch(OutboundEndpoint endpoint, MuleMessage message, boolean forceSynchronous) {
-
-			if(executionContextAsMessageProperty) {
-	        	// Set the Smooks Excecution properties on the Mule Message object
-	        	message.setOutboundProperty(executionContextMessagePropertyKey, ExecutionContextUtil.getAtrributesMap(executionContext, excludeNonSerializables) );
-	        }
-
-			try {
-				return sendRequest(inboundEvent, message, endpoint, forceSynchronous);
-			} catch (MuleException e) {
-				throw new RuntimeException(e);
-			}
 		}
 
 	}
