@@ -201,6 +201,9 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
     @ConfigParam(defaultVal = "true")
     private boolean ignorePropertiesWithNullValues;
 
+    @ConfigParam(defaultVal = "false")
+    private boolean copyOriginalMessageAttachments;
+
 	@Config
     private SmooksResourceConfiguration config;
 
@@ -297,7 +300,7 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 
 		Map<String, Object> messageProperties = createMessagePropertiesMap(executionContext);
 
-		Object result = dispatcher.dispatch(endpointName, payload, messageProperties, forceSynchronous, copyOriginalMessageProperties, overrideOriginalMessageProperties, ignorePropertiesWithNullValues);
+		Object result = dispatcher.dispatch(endpointName, payload, messageProperties, forceSynchronous, copyOriginalMessageProperties, overrideOriginalMessageProperties, ignorePropertiesWithNullValues, copyOriginalMessageAttachments);
 
 		if(result != null && resultBeanId != null) {
 			if(log.isInfoEnabled()) {

@@ -96,4 +96,11 @@
         <resource>org.milyn.smooks.mule.core.ext.DecodeParamResolver</resource>
     </resource-config>
 
+
+    <resource-config selector="dispatcher/messageAttachments">
+        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
+        <param name="attribute">copyOriginal</param>
+        <param name="mapTo">copyOriginalMessageAttachments</param>
+    </resource-config>
+
 </smooks-resource-list>

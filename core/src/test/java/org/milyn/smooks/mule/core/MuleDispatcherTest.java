@@ -66,7 +66,7 @@ public class MuleDispatcherTest extends TestCase {
 
 	private void test_no_payload(String config) throws IOException, SAXException {
 
-		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(new HashMap<String, Object>()), eq(false), eq(false), eq(true), eq(true)))
+		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(new HashMap<String, Object>()), eq(false), eq(false), eq(true), eq(true), eq(false)))
 			.andReturn(null);
 
 		replay(dispatcher);
@@ -92,7 +92,7 @@ public class MuleDispatcherTest extends TestCase {
 
 		Object payload = new Object();
 
-		expect(dispatcher.dispatch(eq("endpoint"), eq(payload), eq(new HashMap<String, Object>()), eq(false), eq(false), eq(true), eq(true)))
+		expect(dispatcher.dispatch(eq("endpoint"), eq(payload), eq(new HashMap<String, Object>()), eq(false), eq(false), eq(true), eq(true), eq(false)))
 			.andReturn(null);
 
 		replay(dispatcher);
@@ -120,7 +120,7 @@ public class MuleDispatcherTest extends TestCase {
 
 	private void test_with_payload_with_expression(String config) throws IOException, SAXException {
 
-		expect(dispatcher.dispatch(eq("endpoint"), eq("payload"), eq(new HashMap<String, Object>()), eq(false), eq(false), eq(true), eq(true)))
+		expect(dispatcher.dispatch(eq("endpoint"), eq("payload"), eq(new HashMap<String, Object>()), eq(false), eq(false), eq(true), eq(true), eq(false)))
 			.andReturn(null);
 
 		replay(dispatcher);
@@ -146,7 +146,7 @@ public class MuleDispatcherTest extends TestCase {
 
 		Object result = new Object();
 
-		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(new HashMap<String, Object>()), eq(true), eq(false), eq(true), eq(true)))
+		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(new HashMap<String, Object>()), eq(true), eq(false), eq(true), eq(true), eq(false)))
 			.andReturn(result);
 
 		replay(dispatcher);
@@ -178,7 +178,7 @@ public class MuleDispatcherTest extends TestCase {
 
 		Object result = new Object();
 
-		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(properties), eq(false), eq(false), eq(true), eq(true)))
+		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(properties), eq(false), eq(false), eq(true), eq(true), eq(false)))
 			.andReturn(result);
 
 		replay(dispatcher);
@@ -198,15 +198,15 @@ public class MuleDispatcherTest extends TestCase {
         verify(dispatcher);
     }
 
-	public void test_with_copy_messageBeanProperties_extended_config() throws IOException, SAXException, ParseException {
-		test_with_copy_messageBeanProperties("/test-config-dispatcher-extended-06.xml");
+	public void test_with_copyOriginalProperties_extended_config() throws IOException, SAXException, ParseException {
+		test_with_copyOriginalProperties("/test-config-dispatcher-extended-06.xml");
 	}
 
-	private void test_with_copy_messageBeanProperties(String config) throws IOException, SAXException, ParseException {
+	private void test_with_copyOriginalProperties(String config) throws IOException, SAXException, ParseException {
 
 		Object result = new Object();
 
-		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(new HashMap<String, Object>()), eq(false), eq(true), eq(false), eq(false)))
+		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(new HashMap<String, Object>()), eq(false), eq(true), eq(false), eq(false), eq(false)))
 			.andReturn(result);
 
 		replay(dispatcher);
@@ -221,4 +221,30 @@ public class MuleDispatcherTest extends TestCase {
 
         verify(dispatcher);
     }
+
+
+	public void test_with_copyOriginalAttachments_extended_config() throws IOException, SAXException, ParseException {
+		test_with_copyOriginalAttachments("/test-config-dispatcher-extended-07.xml");
+	}
+
+	private void test_with_copyOriginalAttachments(String config) throws IOException, SAXException, ParseException {
+
+		Object result = new Object();
+
+		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(new HashMap<String, Object>()), eq(false), eq(false), eq(true), eq(true), eq(true)))
+			.andReturn(result);
+
+		replay(dispatcher);
+
+		Smooks smooks = new Smooks(getClass().getResourceAsStream(config));
+		ExecutionContext execContext = smooks.createExecutionContext();
+		execContext.setAttribute(NamedEndpointMuleDispatcher.SMOOKS_CONTEXT, dispatcher);
+
+		JavaResult javaResult = new JavaResult();
+
+        smooks.filterSource(execContext, new StreamSource(getClass().getResourceAsStream("/test-data-01.xml")), javaResult);
+
+        verify(dispatcher);
+    }
+
 }

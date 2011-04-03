@@ -58,6 +58,13 @@
 	    					</xs:documentation>
 	    				</xs:annotation>
     				</xs:element>
+    				<xs:element name="messageAttachments" type="mule:messageAttachments" maxOccurs="1" minOccurs="0">
+    					<xs:annotation>
+	    					<xs:documentation xml:lang="en">
+	    						The message attachments configuration
+	    					</xs:documentation>
+	    				</xs:annotation>
+    				</xs:element>
     			</xs:sequence>
     			<xs:attribute name="endpointName" type="xs:string"
     				use="required">
@@ -235,6 +242,19 @@
 				</xs:documentation>
 			</xs:annotation>
     	</xs:attribute>
+    </xs:complexType>
+
+
+    <xs:complexType name="messageAttachments">
+        <xs:attribute name="copyOriginal" type="xs:boolean" use="optional" default="false">
+
+    		<xs:annotation>
+				<xs:documentation xml:lang="en">
+					If the original message attachments need to be copied to the message that is going to be
+                    dispatched.
+				</xs:documentation>
+			</xs:annotation>
+    	 </xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="decodeParam">

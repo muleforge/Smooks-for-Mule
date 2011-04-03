@@ -32,6 +32,7 @@ public interface NamedEndpointMuleDispatcher {
                     boolean forceSynchronous,
                     boolean copyOriginalMessageProperties,
                     boolean overrideOriginalMessageProperties,
-                    boolean ignorePropertiesWithNullValues);
+                    boolean ignorePropertiesWithNullValues,
+                    boolean copyOriginalMessageAttachments);
 
 }

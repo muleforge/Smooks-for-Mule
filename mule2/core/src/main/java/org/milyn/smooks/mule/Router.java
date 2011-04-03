@@ -22,7 +22,9 @@ import static org.mule.config.i18n.MessageFactory.createStaticMessage;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.milyn.Smooks;
@@ -30,6 +32,7 @@ import org.milyn.container.ExecutionContext;
 import org.milyn.container.plugin.PayloadProcessor;
 import org.milyn.container.plugin.ResultType;
 import org.milyn.event.report.HtmlReportGenerator;
+import org.milyn.smooks.mule.core.AttachmentException;
 import org.milyn.smooks.mule.core.ExecutionContextUtil;
 import org.milyn.smooks.mule.core.MuleDispatcher;
 import org.milyn.smooks.mule.core.NamedEndpointMuleDispatcher;
@@ -42,6 +45,7 @@ import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.routing.CouldNotRouteOutboundMessageException;
 import org.mule.api.routing.RoutingException;
+import org.mule.api.transport.PropertyScope;
 import org.mule.config.i18n.Message;
 import org.mule.routing.outbound.AbstractOutboundRouter;
 import org.mule.routing.outbound.FilteringOutboundRouter;
@@ -429,23 +433,41 @@ public class Router extends FilteringOutboundRouter {
             this.executionContext = executionContext;
         }
 
-        public Object dispatch(String endpointName, Object payload, Map<String, Object> messageProperties, boolean forceSynchronous, boolean copyOriginalMessageProperties, boolean overrideOriginalMessageProperties, boolean ignorePropertiesWithNullValues) {
+        public Object dispatch(String endpointName, Object payload, Map<String, Object> newMessageProperties, boolean forceSynchronous, boolean copyOriginalMessageProperties, boolean overrideOriginalMessageProperties, boolean ignorePropertiesWithNullValues, boolean copyOriginalMessageAttachments) {
             OutboundEndpoint outboundEndpoint = endpointMap.get(endpointName);
 
             if(outboundEndpoint == null) {
                 throw new IllegalArgumentException("The outbound endpoint with the name '" + endpointName + "' isn't declared in the outbound endpoint map");
             }
 
-            MuleMessage muleMessage;
-            if(messageProperties == null || messageProperties.size() == 0) {
-                muleMessage = new DefaultMuleMessage(payload);
-            } else {
-                muleMessage = new DefaultMuleMessage(payload, messageProperties);
+            Map<String, Object> allMessageProperties = new HashMap<String, Object>();
+
+			if(newMessageProperties != null) {
+				allMessageProperties.putAll(newMessageProperties);
+			}
+
+			if(copyOriginalMessageProperties) {
+            	copyOriginalMessageProperties(allMessageProperties, overrideOriginalMessageProperties, ignorePropertiesWithNullValues);
             }
 
-            muleMessage.setCorrelationId(inboundMessage.getUniqueId());
+            if(ignorePropertiesWithNullValues) {
+            	filterNullValues(allMessageProperties);
+            }
 
-            MuleMessage resultMessage = dispatch(outboundEndpoint, muleMessage, forceSynchronous);
+            MuleMessage outboundMessage = new DefaultMuleMessage(payload, allMessageProperties);
+
+            outboundMessage.setCorrelationId(inboundMessage.getUniqueId());
+
+            if(copyOriginalMessageAttachments) {
+            	copyOriginalMessageAttachments(outboundMessage);
+            }
+
+            if(executionContextAsMessageProperty) {
+                // Set the Smooks Excecution properties on the Mule Message object
+            	outboundMessage.setProperty(executionContextMessagePropertyKey, ExecutionContextUtil.getAtrributesMap(executionContext, excludeNonSerializables) );
+            }
+
+            MuleMessage resultMessage = dispatch(outboundEndpoint, outboundMessage, forceSynchronous);
 
             Object result = null;
             if(resultMessage != null) {
@@ -455,14 +477,8 @@ public class Router extends FilteringOutboundRouter {
         }
 
         public MuleMessage dispatch(OutboundEndpoint endpoint, MuleMessage message, boolean forceSynchronous) {
-            boolean synchr = endpoint.isSynchronous() || forceSynchronous;
-
-            if(executionContextAsMessageProperty) {
-                // Set the Smooks Excecution properties on the Mule Message object
-                message.setProperty(executionContextMessagePropertyKey, ExecutionContextUtil.getAtrributesMap(executionContext, excludeNonSerializables) );
-            }
-
             try {
+            	boolean synchr = endpoint.isSynchronous() || forceSynchronous;
 
                 if(synchr) {
                     return Router.this.send(muleSession, message, endpoint);
@@ -477,6 +493,51 @@ public class Router extends FilteringOutboundRouter {
             }
             return null;
         }
+
+		private void filterNullValues(Map<String, Object> allMessageProperties) {
+			Iterator<Entry<String, Object>> entryIterator = allMessageProperties.entrySet().iterator();
+
+			while(entryIterator.hasNext()) {
+				Entry<String, Object> entry = entryIterator.next();
+
+				if(entry.getValue() == null) {
+					entryIterator.remove();
+				}
+			}
+		}
+
+		private void copyOriginalMessageProperties(
+				Map<String, Object> allMessageProperties,
+				boolean overrideOriginalMessageProperties,
+				boolean ignorePropertiesWithNullValues) {
+
+			for(Object propertyNameObj : inboundMessage.getPropertyNames(PropertyScope.INBOUND)) {
+				String propertyName = (String) propertyNameObj;
+
+				if(!overrideOriginalMessageProperties || !allMessageProperties.containsKey(propertyName)) {
+					Object value = inboundMessage.getProperty(propertyName, PropertyScope.INBOUND);
+
+					if(!ignorePropertiesWithNullValues || value != null ) {
+						allMessageProperties.put(propertyName, value);
+					}
+				}
+
+			}
+
+		}
+
+		private void copyOriginalMessageAttachments(MuleMessage outboundMessage){
+			for(Object attachmentNameObj : inboundMessage.getAttachmentNames()) {
+				String attachmentName = (String) attachmentNameObj;
+
+				try {
+					outboundMessage.addAttachment(attachmentName, inboundMessage.getAttachment(attachmentName));
+				} catch (Exception e) {
+					throw new AttachmentException("Exception while trying to add the attachment '" + attachmentName + "' to the outbound message.", e);
+				}
+			}
+
+		}
 
     }
 
