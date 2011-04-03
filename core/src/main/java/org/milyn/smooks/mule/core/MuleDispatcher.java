@@ -324,7 +324,7 @@ public class MuleDispatcher implements DOMElementVisitor, SAXVisitBefore, SAXVis
 
 			BeanContext beanContext = executionContext.getBeanContext();
 
-			Map bProperties = (Map<String, Object>) beanContext.getBean(messagePropertiesBeanId);
+			Map<String, Object> bProperties = (Map<String, Object>) beanContext.getBean(messagePropertiesBeanId);
 
 			if(bProperties == null) {
 				throw new SmooksConfigurationException("No properties map could be found under the beanId '" + messagePropertiesBeanId.getName() + "'");

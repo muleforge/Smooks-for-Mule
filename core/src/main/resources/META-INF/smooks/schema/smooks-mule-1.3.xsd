@@ -174,7 +174,7 @@
 				</xs:documentation>
 			</xs:annotation>
     	</xs:attribute>
-         <xs:attribute name="ignoreNullValues" type="xs:boolean" use="optional" default="false">
+         <xs:attribute name="ignoreNullValues" type="xs:boolean" use="optional" default="true">
 
     		<xs:annotation>
 				<xs:documentation xml:lang="en">

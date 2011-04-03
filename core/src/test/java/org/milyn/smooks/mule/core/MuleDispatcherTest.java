@@ -164,10 +164,6 @@ public class MuleDispatcherTest extends TestCase {
 
     }
 
-	public void test_with_messageBeanProperties_plain_config() throws IOException, SAXException, ParseException {
-		//test_with_messageBeanProperties("test-config-dispatcher-plain-05.xml");
-	}
-
 	public void test_with_messageBeanProperties_extended_config() throws IOException, SAXException, ParseException {
 		test_with_messageBeanProperties("/test-config-dispatcher-extended-05.xml");
 	}
@@ -196,6 +192,30 @@ public class MuleDispatcherTest extends TestCase {
 
 		JavaResult javaResult = new JavaResult();
 		javaResult.getResultMap().put("messageProperties", propertiesToInject);
+
+        smooks.filterSource(execContext, new StreamSource(getClass().getResourceAsStream("/test-data-01.xml")), javaResult);
+
+        verify(dispatcher);
+    }
+
+	public void test_with_copy_messageBeanProperties_extended_config() throws IOException, SAXException, ParseException {
+		test_with_copy_messageBeanProperties("/test-config-dispatcher-extended-06.xml");
+	}
+
+	private void test_with_copy_messageBeanProperties(String config) throws IOException, SAXException, ParseException {
+
+		Object result = new Object();
+
+		expect(dispatcher.dispatch(eq("endpoint"), isNull(), eq(new HashMap<String, Object>()), eq(false), eq(true), eq(false), eq(false)))
+			.andReturn(result);
+
+		replay(dispatcher);
+
+		Smooks smooks = new Smooks(getClass().getResourceAsStream(config));
+		ExecutionContext execContext = smooks.createExecutionContext();
+		execContext.setAttribute(NamedEndpointMuleDispatcher.SMOOKS_CONTEXT, dispatcher);
+
+		JavaResult javaResult = new JavaResult();
 
         smooks.filterSource(execContext, new StreamSource(getClass().getResourceAsStream("/test-data-01.xml")), javaResult);
 

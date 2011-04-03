@@ -58,24 +58,6 @@
         <param name="attribute">beanId</param>
     </resource-config>
 
-    <resource-config selector="dispatcher/messagePayload">
-        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
-        <param name="attribute">copyOriginal</param>
-        <param name="mapTo">copyOriginalMessageProperties</param>
-    </resource-config>
-
-    <resource-config selector="dispatcher/messagePayload">
-        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
-        <param name="attribute">overrideOriginal</param>
-        <param name="mapTo">overrideOriginalMessageProperties</param>
-    </resource-config>
-
-    <resource-config selector="dispatcher/messagePayload">
-        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
-        <param name="attribute">ignoreNullValues</param>
-        <param name="mapTo">ignorePropertiesWithNullValues</param>
-    </resource-config>
-
     <resource-config selector="dispatcher/messagePayload/expression">
         <resource>org.milyn.cdr.extension.MapToResourceConfigFromText</resource>
         <param name="mapTo">expression</param>
@@ -90,6 +72,24 @@
     <resource-config selector="dispatcher/messageProperties">
         <resource>org.milyn.cdr.extension.MapToResourceConfigFromText</resource>
         <param name="mapTo">messageProperties</param>
+    </resource-config>
+
+    <resource-config selector="dispatcher/messageProperties">
+        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
+        <param name="attribute">copyOriginal</param>
+        <param name="mapTo">copyOriginalMessageProperties</param>
+    </resource-config>
+
+    <resource-config selector="dispatcher/messageProperties">
+        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
+        <param name="attribute">overrideOriginal</param>
+        <param name="mapTo">overrideOriginalMessageProperties</param>
+    </resource-config>
+
+    <resource-config selector="dispatcher/messageProperties">
+        <resource>org.milyn.cdr.extension.MapToResourceConfigFromAttribute</resource>
+        <param name="attribute">ignoreNullValues</param>
+        <param name="mapTo">ignorePropertiesWithNullValues</param>
     </resource-config>
 
     <resource-config selector="dispatcher/messageProperties/property">

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd" xmlns:mule="http://dist.muleforge.org/smooks/schema/smooks-mule-1.2.xsd">
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd" xmlns:mule="http://dist.muleforge.org/smooks/schema/smooks-mule-1.3.xsd">
 
 	<mule:dispatcher endpointName="endpoint" dispatchOnElement="root" >
-		<mule:messageProperties beanId="messageProperties">
+		<mule:messageProperties beanId="messageProperties" copyOriginal="false" ignoreNullValues="true" overrideOriginal="true">
 			<mule:property name="prop1" value="prop1Value" />
 	        <mule:property name="prop2">
 	        	<mule:expression>"prop2Value"</mule:expression>
