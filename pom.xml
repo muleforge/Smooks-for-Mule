@@ -102,22 +102,31 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-webdav-jackrabbit</artifactId>
-				<version>1.0-beta-6</version>
+				<version>1.0-beta-7</version>
 			</extension>
 		</extensions>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.3.2</version>
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2-beta-5</version>
+				<version>2.2.1</version>
 				<configuration>
 					<finalName>${artifactId}-${version}</finalName>
 					<descriptors>
@@ -126,10 +135,11 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1.1</version>
+				<version>2.1.2</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -139,6 +149,64 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<id>enforce-plugin-versions</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireJavaVersion>
+									<version>1.5.0</version>
+								</requireJavaVersion>
+								<!-- Doesn't work with Maven 3.x -->
+								<!-- <requirePluginVersions> <message>Best Practice is to always
+									define plugin versions!</message> <banLatest>true</banLatest> <banRelease>true</banRelease>
+									<banSnapshots>true</banSnapshots> <unCheckedPluginList>org.maven.ide.eclipse:lifecycle-mapping</unCheckedPluginList>
+									</requirePluginVersions> -->
+								<requireReleaseDeps>
+									<message>No snapshots allowed in a release build!</message>
+									<onlyWhenRelease>true</onlyWhenRelease>
+								</requireReleaseDeps>
+								<requireMavenVersion>
+									<version>[3.0.2,)</version>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.4.1</version>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.8</version>
+				<inherited>true</inherited>
+				<configuration>
+					<!-- Make sure thate every test is run with UTF-8 encoding -->
+					<argLine>-Dfile.encoding=UTF-8</argLine>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>2.3.1</version>
 			</plugin>
 
 			<plugin>
@@ -178,96 +246,109 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 					</properties>
 					<encoding>UTF-8</encoding>
 				</configuration>
-				<!--
-					<executions> <execution> <inherited>false</inherited> <goals>
-					<goal>check</goal> </goals> </execution> </executions>
-				-->
 			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>2.0-beta-7</version>
-				<configuration>
-					<locales>en</locales>
-					<port>9000</port>
-					<tempWebappDirectory>${basedir}/target/site/tempdir</tempWebappDirectory>
-				</configuration>
-			</plugin>
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-site-plugin</artifactId>
+				<version>2.2</version> <configuration> <locales>en</locales> <port>9000</port>
+				<tempWebappDirectory>${basedir}/target/site/tempdir</tempWebappDirectory>
+				</configuration> </plugin> -->
 
 
 		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.0-beta-3</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-ear-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-ejb-plugin</artifactId>
+					<version>2.3</version>
+					<configuration>
+						<ejbVersion>3.0</ejbVersion>
+						<generateClient>false</generateClient>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.3.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-rar-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.1.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>1.4</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-ant-plugin</artifactId>
+					<version>2.3</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.6</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.2.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-remote-resources-plugin</artifactId>
+					<version>1.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-repository-plugin</artifactId>
+					<version>2.3.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-scm-plugin</artifactId>
+					<version>1.4</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-stage-plugin</artifactId>
+					<version>1.0-alpha-2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.2</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.5</version>
-			</plugin>
-
-			<!--
-				<plugin> <groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId> </plugin>
-			-->
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>taglist-maven-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<tags>
-						<tag>TODO</tag>
-						<tag>@todo</tag>
-						<tag>FIXME</tag>
-						<tag>@fixme</tag>
-						<tag>@deprecated</tag>
-					</tags>
-				</configuration>
-			</plugin>
-			<!--
-				<plugin> <groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId> </plugin>
-			-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.6.1</version>
-				<configuration>
-					<links>
-						<link>
-							http://java.sun.com/j2se/1.5.0/docs/api
-						</link>
-					</links>
-				</configuration>
-			</plugin>
-			<!--
-				<plugin> <groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId> <configuration>
-				<configLocation>
-				http://mulesource.org/download/attachments/92/checkstyle.xml?version=1
-				</configLocation> </configuration> </plugin>
-			-->
-			<!--
-				<plugin> <groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId> <configuration>
-				<targetJdk>1.5</targetJdk> </configuration> </plugin> <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jdepend-maven-plugin</artifactId> </plugin> <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId> <!- - configuration>
-				<threshold>Low</threshold> <effort>Max</effort> </configuration - ->
-				</plugin>
-			-->
-
-
-		</plugins>
-	</reporting>
+	<!-- DISABLED IN FAVOUR OF MAVEN 3.x WHERE THIS IS OBSOLETE <reporting>
+		<plugins> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-surefire-report-plugin</artifactId>
+		<version>2.5</version> </plugin> <plugin> <groupId>org.codehaus.mojo</groupId>
+		<artifactId>taglist-maven-plugin</artifactId> <version>2.4</version> <configuration>
+		<tags> <tag>TODO</tag> <tag>@todo</tag> <tag>FIXME</tag> <tag>@fixme</tag>
+		<tag>@deprecated</tag> </tags> </configuration> </plugin> <plugin> <groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-javadoc-plugin</artifactId> <version>2.6.1</version> <configuration>
+		<links> <link> http://java.sun.com/j2se/1.5.0/docs/api </link> </links> </configuration>
+		</plugin> </plugins> </reporting> -->
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- Mule Smooks Module Dependencies  -->
+			<!-- Mule Smooks Module Dependencies -->
 			<dependency>
 				<groupId>org.mule.modules.mule-module-smooks</groupId>
 				<artifactId>smooks-4-mule-core</artifactId>
@@ -324,6 +405,15 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 				<version>${smooks-version}</version>
 			</dependency>
 
+			<!-- JAVAX -->
+
+			<dependency>
+				<groupId>javax.activation</groupId>
+				<artifactId>activation</artifactId>
+				<version>1.1.1</version>
+				<scope>provided</scope>
+			</dependency>
+
 			<!-- Defining conflicting dependencies -->
 			<dependency>
 				<groupId>commons-lang</groupId>
@@ -332,26 +422,33 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 			</dependency>
 
 			<!-- logging -->
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.6.1</version>
-                <scope>provided</scope>
-            </dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.6.1</version>
+				<scope>provided</scope>
+			</dependency>
 
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>1.6.1</version>
-                <scope>test</scope>
-            </dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.6.1</version>
+				<scope>test</scope>
+			</dependency>
 
-            <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>1.2.12</version>
-                <scope>test</scope>
-            </dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jcl-over-slf4j</artifactId>
+				<version>1.6.1</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.12</version>
+				<scope>test</scope>
+			</dependency>
 
 			<!-- unit testing -->
 			<dependency>
@@ -382,12 +479,12 @@ Smooks for Mule is compatible with Smooks 1.x and Smooks 2.x. Depending on what 
 				<scope>test</scope>
 			</dependency>
 
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>1.8.5</version>
-                <scope>test</scope>
-            </dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>1.8.5</version>
+				<scope>test</scope>
+			</dependency>
 
 			<dependency>
 				<groupId>org.dbunit</groupId>

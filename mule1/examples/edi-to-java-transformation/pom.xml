@@ -6,7 +6,7 @@
 		<groupId>org.mule.modules.mule-module-smooks</groupId>
 		<artifactId>smooks-4-mule-1-examples</artifactId>
 		<version>1.3-SNAPSHOT</version>
-		<relativePath>../</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules.mule-module-smooks</groupId>
