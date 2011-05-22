@@ -80,7 +80,7 @@ Assembly descriptor for the full distribution.
 						</includes>
 					</fileSet>
 					<fileSet>
-						<directory>/dist</directory>
+						<directory>dist</directory>
 						<includes>
 							<include>README*</include>
 							<include>build.xml</include>
@@ -123,7 +123,7 @@ Assembly descriptor for the full distribution.
 						</includes>
 					</fileSet>
 					<fileSet>
-						<directory>/dist</directory>
+						<directory>dist</directory>
 						<includes>
 							<include>README*</include>
 							<include>build.xml</include>
@@ -166,7 +166,7 @@ Assembly descriptor for the full distribution.
 						</includes>
 					</fileSet>
 					<fileSet>
-						<directory>/dist</directory>
+						<directory>dist</directory>
 						<includes>
 							<include>README*</include>
 							<include>build.xml</include>
@@ -210,7 +210,7 @@ Assembly descriptor for the full distribution.
 						</includes>
 					</fileSet>
 					<fileSet>
-						<directory>/dist</directory>
+						<directory>dist</directory>
 						<includes>
 							<include>README*</include>
 							<include>*.xml</include>
@@ -240,7 +240,7 @@ Assembly descriptor for the full distribution.
 						</excludes>
 					</dependencySet>
 					<dependencySet>
-						<scope>runtime</scope>
+						<scope>test</scope>
 						<useTransitiveFiltering>false</useTransitiveFiltering>
 						<includes>
 							<include>org.slf4j:slf4j-api</include>
