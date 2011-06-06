@@ -1,10 +1,12 @@
-<project name="Smooks for Mule 2.x - EDI to Java example" default="install" basedir=".">
+<project name="Smooks for Mule 3.x - EDI to Java example" default="install" basedir=".">
 
 	<property environment="env" />
 
 	<property name="mule.home" value="${env.MULE_HOME}" />
 
 	<path id="classpath">
+		<!-- TODO: Had to add this pathelement due to the build problem in the assembly.xml file, see "<unpack>false</unpack>" in mule3/dist/assembly.xml -->
+        <pathelement location="lib/user"/>
 		<fileset dir="lib/user">
 			<include name="**/*.jar" />
 		</fileset>
@@ -33,8 +35,10 @@
 
 	<target name="install" depends="check-mule-home"  description="Installs the example with mule">
 
-		<copy todir="${mule.home}/lib/user" >
-			<fileset dir="lib/user" />
+		<copy todir="${mule.home}/apps" verbose="true">
+			<fileset dir=".">
+			      <include name="*.zip"/>
+			</fileset>
 		</copy>
 
 	</target>

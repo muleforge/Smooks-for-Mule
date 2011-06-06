@@ -1,4 +1,4 @@
-<project name="Smooks for Mule 2.x - Basic transformation example" default="install" basedir=".">
+<project name="Smooks for Mule 3.x - Basic transformation example" default="install" basedir=".">
 
 	<property environment="env" />
 
@@ -21,8 +21,10 @@
 
 	<target name="install" depends="check-mule-home">
 
-		<copy todir="${mule.home}/lib/user">
-			<fileset dir="lib/user" />
+		<copy todir="${mule.home}/apps" verbose="true">
+			<fileset dir=".">
+			      <include name="*.zip"/>
+			</fileset>
 		</copy>
 
 	</target>

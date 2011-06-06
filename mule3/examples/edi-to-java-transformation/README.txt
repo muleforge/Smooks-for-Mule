@@ -1,3 +1,5 @@
+TODO: NEEDS TO BE UPDATED TO REFLECT MULE 3!!!
+
 +----------------------------+
 | Smooks EDI to Java Example |
 +----------------------------+

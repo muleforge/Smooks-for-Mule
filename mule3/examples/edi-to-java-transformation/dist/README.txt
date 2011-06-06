@@ -1,7 +1,7 @@
 +----------------------------+
 | Smooks EDI to Java Example |
 +----------------------------+
-This example demonstrates how perform an EDI to Java transform in Mule, using Smooks.
+This example demonstrates how perform an EDI to Java transform in Mule 3, using Smooks.
 
 +------------------------+
 | Installing the example |
@@ -11,25 +11,48 @@ and that you have installed the Smooks for Mule module itself
 
 Run "ant install" from this folder.
 
+NOTE: This command will copy the examples zip file to the ${MULE_HOME}/apps - folder.
+
 +---------------------+
 | Running the example |
 +---------------------+
-Make sure you have installed the example as describe in the previous section.
+Make sure you have installed the example as describe in the previous section have added Mule to your executable path as described in ${MULE_HOME}/README.txt.
 
-Simply use the 'run' shell script (Unix/Linux) or 'run.bat' batch file (Windows) provided
-in this directory to run the example.
+Simply start Mule from this folder to run the example.
 
-Alternatively, if you have added Mule to your executable path as recommended in INSTALL.txt, you
-can run the example from the command line as follows:
+NOTE: It is important to start Mule from this folder, otherwise will mule not be able to find this examples data - folder, see below!
+
 
     Linux / Unix
     ------------
-    mule -config ./conf/mule-config.xml
+    mule 
 
     Windows
     -------
-    mule.bat -config .\conf\mule-config.xml
+    mule.bat 
 
-Once Mule is running, copy the EDI sample message from "data/out" to "data/in" and see the
+Wait for Mule to start and deploy this examples application. 
+Mule should display something like the following in the console:
+
+**********************************************************************
+*            - - + APPLICATION + - -            * - - + STATUS + - - *
+**********************************************************************
+* smooks-4-mule-3-examples-edi-to-java-transfor * DEPLOYED           *
+* default                                       * DEPLOYED           *
+**********************************************************************
+
+Copy the EDI sample message from "data/out" to "data/in" and see the
 transformed message objects printed to the console.  At this point, the processed message file
 will be back in the "data/out" folder and the process can be repeated.
+
++--------------------------+
+| Uninstalling the example |
++--------------------------+
+
+While having Mule running remove the file:
+
+${MULE_HOME}/apps/smooks-4-mule-3-examples-edi-to-java-transformation-1.3-anchor.txt
+
+After a few seconds Mule will shutdown and uninstall this examples application automatically.
+
+Stop Mule with CTRL/C (twice might be needed) in the command windows where you started Mule.

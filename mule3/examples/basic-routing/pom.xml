@@ -11,6 +11,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules.mule-module-smooks</groupId>
 	<artifactId>smooks-4-mule-3-examples-basic-routing</artifactId>
+	<packaging>mule</packaging>
 	<name>Smooks for Mule 3.x - Basic routing example</name>
 	<description>Is a basic example of how the Smooks for Mule routing can be used.</description>
 
@@ -33,9 +34,32 @@
           <resource>
               <directory>src/main/resources</directory>
           </resource>
+          <resource>
+              <directory>src/main/app</directory>
+          </resource>
       </resources>
 
-  </build>
+        <plugins>
+            <plugin>
+                <groupId>org.mule.tools</groupId>
+                <artifactId>maven-mule-plugin</artifactId>
+                <version>1.6</version>
+                <extensions>true</extensions>
+			    <configuration>
+			        <inclusions>
+			            <inclusion>
+							<groupId>org.mule.modules.mule-module-smooks</groupId>
+							<artifactId>smooks-4-mule-3</artifactId>
+			            </inclusion>
+			            <inclusion>
+							<groupId>org.mule.modules.mule-module-smooks</groupId>
+							<artifactId>smooks-4-mule-core</artifactId>
+			            </inclusion>
+			        </inclusions>
+			    </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 	<dependencies>
 
@@ -105,6 +129,9 @@
 
 			<build>
 				<plugins>
+                    
+                    <!-- TODO: Should be replaced by use of maven-mule-plugin? -->
+                    
 		            <!-- "mvn -P install-in-mule install" will copy the target jar to the $MULE_HOME/lib/user directory,
 		                overwriting the previous one.-->
 		            <plugin>

@@ -1,7 +1,7 @@
 +--------------------------------------------------+
 | Smooks for Mule: huge message processing example |
 +--------------------------------------------------+
-This example demonstrates how Smooks with Smooks for Mule
+This example demonstrates how Smooks with Smooks for Mule 3
 handles huge gigabyte large data files and split, enrich, transform and
 route the data to multiple endpoints.
 

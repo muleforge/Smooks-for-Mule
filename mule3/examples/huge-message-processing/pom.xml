@@ -11,6 +11,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mule.modules.mule-module-smooks</groupId>
 	<artifactId>smooks-4-mule-3-examples-huge-message-processing</artifactId>
+	<packaging>mule</packaging>
 	<name>Smooks for Mule 3.x - Huge message processing example</name>
 	<description>Is a extensive example how huge message can be splitted, enriched, transformed and routed with Smooks.</description>
 
@@ -33,8 +34,31 @@
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
+            <resource>
+                <directory>src/main/app</directory>
+            </resource>
         </resources>
 
+        <plugins>
+            <plugin>
+                <groupId>org.mule.tools</groupId>
+                <artifactId>maven-mule-plugin</artifactId>
+                <version>1.6</version>
+                <extensions>true</extensions>
+			    <configuration>
+			        <inclusions>
+			            <inclusion>
+							<groupId>org.mule.modules.mule-module-smooks</groupId>
+							<artifactId>smooks-4-mule-3</artifactId>
+			            </inclusion>
+			            <inclusion>
+							<groupId>org.mule.modules.mule-module-smooks</groupId>
+							<artifactId>smooks-4-mule-core</artifactId>
+			            </inclusion>
+			        </inclusions>
+			    </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 	<dependencies>
@@ -165,6 +189,8 @@
 
 			<build>
 				<plugins>
+                    <!-- TODO: Should be replaced by use of maven-mule-plugin? -->
+                    
 		            <!-- "mvn -P install-in-mule install" will copy the target jar to the $MULE_HOME/lib/user directory,
 		                overwriting the previous one.-->
 		            <plugin>
