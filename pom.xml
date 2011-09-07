@@ -13,6 +13,7 @@
 		<module>mule1</module>
 		<module>mule2</module>
 		<module>mule3</module>
+		<module>mule3.1.2-patch-mule5575</module>
 	</modules>
 
 	<properties>
