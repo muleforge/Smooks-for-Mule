@@ -1,5 +1,5 @@
 +---------------------+
-| Smooks for Mule 2.x |
+| Smooks for Mule 3.x |
 +---------------------+
 
  Smooks for Mule enables Message Transformation and
